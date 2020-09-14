@@ -18,7 +18,7 @@ class CreateArticlesTable extends Migration
             $table->bigInteger('blog_id')->unsigned();
             $table->string('title',40);
             $table->string('body',400);
-            $table->boolean('status')->default(false);
+            $table->tinyInteger('status')->default(2);  //非公開
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
 

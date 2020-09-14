@@ -17,7 +17,9 @@ class BlogsTableSeeder extends Seeder
         //
         Blog::create([
             'user_id' => 1,
-            'title' => Str::random(30),
+            'title' => 'First Blog Title',
         ]);
+
+        factory(Blog::class,100)->create();
     }
 }

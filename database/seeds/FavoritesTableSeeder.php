@@ -19,5 +19,7 @@ class FavoritesTableSeeder extends Seeder
             'article_id' => 1,
             'user_id' => 1
         ]);
+
+        factory(Favorite::class,1000)->create();
     }
 }

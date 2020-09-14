@@ -17,8 +17,10 @@ class ArticlesTableSeeder extends Seeder
         //
         Article::create([
             'blog_id' => 1,
-            'title' => Str::random(40),
-            'body' => Str::random(400)
+            'title' => 'First Article Title',
+            'body' => 'First Article Body aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         ]);
+
+        factory(Article::class,200)->create();
     }
 }

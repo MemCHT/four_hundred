@@ -10,6 +10,14 @@ class Article extends Model
 
     //
     public function blog(){
-        return $this->hasOne('App\Models\Blog','id','blog_id');
+        return $this->belongsTo(Blog::class, 'blog_id', 'id');
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class, 'article_id', 'id');
+    }
+
+    public function favorites(){
+        return $this->hasMany(Favorite::class, 'article_id', 'id');
     }
 }

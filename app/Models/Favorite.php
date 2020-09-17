@@ -10,10 +10,10 @@ class Favorite extends Model
 
     //
     public function article(){
-        return $this->hasOne('App\Models\Article','id','article_id');
+        return $this->belongsTo(Article::class, 'article_id', 'id');
     }
 
     public function user(){
-        return $this->hasOne('App\Models\User','id','user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

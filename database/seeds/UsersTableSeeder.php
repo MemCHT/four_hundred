@@ -22,5 +22,7 @@ class UsersTableSeeder extends Seeder
             'remember_token' => Str::random(10),
             'icon' => 'default.jpg'
         ]);
+
+        factory(User::class,100)->create();
     }
 }

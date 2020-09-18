@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\User;
+use App\Models\Blog;
+
 class BlogController extends Controller
 {
     /**
@@ -51,12 +54,18 @@ class BlogController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $user_id
+     * @param int $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($user_id,$blog_id)
     {
         //
+        $user = User::get($user_id);
+        $blog = Blog::get($blog_id);
+        $articles = $blog->articles()->paginate(10);
+
+        return view('blogs.edit',compact('user_id','blog_id','user','blog','articles'));
     }
 
     /**
@@ -66,7 +75,7 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $user_id, $blog_id)
     {
         //
     }

@@ -1,3 +1,5 @@
+
+
 <div class="panel panel-default">
     <div class="panel-header">
         ※各々のid=1 のインスタンスを取得して表示しています。 

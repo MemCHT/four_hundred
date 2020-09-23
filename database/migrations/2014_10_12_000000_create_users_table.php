@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password',255);
             $table->rememberToken();
             $table->boolean('status')->default(false);
-            $table->string('icon',255);
+            $table->string('icon',255)->default('default.jpg');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Article extends Model
 {
-    protected $fillable = ['blog_id','title','body','status'];
+    protected $fillable = ['blog_id','title','body','status_id'];
 
     //
     public function blog(){
         return $this->belongsTo(Blog::class, 'blog_id', 'id');
+    }
+
+    public function status(){
+        return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 
     public function comments(){

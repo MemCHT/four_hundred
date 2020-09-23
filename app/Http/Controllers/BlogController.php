@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\Blog;
+use App\Models\Status;
 
 class BlogController extends Controller
 {
@@ -46,9 +47,14 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($user_id,$blog_id)
     {
         //
+        $user = User::get($user_id);
+        $blog = Blog::get($blog_id);
+        $articles = $blog->articles()->paginate(10);
+
+        return view('blogs.show',compact('user_id','blog_id','user','blog','articles'));
     }
 
     /**
@@ -72,12 +78,17 @@ class BlogController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $user_id
+     * @param int $blog_id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $user_id, $blog_id)
     {
-        //
+        $blog_title = $request->input('blog_title');
+
+        Blog::get($blog_id)->update(['title' => $blog_title]);
+
+        return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
     }
 
     /**

@@ -2,21 +2,24 @@
 
 namespace App\Models;
 
-/**
- * Statusモデル
- * 
- * $status = ['公開' => 1, '非公開' => 2, '下書き' => 3]
- */
-class Status
-{
-    //Blog, Articleモデル共通ステータス
-    private static $status = [
-        '公開' => 1,
-        '非公開' => 2,
-        '下書き' => 3
-    ];
+use Illuminate\Database\Eloquent\Model;
 
-    public static function count(){
-        return count(self::$status);
+class Status extends Model
+{
+    public $timestamps = false;
+
+    protected $fillable = ['name','color'];
+
+    //
+    public function users(){
+        return $this->hasMany(User::class,'status_id', 'id');
+    }
+
+    public function blogs(){
+        return $this->hasMany(Blog::class,'status_id', 'id');
+    }
+
+    public function articles(){
+        return $this->hasMany(Article::class, 'status_id', 'id');
     }
 }

@@ -20,8 +20,8 @@ class CreateUsersTable extends Migration
             $table->dateTime('email_verified_at')->nullable();
             $table->string('password',255);
             $table->rememberToken();
-            $table->boolean('status')->default(false);
-            $table->string('icon',255);
+            $table->boolean('status_id')->default(1);   //公開（正常）
+            $table->string('icon',255)->default('default.jpg');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

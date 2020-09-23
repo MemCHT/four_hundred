@@ -6,18 +6,9 @@
         <div class="col-md-8">
 
             <div class="title-wrapper mt-5">
-                <h3>ブログタイトル編集</h3>
-
-                <form action="{{ route('users.blogs.update', ['user' => $user_id, 'blog' => $blog_id]) }}" method="POST">
-                    {{ method_field('PUT') }}
-                    {{ csrf_field() }}
-                    <div class="input-group">
-                        <input name="blog_title" type="text" class="form-control" value="{{$blog->title}}" placeholder="ブログ名を記入">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit">確定</button>
-                        </div>
-                    </div>
-                </form>
+                <h2>{{$blog->title}}
+                    <a class="btn btn-secondary" href="{{route('users.blogs.edit', ['user' => $user_id, 'blog' => $blog_id])}}"> 編集 </a>
+                </h2>
             </div>
 
 
@@ -42,7 +33,7 @@
                             </div>
                         </div>
                         <p>{{$article->body}}</p>
-                        <a class="btn btn-primary" href="#">編集</a>
+                        <a class="btn btn-primary" href="#">エッセイ詳細</a>
                     </div>
                 </div>
                 @endforeach

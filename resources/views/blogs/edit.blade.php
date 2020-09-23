@@ -18,34 +18,32 @@
                         </div>
                     </div>
                 </form>
+            </div>
 
 
-                <div class="card-wrapper mt-5">
-                    <h3 class="mb-3">{{$user->name}}さんのエッセイ一覧</h3>
+            <div class="card-wrapper mt-5">
+                <h3 class="mb-3">{{$user->name}}さんのエッセイ一覧</h3>
 
-                    @foreach($articles as $article)
-                    <div class="card card-default mb-3">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-md-10">
-                                    {{$article->title}}
-                                </div>
-                                <div class="col-md-2 text-right">
-                                    <i class="far fa-star text-info"></i>{{count($article->favorites)}}
-                                </div>
+                @foreach($articles as $article)
+                <div class="card card-default mb-3">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-md-10">{{$article->title}}</div>
+                            <div class="col-md-2 text-right">
+                                <i class="far fa-star text-info"></i>{{count($article->favorites)}}
                             </div>
                         </div>
-                        <div class="card-body">
-                            <p>{{$article->updated_at}}</p>
-                            <p>{{$article->body}}</p>
-                            <a class="btn btn-primary" href="#">編集</a>
-                        </div>
                     </div>
-                    @endforeach
+                    <div class="card-body">
+                        <p>{{$article->updated_at}}</p>
+                        <p>{{$article->body}}</p>
+                        <a class="btn btn-primary" href="#">編集</a>
+                    </div>
                 </div>
-
-                {{$articles->links('vendor.pagination.modified')}}
+                @endforeach
             </div>
+
+            {{$articles->links('vendor.pagination.modified')}}
         </div>
     </div>
 </div>

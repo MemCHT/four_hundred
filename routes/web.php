@@ -16,3 +16,11 @@ Route::get('/', function () {
 });
 
 Route::get('/test/model/{index}','TestController@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::prefix('users')->name('users.')->group(function(){
+    Route::resource('{user_id}/blogs', 'BlogController');
+});

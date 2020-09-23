@@ -21,6 +21,10 @@ class ArticlesTableSeeder extends Seeder
             'body' => 'First Article Body aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         ]);
 
+        factory(Article::class,50)->create([
+            'blog_id' => 1
+        ]);
+
         factory(Article::class,200)->create();
     }
 }

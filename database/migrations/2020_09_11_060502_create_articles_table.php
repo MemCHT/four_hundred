@@ -18,12 +18,19 @@ class CreateArticlesTable extends Migration
             $table->bigInteger('blog_id')->unsigned();
             $table->string('title',40);
             $table->string('body',400);
-            $table->tinyInteger('status_id')->default(2);  //非公開
+            $table->tinyInteger('status_id')->unsigned()->default(2);  //非公開
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
 
-            $table->foreign('blog_id')->references('id')->on('blogs')
-                ->onUpdate('cascade');
+            $table->foreign('blog_id')
+                ->references('id')->on('blogs')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('status_id')
+                ->references('id')->on('statuses')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
         });
     }
 

@@ -21,8 +21,15 @@ class CreateCommentsTable extends Migration
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
 
-            $table->foreign('article_id')->references('id')->on('articles')
-                ->onUpdate('cascade');
+            $table->foreign('article_id')
+                ->references('id')->on('articles')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
         });
     }
 

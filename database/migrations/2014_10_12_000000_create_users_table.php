@@ -20,10 +20,15 @@ class CreateUsersTable extends Migration
             $table->dateTime('email_verified_at')->nullable();
             $table->string('password',255);
             $table->rememberToken();
-            $table->boolean('status_id')->default(1);   //公開（正常）
+            $table->tinyInteger('status_id')->unsigned()->default(1);   //公開（正常）
             $table->string('icon',255)->default('default.jpg');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
+
+            $table->foreign('status_id')
+                ->references('id')->on('statuses')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
         });
     }
 

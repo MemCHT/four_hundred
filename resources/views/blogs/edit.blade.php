@@ -8,7 +8,7 @@
             <div class="title-wrapper mt-5">
                 <h3>ブログタイトル編集</h3>
 
-                <form action="{{ route('users.blogs.update', ['user' => $user_id, 'blog' => $blog_id]) }}" method="POST">
+                <form action="{{ route('users.blogs.update', ['user' => $blog->user_id, 'blog' => $blog->id]) }}" method="POST">
                     {{ method_field('PUT') }}
                     {{ csrf_field() }}
                     <div class="input-group">
@@ -22,7 +22,7 @@
 
 
             <div class="card-wrapper mt-5">
-                <h3 class="mb-3">{{$user->name}}さんのエッセイ一覧</h3>
+                <h3 class="mb-3">{{$blog->user->name}}さんのエッセイ一覧</h3>
 
                 @foreach($articles as $article)
                 <div class="card card-default mb-3">
@@ -30,7 +30,9 @@
                         <div class="row">
                             <div class="col-md-10">{{$article->title}}</div>
                             <div class="col-md-2 text-right">
-                                <i class="far fa-star text-info"></i>{{count($article->favorites)}}
+                                @favorite
+                                {{ count($article->favorites) }}
+                                @endfavorite
                             </div>
                         </div>
                     </div>
@@ -38,7 +40,9 @@
                         <div class="row">
                             <div class="col-md-8">{{$article->updated_at}}</div>
                             <div class="col-md-4 text-right">
-                                    <i class="fas fa-circle {{$article->status->color}}"></i>{{$article->status->name}}
+                                @status(['color' => $article->status->color])
+                                {{ $article->status->name }}
+                                @endstatus
                             </div>
                         </div>
                         <p>{{$article->body}}</p>

@@ -1,0 +1,1 @@
+<i class="far fa-star text-info"></i><span>{{ $slot }}</span>

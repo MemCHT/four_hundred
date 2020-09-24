@@ -6,36 +6,59 @@
         <div class="col-md-8">
 
             <div class="title-wrapper mt-5">
-                <h2>{{$blog->title}}
-                    <a class="btn btn-secondary" href="{{route('users.blogs.edit', ['user' => $user_id, 'blog' => $blog_id])}}"> 編集 </a>
-                </h2>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2>{{$blog->title}}</h2>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        @if(Auth::id() === $blog->user->id)
+                        <a class="btn btn-secondary" href="{{route('users.blogs.edit', ['user' => $blog->user_id, 'blog' => $blog->id])}}"> 編集 </a>
+                        @endif
+                    </div>
+                </div>
             </div>
 
 
             <div class="card-wrapper mt-5">
-                <h3 class="mb-3">{{$user->name}}さんのエッセイ一覧</h3>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 class="mb-3">{{$blog->user->name}}さんのエッセイ一覧</h3>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        @if(Auth::id() === $blog->user->id)
+                        <a class="btn btn-secondary" href="#">エッセイを投稿する</a>
+                        @endif
+                    </div>
+                </div>
 
                 @foreach($articles as $article)
+                <!-- ブログ所有者以外は、公開記事のみ閲覧可能 -->
+                @if(Auth::id() === $blog->user->id || $article->status->name === '公開')
                 <div class="card card-default mb-3">
                     <div class="card-header">
-                        <div class="row">
+                        <div class="row article-favorite">
                             <div class="col-md-10">{{$article->title}}</div>
                             <div class="col-md-2 text-right">
-                                <i class="far fa-star text-info"></i>{{count($article->favorites)}}
+                                @favorite
+                                {{ count($article->favorites) }}
+                                @endfavorite
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row article-status">
                             <div class="col-md-8">{{$article->updated_at}}</div>
                             <div class="col-md-4 text-right">
-                                    <i class="fas fa-circle {{$article->status->color}}"></i>{{$article->status->name}}
+                                @status(['color' => $article->status->color])
+                                {{ $article->status->name }}
+                                @endstatus
                             </div>
                         </div>
                         <p>{{$article->body}}</p>
                         <a class="btn btn-primary" href="#">エッセイ詳細</a>
                     </div>
                 </div>
+                @endif
                 @endforeach
             </div>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 use App\Models\Blog;
@@ -49,12 +50,16 @@ class BlogController extends Controller
      */
     public function show($user_id,$blog_id)
     {
-        //
         $user = User::get($user_id);
         $blog = Blog::get($blog_id);
         $articles = $blog->articles()->paginate(10);
 
-        return view('blogs.show',compact('user_id','blog_id','user','blog','articles'));
+        //ブログが非公開 かつ ブログ所有ユーザでない なら別のビューを表示
+        if(Status::isPrivate($blog->status) && Auth::id() !== $blog->user_id){
+            return view('blogs.private');
+        }
+
+        return view('blogs.show',compact('user','blog','articles'));
     }
 
     /**
@@ -66,12 +71,16 @@ class BlogController extends Controller
      */
     public function edit($user_id,$blog_id)
     {
-        //
         $user = User::get($user_id);
         $blog = Blog::get($blog_id);
         $articles = $blog->articles()->paginate(10);
 
-        return view('blogs.edit',compact('user_id','blog_id','user','blog','articles'));
+        //ブログ所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $blog->user_id){
+            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+        }
+
+        return view('blogs.edit',compact('user','blog','articles'));
     }
 
     /**

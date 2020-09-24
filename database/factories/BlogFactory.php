@@ -14,6 +14,6 @@ $factory->define(Blog::class, function (Faker $faker) {
     return [
         'user_id' => $faker->numberBetween(1,$user_count),
         'title' => $faker->text(255),
-        'status' => $faker->numberBetween(1,$status_count)
+        'status_id' => $faker->numberBetween(1,$status_count)
     ];
 });

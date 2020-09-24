@@ -17,12 +17,19 @@ class CreateBlogsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned();
             $table->string('title',255);
-            $table->tinyInteger('status')->default(2);  //非公開
+            $table->tinyInteger('status_id')->unsigned()->default(2);  //非公開
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
 
-            $table->foreign('user_id')->references('id')->on('users')
-                ->onUpdate('cascade');
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
+
+            $table->foreign('status_id')
+                ->references('id')->on('statuses')
+                ->onUpdate('cascade')
+                ->onDelete('restrict');
         });
     }
 

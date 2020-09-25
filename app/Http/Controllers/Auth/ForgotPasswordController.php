@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Http\Request;
 
 class ForgotPasswordController extends Controller
 {
@@ -19,4 +20,17 @@ class ForgotPasswordController extends Controller
     */
 
     use SendsPasswordResetEmails;
+
+    /**
+     * credentialsのオーバーライド
+     *
+     * @param  Request $request
+     * @return Request $request
+     */
+    protected function credentials(Request $request)
+    {
+        // ステータスが0（凍結されていない）場合のみパスワードリセット可能
+        $request->merge(['status' => 0]);
+        return $request->only('email', 'status');
+    }
 }

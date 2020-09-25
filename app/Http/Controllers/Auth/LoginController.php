@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -36,5 +37,18 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * credentialsのオーバーライド
+     *
+     * @param  Request $request
+     * @return Request $request
+     */
+    protected function credentials(Request $request)
+    {
+        // ステータスが0（凍結されていない）場合のみログイン可
+        $request->merge(['status' => 0]);
+        return $request->only($this->username(), 'password', 'status');
     }
 }

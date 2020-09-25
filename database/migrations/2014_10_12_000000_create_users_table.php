@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('password',255);
             $table->rememberToken();
             $table->tinyInteger('status_id')->unsigned()->default(1);   //公開（正常）
-            $table->string('icon',255)->default('default.jpg');
+            $table->string('icon',255)->default('default.png');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
 

@@ -10899,3 +10899,13 @@ a.text-dark:focus {
   }
 }
 
+.fade-item {
+  margin: 0;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 15px 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+}

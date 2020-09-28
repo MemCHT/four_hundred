@@ -78,6 +78,6 @@
         </main>
     </div>
 
-    @yield('script')
+    @include('layouts.success')
 </body>
 </html>

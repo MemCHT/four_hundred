@@ -89,7 +89,7 @@ class ProfilesController extends Controller
                 'image',
                 'mimes:jpeg,png',
                 'dimensions:min_width=200,min_height=200,max_width=1000,max_height=1000',
-                'max:2048'// 2MB
+                'max:5120'// 5MB
             ],
         ]);
 

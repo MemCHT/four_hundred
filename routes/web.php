@@ -24,8 +24,11 @@ Route::post('users/login', 'Auth\LoginController@login');
 Route::post('users/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('users/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('users/register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
-Route::post('users/register', 'Auth\RegisterController@register')->name('registerPost');
+Route::post('users/register', 'Auth\RegisterController@register');
+
+Route::get('users/register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
+Route::post('users/register/confirm','Auth\RegisterController@post');
+
 
 Route::get('users/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::post('users/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');

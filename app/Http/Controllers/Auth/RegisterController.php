@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
@@ -67,8 +68,11 @@ class RegisterController extends Controller
     {
         // セッションの存在チェック
         if(session()->has('password')) {
-            $data['password'] = session('password');
-            session()->forget('password');
+            $data = session('form_input');
+            session()->forget('form_input');
+        } else {
+            // セッションが存在しなければリダイレクト
+            return redirect()->route('register');
         }
 
         return User::create([
@@ -79,21 +83,59 @@ class RegisterController extends Controller
     }
 
     /**
-     * アカウント作成確認画面
+     * フォームに入力されたアカウント情報をセッションに保存
      *
      * @param  \Illuminate\Http\Request  $request
      */
-    public function confirm(Request $request)
+    private $formItems = ['name', 'email', 'password', 'password_confirmation'];
+    public function post(Request $request)
     {
-        $this->validator($request->all())->validate();
+        $input = $request->only($this->formItems);
 
-        // パスワードのみセッションに登録
-        $request->session()->put('password', $request->password);
+        $this->validator($input)->validate();
+
+        // セッションに書き込む
+        $request->session()->put('form_input', $input);
+
+        return redirect()->route('register.confirm');
+    }
+
+    /**
+     * confirm
+     *
+     * @param  \Illuminate\Http\Request  $request
+     */
+    function confirm(Request $request){
+        $input = $request->session()->get('form_input');
+
+        // セッションに値が無い時はフォームに戻る
+        if(!$input){
+            return redirect()->route('register');
+        }
 
         return view('auth.register_confirm', [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => preg_replace("/./", "*", $request->password),
+            'input' => $input,
         ]);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        // セッションにデータを登録しているので、バリデーションは行わない
+        // $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        $this->guard()->login($user);
+
+        // 登録完了メール送信
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
     }
 }

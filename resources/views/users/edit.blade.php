@@ -24,7 +24,7 @@
 
         <div class="form-group{{ $errors->has('icon') ? ' has-error' : '' }}">
             <label for="icon" class="control-label">
-                アイコン
+                アイコン（5MBまでのjpg,png）
                 <figure><img class="border" src="/images/icon/{{ $user->icon }}" alt="ユーザーアイコン"></figure>
             </label>
             <div>
@@ -46,11 +46,4 @@
     </form>
 
 </div>
-@endsection
-
-
-@section('script')
-
-@include('layouts.success')
-
 @endsection

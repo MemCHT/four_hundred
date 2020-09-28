@@ -19,6 +19,10 @@ Route::get('/test/model/{index}','TestController@index');
 
 Auth::routes();
 
+// プロフィール設定
+Route::get('/users/edit', 'ProfilesController@index')->name('profile.edit');
+Route::post('/users/edit/update', 'ProfilesController@update')->name('profile.update');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('users')->name('users.')->group(function(){

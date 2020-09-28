@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleFormRequest;
+use App\Http\Requests\BlogFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 use App\Models\Blog;
 use App\Models\Status;
+use App\Models\Article;
 
 class BlogController extends Controller
 {
@@ -28,22 +31,33 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        $statuses = Status::all();
+        $user = Auth::user();
+
+        return view('blogs.create',compact('statuses', 'user'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\ArticleFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ArticleFormRequest $request)
     {
-        //
+        $inputs = $request->all();
+
+        $user = Auth::user();
+        $blog = $user->blog;
+        $inputs['blog_id'] = $blog->id;
+        
+        Article::create($inputs);
+
+        return redirect(route('users.blogs.show', ['user' => $user->id, 'blog' => $blog->id]));
     }
 
     /**
-     * Display the specified resource.
+     * ブログを表示
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -63,7 +77,7 @@ class BlogController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ブログの編集画面を表示
      *
      * @param  int  $user_id
      * @param int $blog_id
@@ -71,7 +85,7 @@ class BlogController extends Controller
      */
     public function edit($user_id,$blog_id)
     {
-        $user = User::get($user_id);
+        $user = Auth::user();
         $blog = Blog::get($blog_id);
         $articles = $blog->articles()->paginate(10);
 
@@ -86,16 +100,16 @@ class BlogController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\BlogFormRequest  $request
      * @param  int  $user_id
      * @param int $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id, $blog_id)
+    public function update(BlogFormRequest $request, $user_id, $blog_id)
     {
-        $blog_title = $request->input('blog_title');
+        $title = $request->input('title');
 
-        Blog::get($blog_id)->update(['title' => $blog_title]);
+        Blog::get($blog_id)->update(['title' => $title]);
 
         return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
     }

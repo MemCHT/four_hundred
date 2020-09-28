@@ -7,7 +7,7 @@ namespace App\Models;
  * 
  * $status = ['公開' => 1, '非公開' => 2, '下書き' => 3]
  */
-class Status
+class Status_old
 {
     //Blog, Articleモデル共通ステータス
     private static $status = [

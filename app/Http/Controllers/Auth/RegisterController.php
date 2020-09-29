@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
 
+use App\Models\Blog;
+use App\Models\Status;
+
 class RegisterController extends Controller
 {
     /*
@@ -62,17 +65,25 @@ class RegisterController extends Controller
 
     /**
      * Create a new user instance after a valid registration.
+     * ＋Userインスタンスと同時にBlogモデルも作成
      *
      * @param  array  $data
      * @return \App\Models\User
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        Blog::create([
+            'user_id' => $user->id,
+            'title' => "{$user->name}さんのブログ"
+        ]);
+
+        return $user;
     }
 
     /**

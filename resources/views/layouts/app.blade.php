@@ -77,5 +77,7 @@
             @yield('content')
         </main>
     </div>
+
+    @include('layouts.success')
 </body>
 </html>

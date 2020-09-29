@@ -11,6 +11,7 @@
                 <div class="card-body">
                     <h4>Userモデル</h4>
                     <ul class="list-group">
+                        <li class="list-group-item">user->status <br> {{ $user->status }}</li><br>
                         <li class="list-group-item">user->blog <br> {{ $user->blog }}</li><br>
                         <li class="list-group-item">
                             @foreach($user->comments as $key => $comment)
@@ -30,6 +31,7 @@
                     <h4>Blogモデル</h4>
                     <ul class="list-group">
                         <li class="list-group-item">blog->user <br> {{ $blog->user }}</li><br>
+                        <li class="list-group-item">blog->status <br> {{ $blog->status }}</li><br>
                         <li class="list-group-item">
                             @foreach($blog->articles as $key => $article)
                             blog->articles[{{$key}}] <br> {{ $article }}
@@ -42,6 +44,7 @@
                     <h4>Articleモデル</h4>
                     <ul class="list-group">
                         <li class="list-group-item">article->blog <br> {{ $article->blog }}</li><br>
+                        <li class="list-group-item">article->status <br> {{ $article->status }}</li><br>
                         <li class="list-group-item">
                             @foreach($article->comments as $key => $comment)
                             article->comments[{{$key}}] <br> {{ $comment }}

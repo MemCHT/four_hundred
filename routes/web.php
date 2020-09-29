@@ -33,16 +33,12 @@ Route::post('users/password/email', 'Auth\ForgotPasswordController@sendResetLink
 Route::get('users/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('users/password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
-
-
-
-
-
-
-
+// プロフィール設定
+Route::get('/users/edit', 'ProfilesController@index')->name('profile.edit');
+Route::post('/users/edit/update', 'ProfilesController@update')->name('profile.update');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('users')->name('users.')->group(function(){
-    Route::resource('{user_id}/blogs', 'BlogController');
+    Route::resource('{user}/blogs', 'BlogController');
 });

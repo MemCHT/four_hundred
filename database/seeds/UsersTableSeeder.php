@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'user@example.com',
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
-            'icon' => 'default.jpg'
+            'icon' => 'default.png'
         ]);
 
         factory(User::class,100)->create();

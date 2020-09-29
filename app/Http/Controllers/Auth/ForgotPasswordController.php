@@ -29,8 +29,8 @@ class ForgotPasswordController extends Controller
      */
     protected function credentials(Request $request)
     {
-        // ステータスが0（凍結されていない）場合のみパスワードリセット可能
-        $request->merge(['status' => 0]);
-        return $request->only('email', 'status');
+        // ステータスが1（凍結されていない）場合のみパスワードリセット可能
+        $request->merge(['status_id' => 1]);
+        return $request->only('email', 'status_id');
     }
 }

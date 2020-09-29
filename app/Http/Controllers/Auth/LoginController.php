@@ -47,8 +47,8 @@ class LoginController extends Controller
      */
     protected function credentials(Request $request)
     {
-        // ステータスが0（凍結されていない）場合のみログイン可
-        $request->merge(['status' => 0]);
-        return $request->only($this->username(), 'password', 'status');
+        // ステータスが1（凍結されていない）場合のみログイン可
+        $request->merge(['status_id' => 1]);
+        return $request->only($this->username(), 'password', 'status_id');
     }
 }

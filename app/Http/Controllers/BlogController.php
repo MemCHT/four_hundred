@@ -31,10 +31,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        $statuses = Status::all();
-        $user = Auth::user();
-
-        return view('blogs.create',compact('statuses', 'user'));
+        
     }
 
     /**
@@ -45,15 +42,7 @@ class BlogController extends Controller
      */
     public function store(ArticleFormRequest $request)
     {
-        $inputs = $request->all();
-
-        $user = Auth::user();
-        $blog = $user->blog;
-        $inputs['blog_id'] = $blog->id;
         
-        Article::create($inputs);
-
-        return redirect(route('users.blogs.show', ['user' => $user->id, 'blog' => $blog->id]));
     }
 
     /**
@@ -64,8 +53,8 @@ class BlogController extends Controller
      */
     public function show($user_id,$blog_id)
     {
-        $user = User::get($user_id);
-        $blog = Blog::get($blog_id);
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
         $articles = $blog->articles()->paginate(10);
 
         //ブログが非公開 かつ ブログ所有ユーザでない なら別のビューを表示
@@ -86,7 +75,7 @@ class BlogController extends Controller
     public function edit($user_id,$blog_id)
     {
         $user = Auth::user();
-        $blog = Blog::get($blog_id);
+        $blog = Blog::find($blog_id);
         $articles = $blog->articles()->paginate(10);
 
         //ブログ所有ユーザ以外ならリダイレクト

@@ -54,14 +54,4 @@ class User extends Authenticatable
         //return $this->belongsTo('App\Models\Favorite');
         return $this->hasMany(Favorite::class, 'user_id', 'id');
     }
-
-    /**
-     * Userをidで取得
-     * 
-     * @param int $id
-     * @return App\Models\User
-     */
-    public static function get($id){
-        return User::find($id);
-    }
 }

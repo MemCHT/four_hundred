@@ -20,20 +20,4 @@ class Blog extends Model
     public function articles(){
         return $this->hasMany(Article::class, 'blog_id', 'id');
     }
-
-    /**
-     * idと結びついたArticleインスタンスを返します。
-     * 
-     * @return App\Models\Article[]
-     */
-
-    /**
-     * Blogをidで取得
-     * 
-     * @param int $id
-     * @return App\Models\User
-     */
-    public static function get($id){
-        return Blog::find($id);
-    }
 }

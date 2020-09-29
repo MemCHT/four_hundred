@@ -26,11 +26,14 @@ Route::post('/users/edit/update', 'ProfilesController@update')->name('profile.up
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('users')->name('users.')->group(function(){
-    
 
     Route::resource('{user}/blogs', 'BlogController');
 
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
         Route::resource('{blog}/articles', 'ArticleController');
+
+        Route::prefix('{blog}/articles')->name('articles.')->group(function(){
+            Route::resource('{article}/comments', 'CommentController');
+        });
     });
 });

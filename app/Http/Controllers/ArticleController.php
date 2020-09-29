@@ -46,25 +46,30 @@ class ArticleController extends Controller
     public function store(ArticleFormRequest $request)
     {
         $inputs = $request->all();
-
+        
         $user = Auth::user();
         $blog = $user->blog;
         $inputs['blog_id'] = $blog->id;
         
-        Article::create($inputs);
+        $article = Article::create($inputs);
 
-        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id]));
+        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $user_id
+     * @param int $blog_id
+     * @param int $article_id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($user_id,$blog_id,$article_id)
     {
-        //
+        $article = Article::find($article_id);
+        $user = Auth::user();
+
+        return view('articles.show',compact('article','user'));
     }
 
     /**
@@ -73,21 +78,36 @@ class ArticleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($user_id,$blog_id,$article_id)
     {
-        //
+        $user = Auth::user();
+        $article = Article::find($article_id);
+        $statuses = Status::all();
+
+        return view('articles.edit',compact('user','article','statuses'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Http\Requests\ArticleFormRequest  $request
+     * @param  int  $user_id
+     * @param  int  $blog_id
+     * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ArticleFormRequest $request, $user_id,$blog_id,$article_id)
     {
-        //
+        $inputs = $request->all();
+
+        $user = Auth::user();
+        $blog = $user->blog;
+        //$inputs['blog_id'] = $blog->id;
+        $article = Article::find($article_id);
+
+        $article->update($inputs);
+
+        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]));
     }
 
     /**

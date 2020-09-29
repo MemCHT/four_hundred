@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Mail\RegisterEmail;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -66,15 +68,6 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // セッションの存在チェック
-        if(session()->has('password')) {
-            $data = session('form_input');
-            session()->forget('form_input');
-        } else {
-            // セッションが存在しなければリダイレクト
-            return redirect()->route('register');
-        }
-
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -129,11 +122,26 @@ class RegisterController extends Controller
         // セッションにデータを登録しているので、バリデーションは行わない
         // $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        $input = $request->all();
+        // セッションの存在チェック
+        if(session()->has('form_input')) {
+            $tmp = session('form_input');
+
+            $input['name'] = $tmp['name'];
+            $input['email'] = $tmp['email'];
+            $input['password'] = $tmp['password'];
+            session()->forget('form_input');
+        } else {
+            // セッションが存在しなければリダイレクト
+            return redirect()->route('register');
+        }
+
+        event(new Registered($user = $this->create($input)));
 
         $this->guard()->login($user);
 
         // 登録完了メール送信
+        Mail::to($request->user())->send(new RegisterEmail($input));
 
         return $this->registered($request, $user)
                         ?: redirect($this->redirectPath());

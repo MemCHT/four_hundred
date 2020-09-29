@@ -18,7 +18,6 @@ Route::get('/', function () {
 Route::get('/test/model/{index}','TestController@index');
 
 // ログイン機能
-// Auth::routes();
 Route::get('users/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('users/login', 'Auth\LoginController@login');
 Route::post('users/logout', 'Auth\LoginController@logout')->name('logout');
@@ -28,7 +27,6 @@ Route::post('users/register', 'Auth\RegisterController@register');
 
 Route::get('users/register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
 Route::post('users/register/confirm','Auth\RegisterController@post');
-
 
 Route::get('users/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::post('users/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');

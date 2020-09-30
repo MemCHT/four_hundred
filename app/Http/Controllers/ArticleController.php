@@ -48,23 +48,23 @@ class ArticleController extends Controller
         $inputs = $request->all();
         
         $user = Auth::user();
-        $blog = $user->blog;
+        $blog = $user->blog;    //blogの取得方法を改善できる
         $inputs['blog_id'] = $blog->id;
         
         $article = Article::create($inputs);
 
-        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]));
+        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]))->with('success','エッセイの投稿を完了しました');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $user_id
-     * @param int $blog_id
-     * @param int $article_id
+     * @param  int  $user_id
+     * @param  int  $blog_id
+     * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function show($user_id,$blog_id,$article_id)
+    public function show($user_id,$blog_id,$article_id)     //URLに対応させるための排他処理が必要
     {
         $article = Article::find($article_id);
         $user = Auth::user();
@@ -75,10 +75,12 @@ class ArticleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $user_id
+     * @param  int  $blog_id
+     * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($user_id,$blog_id,$article_id)
+    public function edit($user_id,$blog_id,$article_id)     //URLに対応させるための排他処理が必要（どのレイヤーでバリデーションをつけるか）
     {
         $user = Auth::user();
         $article = Article::find($article_id);
@@ -101,13 +103,12 @@ class ArticleController extends Controller
         $inputs = $request->all();
 
         $user = Auth::user();
-        $blog = $user->blog;
-        //$inputs['blog_id'] = $blog->id;
+        $blog = $user->blog;    //blogの取得方法を改善できる
         $article = Article::find($article_id);
 
         $article->update($inputs);
 
-        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]));
+        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]))->with('success','エッセイの編集を完了しました');
     }
 
     /**

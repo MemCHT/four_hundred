@@ -51,7 +51,10 @@
 
                     <div class="form-group col-md-12">
                         <button type="submit" class="btn btn-primary">確定</button>
-                        <button class="btn btn-danger" disabled>エッセイを削除する</button>
+                        <a id="delete-button" class="btn btn-danger btn-delete" 
+                            onclick="event.preventDefault();">
+                            エッセイを削除する
+                        </a>
                     </div>
                 </form>
             </div>
@@ -59,3 +62,14 @@
     </div>
 </div>
 @endsection
+
+<script>
+window.onload = function(){
+    var btn_delete = document.getElementsByClassName('btn-delete');
+    Array.from(btn_delete).forEach((element) => {
+        element.addEventListener('click',function(){
+            document.getElementById('popup').style.display='block';
+        });
+    });
+}
+</script>

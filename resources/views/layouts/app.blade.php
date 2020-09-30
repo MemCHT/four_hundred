@@ -86,7 +86,8 @@
             @yield('content')
         </main>
     </div>
-
+    
+    @include('layouts.popup')
     @include('layouts.success')
 </body>
 </html>

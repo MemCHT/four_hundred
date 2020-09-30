@@ -69,10 +69,10 @@ class BlogController extends Controller
      * ブログの編集画面を表示
      *
      * @param  int  $user_id
-     * @param int $blog_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($user_id,$blog_id)
+    public function edit($user_id,$blog_id)     //URLに対応させるための排他処理が必要
     {
         $user = Auth::user();
         $blog = Blog::find($blog_id);
@@ -91,16 +91,16 @@ class BlogController extends Controller
      *
      * @param  \App\Http\Requests\BlogFormRequest  $request
      * @param  int  $user_id
-     * @param int $blog_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function update(BlogFormRequest $request, $user_id, $blog_id)
+    public function update(BlogFormRequest $request, $user_id, $blog_id)        //URLに対応させるための排他処理が必要
     {
         $title = $request->input('title');
 
-        Blog::get($blog_id)->update(['title' => $title]);
+        Blog::find($blog_id)->update(['title' => $title]);
 
-        return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+        return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]))->with('success','ブログタイトルの編集を完了しました');
     }
 
     /**

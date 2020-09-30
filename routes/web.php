@@ -40,13 +40,15 @@ Route::post('/users/edit/update', 'ProfilesController@update')->name('profile.up
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('users')->name('users.')->group(function(){
-
+    //ブログ管理
     Route::resource('{user}/blogs', 'BlogController');
 
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
+        //記事管理
         Route::resource('{blog}/articles', 'ArticleController');
 
         Route::prefix('{blog}/articles')->name('articles.')->group(function(){
+            //コメント管理
             Route::resource('{article}/comments', 'CommentController');
         });
     });

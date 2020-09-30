@@ -20,6 +20,6 @@ class FavoritesTableSeeder extends Seeder
             'user_id' => 1
         ]);
 
-        factory(Favorite::class,1000)->create();
+        factory(Favorite::class,100000)->create();
     }
 }

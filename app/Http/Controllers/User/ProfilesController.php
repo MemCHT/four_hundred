@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Controllers\Controller;
 use \InterventionImage;
 
 class ProfilesController extends Controller
@@ -110,7 +111,7 @@ class ProfilesController extends Controller
         }
 
         return redirect()
-                ->route('profile.edit')
+                ->route('users.profile.edit')
                 ->with('success', 'プロフィールが更新されました。');
     }
 

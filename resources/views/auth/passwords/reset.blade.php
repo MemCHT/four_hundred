@@ -8,7 +8,7 @@
                 <div class="card-header">パスワードリセット</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
+                    <form method="POST" action="{{ route('users.password.update') }}">
                         @csrf
 
                         <input type="hidden" name="token" value="{{ $token }}">

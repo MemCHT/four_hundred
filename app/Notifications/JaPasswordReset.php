@@ -44,7 +44,7 @@ class JaPasswordReset extends Notification
         return (new MailMessage)
             ->subject(Lang::get('パスワードリセットの準備ができました'))
             ->line(Lang::get('パスワードリセットのリクエストを受けたため、このメッセージを送信しています。'))
-            ->action(Lang::get('パスワードリセット'), url(route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
+            ->action(Lang::get('パスワードリセット'), url(route('users.password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
             ->line(Lang::get('このパスワードリセットリンクは :count 分で期限切れになります。', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
             ->line(Lang::get('パスワードリセットを要求していない場合は、操作を行う必要はありません。'));
     }

@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\JaPasswordReset;
+use \InterventionImage;
 
 class User extends Authenticatable
 {
@@ -75,5 +76,27 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new JaPasswordReset($token));
+    }
+
+    /**
+     * profileUpdate ユーザー名とアイコンを更新する
+     *
+     * @param  array $inputs
+     * @param  int $user_id
+     * @return void
+     */
+    public static function profileUpdate($inputs, $user_id)
+    {
+        // iconが空(null)だったらnameのみupdate
+        if(empty($inputs['icon'])) { // 空(null)の場合真
+            self::where('id', $user_id)->update(['name' => $inputs['name']]);
+        } else {
+            $filename = 'icon_'. $user_id. '.'. $inputs['icon']->getClientOriginalExtension();
+            InterventionImage::make($inputs['icon'])
+                ->fit(200, 200)
+                ->save(public_path('/images/icon/' . $filename));
+
+            self::where('id', $user_id)->update(['name' => $inputs['name'], 'icon' => $filename]);
+        }
     }
 }

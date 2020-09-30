@@ -10,7 +10,7 @@
                 <div class="card-header">four hundredにログイン</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('users.login') }}">
                         @csrf
 
                         <div class="form-group row">
@@ -81,10 +81,10 @@
 
                         <div class="form-group row mb-3">
                             <div class="col-md-8 offset-md-4">
-                                <a class="btn btn-link border-right" href="{{ route('password.request') }}">
+                                <a class="btn btn-link border-right" href="{{ route('users.password.request') }}">
                                     パスワードをお忘れですか？
                                 </a>
-                                <a class="btn btn-link" href="{{ route('register') }}">
+                                <a class="btn btn-link" href="{{ route('users.register') }}">
                                     アカウント作成
                                 </a>
                             </div>

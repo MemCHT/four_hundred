@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use \InterventionImage;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileFormRequest;
 
 class ProfilesController extends Controller
 {
@@ -79,38 +80,16 @@ class ProfilesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(ProfileFormRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'icon' => [
-                'nullable',
-                'file',
-                'image',
-                'mimes:jpeg,png',
-                'dimensions:min_width=200,min_height=200,max_width=1000,max_height=1000',
-                'max:5120'// 5MB
-            ],
-        ]);
-
         // フォームから受け取った値取得
         $inputs = $request->all();
 
-        // iconが空(null)だったらnameのみupdate
-        // 空(null)の場合真
-        if(empty($inputs['icon'])) {
-            User::where('id', Auth::id())->update(['name' => $inputs['name']]);
-        } else {
-            $filename = 'icon_'. Auth::id(). '.'. $inputs['icon']->getClientOriginalExtension();
-            InterventionImage::make($inputs['icon'])
-                ->fit(200, 200)
-                ->save(public_path('/images/icon/' . $filename));
-
-            User::where('id', Auth::id())->update(['name' => $inputs['name'], 'icon' => $filename]);
-        }
+        // プロフィール更新
+        User::profileUpdate($inputs, Auth::id());
 
         return redirect()
-                ->route('profile.edit')
+                ->route('users.profile.edit')
                 ->with('success', 'プロフィールが更新されました。');
     }
 

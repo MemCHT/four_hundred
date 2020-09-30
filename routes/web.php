@@ -17,25 +17,18 @@ Route::get('/', function () {
 
 Route::get('/test/model/{index}','TestController@index');
 
-// ログイン機能
-Route::get('users/login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('users/login', 'Auth\LoginController@login');
-Route::post('users/logout', 'Auth\LoginController@logout')->name('logout');
+Route::namespace('User')->prefix('users')->name('users.')->group(function () {
+    // ログイン認証関連
+    Auth::routes();
 
-Route::get('users/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('users/register', 'Auth\RegisterController@register');
+    // アカウント作成確認画面
+    Route::get('register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
+    Route::post('register/confirm','Auth\RegisterController@post');
 
-Route::get('users/register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
-Route::post('users/register/confirm','Auth\RegisterController@post');
-
-Route::get('users/password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('users/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('users/password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('users/password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
-
-// プロフィール設定
-Route::get('/users/edit', 'ProfilesController@index')->name('profile.edit');
-Route::post('/users/edit/update', 'ProfilesController@update')->name('profile.update');
+    // プロフィール設定
+    Route::get('edit', 'ProfilesController@index')->name('profile.edit');
+    Route::post('edit/update', 'ProfilesController@update')->name('profile.update');
+});
 
 Route::get('/home', 'HomeController@index')->name('home');
 

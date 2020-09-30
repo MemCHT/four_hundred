@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\JaPasswordReset;
 
 class User extends Authenticatable
 {
@@ -63,5 +64,16 @@ class User extends Authenticatable
      */
     public static function get($id){
         return User::find($id);
+    }
+
+    /**
+     * sendPasswordResetNotification のオーバーライド
+     *
+     * @param  mixed $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new JaPasswordReset($token));
     }
 }

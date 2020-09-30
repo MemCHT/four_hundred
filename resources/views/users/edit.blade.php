@@ -5,7 +5,7 @@
 
     <h2>プロフィール設定</h2>
 
-    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('users.profile.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">

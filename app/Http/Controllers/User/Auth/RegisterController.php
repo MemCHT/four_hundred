@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\User\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -101,7 +101,7 @@ class RegisterController extends Controller
         // セッションに書き込む
         $request->session()->put('form_input', $input);
 
-        return redirect()->route('register.confirm');
+        return redirect()->route('users.register.confirm');
     }
 
     /**
@@ -114,7 +114,7 @@ class RegisterController extends Controller
 
         // セッションに値が無い時はフォームに戻る
         if(!$input){
-            return redirect()->route('register');
+            return redirect()->route('users.register');
         }
 
         return view('auth.register_confirm', [
@@ -144,7 +144,7 @@ class RegisterController extends Controller
             session()->forget('form_input');
         } else {
             // セッションが存在しなければリダイレクト
-            return redirect()->route('register');
+            return redirect()->route('users.register');
         }
 
         event(new Registered($user = $this->create($input)));

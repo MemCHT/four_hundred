@@ -60,8 +60,7 @@
         </div>
     </div>
 </div>
-@component('components.popup_delete',[
+@include('components.popup_delete',[
     'route' => route('users.blogs.articles.destroy',['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id])
 ])
-@endcomponent
 @endsection

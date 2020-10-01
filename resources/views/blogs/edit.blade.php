@@ -9,7 +9,7 @@
                 <h3>ブログタイトル編集</h3>
 
                 <form action="{{ route('users.blogs.update', ['user' => $user->id, 'blog' => $blog->id]) }}" method="POST">
-                    {{ method_field('PUT') }}
+                    @method('PUT')
                     @csrf
 
                     <div class="form-group">

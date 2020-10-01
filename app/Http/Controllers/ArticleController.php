@@ -114,11 +114,18 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $user_id
+     * @param  int  $blog_id
+     * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($user_id,$blog_id,$article_id)
     {
-        //
+        $user = Auth::user();
+        $blog = $user->blog;
+        $article = Article::find($article_id);
+        Article::destroy($article_id);
+
+        return redirect(route('users.blogs.show', ['user' => $user->id, 'blog' => $blog->id]))->with('success','エッセイ「'.$article->title.'」を削除しました');
     }
 }

@@ -9,7 +9,7 @@
                 <h3>エッセイの編集</h3>
 
                 <form action="{{ route('users.blogs.articles.update',['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id]) }}" method="POST">
-                    {{ method_field('PUT') }}
+                    @method('PUT')
                     @csrf
 
                     <div class="form-group col-md-4">
@@ -51,25 +51,17 @@
 
                     <div class="form-group col-md-12">
                         <button type="submit" class="btn btn-primary">確定</button>
-                        <a id="delete-button" class="btn btn-danger btn-delete" 
-                            onclick="event.preventDefault();">
+                        <button class="btn btn-danger btn-delete">
                             エッセイを削除する
-                        </a>
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+@component('components.popup_delete',[
+    'route' => route('users.blogs.articles.destroy',['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id])
+])
+@endcomponent
 @endsection
-
-<script>
-window.onload = function(){
-    var btn_delete = document.getElementsByClassName('btn-delete');
-    Array.from(btn_delete).forEach((element) => {
-        element.addEventListener('click',function(){
-            document.getElementById('popup').style.display='block';
-        });
-    });
-}
-</script>

@@ -11,7 +11,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/popup.js') }}"></script>
     <script src="https://kit.fontawesome.com/652b493660.js" crossorigin="anonymous"></script>
 
     <!-- Fonts -->
@@ -20,8 +19,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/popup_delete.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/fade_notice.css') }}">
+    <link href="{{ asset('css/all.css') }}" rel="stylesheet">
     
 </head>
 <body>

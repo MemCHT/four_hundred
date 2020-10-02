@@ -1,5 +1,7 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
-    "/js/popup.js": "/js/popup.js"
+    "/../resources/build/css/popup.css": "/../resources/build/css/popup.css",
+    "/../resources/build/css/success.css": "/../resources/build/css/success.css",
+    "/css/all.css": "/css/all.css"
 }

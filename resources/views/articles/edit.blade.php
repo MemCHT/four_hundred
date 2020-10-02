@@ -51,7 +51,7 @@
 
                     <div class="form-group col-md-12">
                         <button type="submit" class="btn btn-primary">確定</button>
-                        <button class="btn btn-danger btn-delete">
+                        <button id="btn-delete_{{ $article->id }}" class="btn btn-danger btn-delete">
                             エッセイを削除する
                         </button>
                     </div>
@@ -60,7 +60,8 @@
         </div>
     </div>
 </div>
+@endsection
+
 @include('components.popup_delete',[
     'route' => route('users.blogs.articles.destroy',['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id])
 ])
-@endsection

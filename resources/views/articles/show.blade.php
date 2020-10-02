@@ -68,7 +68,7 @@
                     </div>
                     <div class="comment-header-right col-md-6 text-right">
                         <p>{{ $comment->created_at }}</p>
-                        <a class="btn btn-secondary" href="#"> 削除 </a>
+                        <button id="btn-delete_{{ $comment->id }}" class="btn btn-secondary btn-delete"> 削除 </button>
                     </div>
                     <div class="comment-body col-md-12">
                         <p>{{ $comment->body }}</p>
@@ -97,3 +97,7 @@
     </div>
 </div>
 @endsection
+
+@include('components.popup_delete',[
+    'route' => route('users.blogs.articles.comments.destroy',['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id, 'comment' => 0])
+])

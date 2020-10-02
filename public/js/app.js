@@ -49860,6 +49860,128 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/popup.js":
+/*!*******************************!*\
+  !*** ./resources/js/popup.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+window.addEventListener('load', function () {
+  var btn_delete = document.getElementsByClassName('btn-delete');
+
+  if (btn_delete) {
+    setDeletePopupEvent();
+  }
+});
+/**
+ * 削除ボタン(classに"btn-delete"を持つ要素)にポップアップを表示するイベントをセットします。
+ */
+
+function setDeletePopupEvent() {
+  var btn_delete = document.getElementsByClassName('btn-delete');
+  Array.from(btn_delete).forEach(function (element) {
+    element.addEventListener('click', function (event) {
+      event.preventDefault();
+      document.getElementById('popup').style.display = 'flex'; //送信用フォームエレメントを作成
+
+      var button_id = event.currentTarget.id;
+      var delete_form = createDeleteForm(button_id);
+      setApplyEvent(delete_form);
+      setCancelEvent();
+    });
+  });
+}
+/**
+ * ポップアップの確定ボタンにイベントをセットします。
+ */
+
+
+function setApplyEvent(delete_form) {
+  var btn_apply = document.getElementById('popup-btn-apply');
+
+  if (btn_apply) {
+    btn_apply.addEventListener('click', function (event) {
+      return apply(event, delete_form);
+    });
+  }
+}
+
+function apply(event, delete_form) {
+  event.preventDefault();
+
+  if (delete_form) {
+    delete_form.submit();
+  }
+}
+/**
+ * 
+<form name="popupFormDelete" action="{{ $route }}" method="POST">
+    @method('DELETE')
+    @csrf
+</form>
+ */
+
+
+function createDeleteForm(button_id) {
+  //vies/components/popup_delete.bladeに記述されている。
+  //delete実行用タグ, token送信用タグを取得
+  var form_elements = getFormElements();
+  var form = document.createElement('form');
+  var url = formatUrl(form_elements['url']);
+  form.action = url + '/' + button_id.split('_')[1];
+  form.method = 'POST';
+  form.innerHTML += form_elements['method'];
+  form.innerHTML += form_elements['token'];
+  form.id = 'delete-form';
+  document.body.append(form);
+  return form;
+} // 末尾から[/] にあたるまで削除
+
+
+function formatUrl(url) {
+  var count = 1;
+
+  while (true) {
+    if (url.slice(-count).match(/\//)) {
+      return url.slice(0, -count);
+    }
+
+    count++;
+    console.log(count);
+  }
+}
+
+function submitDeleteForm(form) {
+  form.submit();
+}
+/**
+ * ポップアップのキャンセルボタンにイベントをセットします。
+ */
+
+
+function setCancelEvent() {
+  var btn_cancel = document.getElementById('popup-btn-cancel');
+
+  if (btn_cancel) {
+    btn_cancel.addEventListener('click', function (event) {
+      return cancel(event);
+    });
+  }
+}
+
+function cancel(event) {
+  event.preventDefault();
+  document.getElementById('popup').setAttribute('style', 'display:none;');
+  var delete_form = document.getElementById('delete-form');
+
+  if (delete_form) {
+    delete_form.remove();
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -49871,15 +49993,40 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/sass/popup.scss":
+/*!***********************************!*\
+  !*** ./resources/sass/popup.scss ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./resources/sass/success.scss":
+/*!*************************************!*\
+  !*** ./resources/sass/success.scss ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ 0:
-/*!*************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
-  \*************************************************************/
+/*!***********************************************************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/js/popup.js ./resources/sass/app.scss ./resources/sass/popup.scss ./resources/sass/success.scss ***!
+  \***********************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! /var/www/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/resources/js/popup.js */"./resources/js/popup.js");
+__webpack_require__(/*! /var/www/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /var/www/resources/sass/popup.scss */"./resources/sass/popup.scss");
+module.exports = __webpack_require__(/*! /var/www/resources/sass/success.scss */"./resources/sass/success.scss");
 
 
 /***/ })

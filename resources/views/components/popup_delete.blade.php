@@ -15,7 +15,11 @@
     </div>
 </div>
 
-<form name="popupFormDelete" action="{{ $route }}" method="POST">
-    @method('DELETE')
-    @csrf
-</form>
+<script>
+    /**
+     * 必要な要素を渡すためのメソッド
+     */
+    function getFormElements(){
+        return {method:'{{ method_field('DELETE') }}', token:'{{ csrf_field() }}', url: '{{ $route }}'};
+    }
+</script>

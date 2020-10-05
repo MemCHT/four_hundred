@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ArticleFormRequest;
 use App\Http\Requests\BlogFormRequest;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Router;
 
 use App\Models\User;
 use App\Models\Blog;
@@ -14,6 +16,19 @@ use App\Models\Article;
 
 class BlogController extends Controller
 {
+    /**
+     * コンストラクタでルートパラメータを取得する。
+     * blogパラメータに応じて、上の階層のパラメータを揃える。
+     */
+    public function __construct(Router $router)
+    {
+        $allRouteParams = $router->getCurrentRoute()->parameters();
+        //dd($allRouteParams);
+        if(Blog::isExist($allRouteParams) === false){
+            return view('blogs.not_exist'); //returnじゃないかも。
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -58,7 +73,7 @@ class BlogController extends Controller
         $articles = $blog->articles()->paginate(10);
 
         //ブログが非公開 かつ ブログ所有ユーザでない なら別のビューを表示
-        if(Status::isPrivate($blog->status) && Auth::id() !== $blog->user_id){
+        if($blog->isPrivate()){
             return view('blogs.private');
         }
 
@@ -80,7 +95,7 @@ class BlogController extends Controller
 
         //ブログ所有ユーザ以外ならリダイレクト
         if(Auth::id() !== $blog->user_id){
-            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+            return redirect(route('users.blogs.show', ['user' => $this->user->id, 'blog' => $this->id]));
         }
 
         return view('blogs.edit',compact('user','blog','articles'));

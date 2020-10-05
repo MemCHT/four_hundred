@@ -34,7 +34,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::prefix('users')->name('users.')->group(function(){
     //ブログ管理
-    Route::resource('{user}/blogs', 'BlogController');
+    Route::resource('{user}/blogs', 'BlogController',['only' => ['index','show','edit','update','destroy']]);
 
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
         //記事管理

@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <p>{{$article->body}}</p>
-                        <a class="btn btn-primary" href="#">編集</a>
+                        <a class="btn btn-primary" href="{{ route('users.blogs.articles.edit',['user' => $user->id, 'blog' => $blog->id, 'article'=>$article->id]) }}">編集</a>
                     </div>
                 </div>
                 @endforeach

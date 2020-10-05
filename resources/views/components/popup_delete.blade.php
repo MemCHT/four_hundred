@@ -1,4 +1,5 @@
-<!-- classに"btn-delete"とついている要素とセットで使うコンポーネント -->
+<!-- idに"btn-delete_N"、classに"btn-delete"と付与されている要素とセットで使うコンポーネント-->
+<!--※idは削除したいテーブルのレコードid-->
 
 <div id="popup" class="popup-wrapper row">
     <div class="container col-md-3">
@@ -15,11 +16,17 @@
     </div>
 </div>
 
+<script src="{{ asset('js/popup.js') }}"></script>
 <script>
     /**
      * 必要な要素を渡すためのメソッド
      */
-    function getFormElements(){
-        return {method:'{{ method_field('DELETE') }}', token:'{{ csrf_field() }}', url: '{{ $route }}'};
-    }
+    window.addEventListener('DOMContentLoaded', function(){
+
+        const btn_delete = document.getElementsByClassName('btn-delete');
+
+        if(btn_delete){
+            setDeletePopupEvent({method:'{{ method_field('DELETE') }}', token:'{{ csrf_field() }}', url: '{{ $route }}'});
+        }
+    });
 </script>

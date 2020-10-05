@@ -1,33 +1,5 @@
 @extends('layouts.app')
 
-<style type="text/css">
-    .article-wrapper .article-body{
-        min-height:20em;
-    }
-
-    .comment-wrapper .comment{
-        margin-left:0;
-    }
-    .comment-header-left img{
-        width: 37px;
-        background-color:white;
-        border-radius: 50%;
-    }
-    .comment-header-left p{
-        display: inline-block;
-    }
-    .comment-header-right p{
-        display: inline-block;
-    }
-    .comment-wrapper .comment-title{
-        border-bottom:1px solid #707070;
-    }
-    .comment-wrapper .comment-body{
-        border-bottom:1px dotted #707070;
-    }
-
-</style>
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

@@ -1,26 +1,26 @@
-window.addEventListener('load', function(){
+/**
+ * views\components\popup_delete.blade.phpで用いるスクリプト
+ */
 
-    const btn_delete = document.getElementsByClassName('btn-delete');
-
-    if(btn_delete){
-        setDeletePopupEvent();
-    }
-});
 
 /**
- * 削除ボタン(classに"btn-delete"を持つ要素)にポップアップを表示するイベントをセットします。
+ * 削除ボタン(classに"btn-delete"を持つ要素)にポップアップを表示するイベントをセットする
+ * 
+ * @param {object} form_elements
+ * form_elements = {method:'method_field', token:'csrf_token', url: 'route'}
  */
-function setDeletePopupEvent(){
+function setDeletePopupEvent(form_elements){
     const btn_delete = document.getElementsByClassName('btn-delete');
 
+    //btn_deleteクラスが適用されている全ての要素にイベントを付与
     Array.from(btn_delete).forEach((element) => {
         element.addEventListener('click',(event) => {
             event.preventDefault();
             document.getElementById('popup').style.display='flex';
 
             //送信用フォームエレメントを作成
-            let button_id = event.currentTarget.id;
-            const delete_form = createDeleteForm(button_id);
+            const button_id = event.currentTarget.id;
+            const delete_form = createDeleteForm(button_id,form_elements);
 
             setApplyEvent(delete_form);
             setCancelEvent();
@@ -29,15 +29,19 @@ function setDeletePopupEvent(){
 }
 
 /**
- * ポップアップの確定ボタンにイベントをセットします。
+ * ポップアップの確定ボタンにイベントをセットする
+ * 
+ * @param {object} form_elements
+ * form_elements = {method:'method_field', token:'csrf_token', url: 'route'}
  */
 function setApplyEvent(delete_form){
     const btn_apply = document.getElementById('popup-btn-apply');
+    //popup-btn-apply というidをもつ要素があったときに、applyイベントをセット
     if(btn_apply){
         btn_apply.addEventListener('click',(event) => apply(event, delete_form));
     }
 }
-
+//削除を適用するイベントapply()
 function apply(event, delete_form){
     event.preventDefault();
     if(delete_form){
@@ -59,17 +63,15 @@ function apply(event, delete_form){
  * @param {string} button_id 
  * @return {HTMLElement} form
  */
-function createDeleteForm(button_id){
+function createDeleteForm(button_id,form_elements){
     /**
      * delete実行用タグ, token送信用タグを取得
      * 
-     * ※メソッドはvies/components/popup_delete.bladeに記述されている。
      */
-    const form_elements = getFormElements();
 
-    let form = document.createElement('form');
+    const form = document.createElement('form');
 
-    let url = formatUrl(form_elements['url']);
+    const url = formatUrl(form_elements['url']);
 
     form.action = url + '/' + button_id.split('_')[1];
     form.method = 'POST';
@@ -98,21 +100,22 @@ function formatUrl(url){
             return url.slice(0, -count);
         }
         count++;
-        console.log(count);
+        //console.log(count);
     }
 }
 
 
 /**
- * ポップアップのキャンセルボタンにイベントをセットする。
+ * ポップアップのキャンセルボタンにイベントをセットする
  */
 function setCancelEvent(){
     const btn_cancel = document.getElementById('popup-btn-cancel');
+    //popup-btn-cancel というidをもつ要素があったときに、cancelイベントをセット
     if(btn_cancel){
         btn_cancel.addEventListener('click',(event) => cancel(event));
     }
 }
-
+//ポップアップをキャンセルするイベントcancel()
 function cancel(event){
     event.preventDefault();
     document.getElementById('popup').setAttribute('style','display:none;');

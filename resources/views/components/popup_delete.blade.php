@@ -1,7 +1,7 @@
 <!-- idに"btn-delete_N"、classに"btn-delete"と付与されている要素とセットで使うコンポーネント-->
 <!--※idは削除したいテーブルのレコードid-->
 
-<div id="popup" class="popup-wrapper row">
+<div id="popup" class="popup-wrapper row" style="display:none;">
     <div class="container col-md-3">
         <div class="card card-default text-center">
             <div class="card-header">

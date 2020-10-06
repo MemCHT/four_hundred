@@ -15,14 +15,6 @@ use App\Models\Article;
 class ArticleController extends Controller
 {
     /**
-     * articleパラメータと上の階層のパラメータがそろっているかチェックする
-     */
-    public function __construct()
-    {
-        $this->middleware('filterBy.routeParameters:article');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -35,33 +27,48 @@ class ArticleController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  int  $user_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($user_id,$blog_id)
     {
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
         $statuses = Status::all();
-        $user = Auth::user();
 
-        return view('articles.create',compact('statuses', 'user'));
+        //ブログ所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+        }
+
+        return view('articles.create',compact('statuses', 'user', 'blog'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \App\Http\Requests\ArticleFormRequest  $request
+     * @param  int  $user_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function store(ArticleFormRequest $request)
+    public function store(ArticleFormRequest $request,$user_id,$blog_id)
     {
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
+
+        //ブログ所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+        }
+
         $inputs = $request->all();
-        
-        $user = Auth::user();
-        $blog = $user->blog;    //blogの取得方法を改善できる
         $inputs['blog_id'] = $blog->id;
         
         $article = Article::create($inputs);
 
-        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]))->with('success','エッセイの投稿を完了しました');
+        return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article->id]))->with('success','エッセイの投稿を完了しました');
     }
 
     /**
@@ -72,10 +79,10 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function show($user_id,$blog_id,$article_id)     //URLに対応させるための排他処理が必要
+    public function show($user_id,$blog_id,$article_id)
     {
+        $user = User::find($user_id);
         $article = Article::find($article_id);
-        $user = Auth::user();
 
         return view('articles.show',compact('article','user'));
     }
@@ -88,11 +95,16 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($user_id,$blog_id,$article_id)     //URLに対応させるための排他処理が必要（どのレイヤーでバリデーションをつけるか）
+    public function edit($user_id,$blog_id,$article_id)
     {
-        $user = Auth::user();
+        $user = User::find($user_id);
         $article = Article::find($article_id);
         $statuses = Status::all();
+
+        //記事所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
+        }
 
         return view('articles.edit',compact('user','article','statuses'));
     }
@@ -110,13 +122,18 @@ class ArticleController extends Controller
     {
         $inputs = $request->all();
 
-        $user = Auth::user();
-        $blog = $user->blog;    //blogの取得方法を改善できる
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
+
+        //記事所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
+        }
 
         $article->update($inputs);
 
-        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]))->with('success','エッセイの編集を完了しました');
+        return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','エッセイの編集を完了しました');
     }
 
     /**
@@ -129,11 +146,17 @@ class ArticleController extends Controller
      */
     public function destroy($user_id,$blog_id,$article_id)
     {
-        $user = Auth::user();
-        $blog = $user->blog;
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
+
+        //記事所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
+        }   
+
         Article::destroy($article_id);
 
-        return redirect(route('users.blogs.show', ['user' => $user->id, 'blog' => $blog->id]))->with('success','エッセイ「'.$article->title.'」を削除しました');
+        return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]))->with('success','エッセイ「'.$article->title.'」を削除しました');
     }
 }

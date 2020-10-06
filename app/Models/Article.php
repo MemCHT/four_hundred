@@ -34,7 +34,7 @@ class Article extends Model
         if(isset($params['article']) && isset($params['blog'])){
             $article = self::find($params['article']);
 
-            if($article->blog_id == $params['blog'])
+            if($article && $article->blog_id == $params['blog'])
                 return Blog::isExist($params);
         }
         return false;

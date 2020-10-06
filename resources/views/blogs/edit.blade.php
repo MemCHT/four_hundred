@@ -8,7 +8,7 @@
             <div class="title-wrapper mt-5">
                 <h3>ブログタイトル編集</h3>
 
-                <form action="{{ route('users.blogs.update', ['user' => $user->id, 'blog' => $blog->id]) }}" method="POST">
+                <form action="{{ route('users.blogs.update', ['user' => $blog->user_id, 'blog' => $blog->id]) }}" method="POST">
                     @method('PUT')
                     @csrf
 
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <p>{{$article->body}}</p>
-                        <a class="btn btn-primary" href="{{ route('users.blogs.articles.edit',['user' => $user->id, 'blog' => $blog->id, 'article'=>$article->id]) }}">編集</a>
+                        <a class="btn btn-primary" href="{{ route('users.blogs.articles.edit',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article'=>$article->id]) }}">編集</a>
                     </div>
                 </div>
                 @endforeach

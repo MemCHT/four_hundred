@@ -59,7 +59,7 @@ class Blog extends Model
         if(isset($params['blog']) && isset($params['user'])){
             $blog = self::find($params['blog']);
 
-            if($blog->user_id == $params['user'])
+            if($blog && $blog->user_id == $params['user'])
                 return User::isExist($params);
         }
         return false;

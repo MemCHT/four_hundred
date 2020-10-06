@@ -15,11 +15,11 @@ class BlogsTableSeeder extends Seeder
     public function run()
     {
         //
-        Blog::create([
+        /*Blog::create([
             'user_id' => 1,
             'title' => 'First Blog Title',
-        ]);
+        ]);*/
 
-        factory(Blog::class,100)->create();
+        //factory(Blog::class,100)->create();
     }
 }

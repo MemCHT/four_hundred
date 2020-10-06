@@ -89,13 +89,20 @@ class CommentController extends Controller
      */
     public function destroy($user_id,$blog_id,$article_id,$comment_id)
     {
-        $user = Auth::user();
-        $blog = $user->blog;
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
         $comment = Comment::find($comment_id);
+
+        //記事所有ユーザ以外ならリダイレクト
+        //動的に作られたフォームでパラメータが文字列判定されているため、intvalをかける。
+        if(Auth::id() !== intval($user_id)){
+            return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
+        }
+
         $comment_user = $comment->user;
         Comment::destroy($comment_id);
 
-        return redirect(route('users.blogs.articles.show', ['user' => $user->id, 'blog' => $blog->id, 'article' => $article->id]))->with('success','「'.$comment_user->name.'」さんのコメントを削除しました');
+        return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','「'.$comment_user->name.'」さんのコメントを削除しました');
     }
 }

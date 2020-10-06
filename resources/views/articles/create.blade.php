@@ -8,7 +8,7 @@
             <div class="article-form-wrapper mt-5">
                 <h3>エッセイの投稿</h3>
 
-                <form action="{{ route('users.blogs.articles.store',['user' => $user->id, 'blog' => $user->blog->id]) }}" method="POST">
+                <form action="{{ route('users.blogs.articles.store',['user' => $blog->user_id, 'blog' => $blog->id]) }}" method="POST">
                     @csrf
 
                     <div class="form-group col-md-4">

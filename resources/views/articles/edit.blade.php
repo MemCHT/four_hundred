@@ -8,7 +8,7 @@
             <div class="article-form-wrapper mt-5">
                 <h3>エッセイの編集</h3>
 
-                <form action="{{ route('users.blogs.articles.update',['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id]) }}" method="POST">
+                <form action="{{ route('users.blogs.articles.update',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
                     @method('PUT')
                     @csrf
 
@@ -63,5 +63,5 @@
 @endsection
 
 @include('components.popup_delete',[
-    'route' => route('users.blogs.articles.destroy',['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id])
+    'route' => route('users.blogs.articles.destroy',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id])
 ])

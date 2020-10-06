@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="title-wrapper mt-5">
                 <h2>
-                    存在しないブログです。
+                    存在しないページです。
                 </h2>
             </div>
         </div>

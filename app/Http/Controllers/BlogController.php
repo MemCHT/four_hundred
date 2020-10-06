@@ -17,14 +17,6 @@ use App\Models\Article;
 class BlogController extends Controller
 {
     /**
-     * articleパラメータと上の階層のパラメータがそろっているかチェックする
-     */
-    public function __construct()
-    {
-        $this->middleware('filterBy.routeParameters:blog');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -58,19 +50,21 @@ class BlogController extends Controller
     /**
      * ブログを表示
      *
-     * @param  int  $id
+     * @param  int  $user_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
     public function show($user_id,$blog_id)
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
-        $articles = $blog->articles()->paginate(10);
 
-        //ブログが非公開 かつ ブログ所有ユーザでない なら別のビューを表示
+        // ブログが非公開 && ブログ所有ユーザでない なら別のビューを表示
         if($blog->isPrivate()){
             return view('blogs.private');
         }
+
+        $articles = $blog->articles()->paginate(10);
 
         return view('blogs.show',compact('user','blog','articles'));
     }
@@ -84,14 +78,15 @@ class BlogController extends Controller
      */
     public function edit($user_id,$blog_id)     //URLに対応させるための排他処理が必要
     {
-        $user = Auth::user();
+        $user = User::find($user_id);
         $blog = Blog::find($blog_id);
-        $articles = $blog->articles()->paginate(10);
 
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $blog->user_id){
-            return redirect(route('users.blogs.show', ['user' => $this->user->id, 'blog' => $this->id]));
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
         }
+
+        $articles = $blog->articles()->paginate(10);
 
         return view('blogs.edit',compact('user','blog','articles'));
     }
@@ -107,8 +102,14 @@ class BlogController extends Controller
     public function update(BlogFormRequest $request, $user_id, $blog_id)        //URLに対応させるための排他処理が必要
     {
         $title = $request->input('title');
-
-        Blog::find($blog_id)->update(['title' => $title]);
+        $blog = Blog::find($blog_id);
+        
+        //ブログ所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+        }
+        
+        $blog->update(['title' => $title]);
 
         return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]))->with('success','ブログタイトルの編集を完了しました');
     }

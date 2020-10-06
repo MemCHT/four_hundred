@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticleFormRequest;
+use App\Http\Requests\BlogFormRequest;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Routing\Router;
 
 use App\Models\User;
 use App\Models\Blog;
 use App\Models\Status;
+use App\Models\Article;
 
 class BlogController extends Controller
 {
@@ -28,57 +33,60 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\ArticleFormRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ArticleFormRequest $request)
     {
-        //
+        
     }
 
     /**
-     * Display the specified resource.
+     * ブログを表示
      *
-     * @param  int  $id
+     * @param  int  $user_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
     public function show($user_id,$blog_id)
     {
-        $user = User::get($user_id);
-        $blog = Blog::get($blog_id);
-        $articles = $blog->articles()->paginate(10);
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
 
-        //ブログが非公開 かつ ブログ所有ユーザでない なら別のビューを表示
-        if(Status::isPrivate($blog->status) && Auth::id() !== $blog->user_id){
+        // ブログが非公開 && ブログ所有ユーザでない なら別のビューを表示
+        if($blog->isPrivate()){
             return view('blogs.private');
         }
+
+        $articles = $blog->articles()->paginate(10);
 
         return view('blogs.show',compact('user','blog','articles'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * ブログの編集画面を表示
      *
      * @param  int  $user_id
-     * @param int $blog_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($user_id,$blog_id)
+    public function edit($user_id,$blog_id)     //URLに対応させるための排他処理が必要
     {
-        $user = User::get($user_id);
-        $blog = Blog::get($blog_id);
-        $articles = $blog->articles()->paginate(10);
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
 
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $blog->user_id){
+        if(Auth::id() !== $user_id){
             return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
         }
+
+        $articles = $blog->articles()->paginate(10);
 
         return view('blogs.edit',compact('user','blog','articles'));
     }
@@ -86,18 +94,24 @@ class BlogController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\BlogFormRequest  $request
      * @param  int  $user_id
-     * @param int $blog_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id, $blog_id)
+    public function update(BlogFormRequest $request, $user_id, $blog_id)        //URLに対応させるための排他処理が必要
     {
-        $blog_title = $request->input('blog_title');
+        $title = $request->input('title');
+        $blog = Blog::find($blog_id);
+        
+        //ブログ所有ユーザ以外ならリダイレクト
+        if(Auth::id() !== $user_id){
+            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+        }
+        
+        $blog->update(['title' => $title]);
 
-        Blog::get($blog_id)->update(['title' => $blog_title]);
-
-        return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+        return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]))->with('success','ブログタイトルの編集を完了しました');
     }
 
     /**

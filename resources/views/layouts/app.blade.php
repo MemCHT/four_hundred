@@ -19,6 +19,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/all.css') }}" rel="stylesheet">
+    
 </head>
 <body>
     <div id="app">
@@ -34,7 +36,16 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">ブログ一覧</a>
+                        </li>
+                        @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{route('users.blogs.show', ['user' => Auth::user()->id, 'blog' => Auth::user()->blog->id])}}">
+                                マイブログ
+                            </a>
+                        </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -77,7 +88,7 @@
             @yield('content')
         </main>
     </div>
-
+    
     @include('layouts.success')
 </body>
 </html>

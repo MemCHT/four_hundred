@@ -5,6 +5,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+use App\Models\Blog;
+
 class UsersTableSeeder extends Seeder
 {
     /**
@@ -22,7 +24,14 @@ class UsersTableSeeder extends Seeder
             'remember_token' => Str::random(10),
             'icon' => 'default.png'
         ]);
+        Blog::create([
+            'user_id' => 1,
+            'title' => 'First Blog Title',
+        ]);
 
-        factory(User::class,100)->create();
+        for($i=0;$i<100;$i++){
+            $user = factory(User::class)->create();
+            factory(Blog::class)->create(['user_id' => $user->id]);
+        }
     }
 }

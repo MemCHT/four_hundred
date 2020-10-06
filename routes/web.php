@@ -16,6 +16,9 @@ Route::get('/', function () {
 });
 
 Route::get('/test/model/{index}','TestController@index');
+Route::get('/home', 'HomeController@index')->name('home');
+
+
 
 Route::namespace('User')->prefix('users')->name('users.')->group(function () {
     // ログイン認証関連
@@ -30,8 +33,22 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
     Route::post('edit/update', 'ProfilesController@update')->name('profile.update');
 });
 
-Route::get('/home', 'HomeController@index')->name('home');
+
 
 Route::prefix('users')->name('users.')->group(function(){
-    Route::resource('{user}/blogs', 'BlogController');
+    //ブログ管理
+    Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');   //ここのuserパラメータいらない。
+    Route::resource('{user}/blogs', 'BlogController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:blog');
+
+    Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
+        //記事管理
+        Route::resource('{blog}/articles', 'ArticleController',['only' => ['create','store']])->middleware('filterBy.routeParameters:blog');
+        Route::resource('{blog}/articles', 'ArticleController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:article');
+
+        Route::prefix('{blog}/articles')->name('articles.')->group(function(){
+            //コメント管理
+            Route::resource('{article}/comments', 'CommentController',['only' => ['store']])->middleware('filterBy.routeParameters:article');
+            Route::resource('{article}/comments', 'CommentController',['only' => ['destroy']])->middleware('filterBy.routeParameters:comment');
+        });
+    });
 });

@@ -1,4 +1,8 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css"
+    "/css/app.css": "/css/app.css",
+    "/../resources/build/css/popup.css": "/../resources/build/css/popup.css",
+    "/../resources/build/css/success.css": "/../resources/build/css/success.css",
+    "/../resources/build/css/articles_show.css": "/../resources/build/css/articles_show.css",
+    "/css/all.css": "/css/all.css"
 }

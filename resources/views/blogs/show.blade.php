@@ -26,7 +26,7 @@
                     </div>
                     <div class="col-md-4 text-right">
                         @if(Auth::id() === $blog->user->id)
-                        <a class="btn btn-secondary" href="#">エッセイを投稿する</a>
+                        <a class="btn btn-secondary" href=" {{route('users.blogs.articles.create', ['user' => $blog->user->id, 'blog' => $blog->id])}} ">エッセイを投稿する</a>
                         @endif
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                             </div>
                         </div>
                         <p>{{$article->body}}</p>
-                        <a class="btn btn-primary" href="#">エッセイ詳細</a>
+                        <a class="btn btn-primary" href="{{ route('users.blogs.articles.show', ['user' => $article->blog->user_id, 'blog' => $article->blog->id, 'article' => $article->id]) }}">エッセイ詳細</a>
                     </div>
                 </div>
                 @endif

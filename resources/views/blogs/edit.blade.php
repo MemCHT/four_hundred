@@ -9,13 +9,19 @@
                 <h3>ブログタイトル編集</h3>
 
                 <form action="{{ route('users.blogs.update', ['user' => $blog->user_id, 'blog' => $blog->id]) }}" method="POST">
-                    {{ method_field('PUT') }}
-                    {{ csrf_field() }}
-                    <div class="input-group">
-                        <input name="blog_title" type="text" class="form-control" value="{{$blog->title}}" placeholder="ブログ名を記入">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit">確定</button>
+                    @method('PUT')
+                    @csrf
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="title" value="{{ $errors->has('title') ? old('title') : $blog->title }}" placeholder="ブログ名を記入">
+
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-secondary">確定</button>
+                            </div>
                         </div>
+                        @component('components.error',['name' => 'title']) @endcomponent
+
                     </div>
                 </form>
             </div>
@@ -46,7 +52,7 @@
                             </div>
                         </div>
                         <p>{{$article->body}}</p>
-                        <a class="btn btn-primary" href="#">編集</a>
+                        <a class="btn btn-primary" href="{{ route('users.blogs.articles.edit',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article'=>$article->id]) }}">編集</a>
                     </div>
                 </div>
                 @endforeach

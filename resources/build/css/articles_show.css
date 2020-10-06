@@ -1,0 +1,30 @@
+.container .row .col-md-8 .article-wrapper .article-body {
+  min-height: 20em;
+}
+
+.container .row .col-md-8 .comment-wrapper .comment-title {
+  border-bottom: 1px solid #707070;
+}
+
+.container .row .col-md-8 .comment-wrapper .comment {
+  margin-left: 0;
+}
+
+.container .row .col-md-8 .comment-wrapper .comment .comment-header-left img {
+  width: 37px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.container .row .col-md-8 .comment-wrapper .comment .comment-header-left p {
+  display: inline-block;
+}
+
+.container .row .col-md-8 .comment-wrapper .comment .comment-header-right p {
+  display: inline-block;
+}
+
+.container .row .col-md-8 .comment-wrapper .comment .comment-body {
+  border-bottom: 1px dotted #707070;
+}
+

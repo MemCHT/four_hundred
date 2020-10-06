@@ -38,7 +38,7 @@ class ArticleController extends Controller
         $statuses = Status::all();
 
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $user_id){
+        if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
         }
 
@@ -59,7 +59,7 @@ class ArticleController extends Controller
         $blog = Blog::find($blog_id);
 
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $user_id){
+        if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
         }
 
@@ -102,7 +102,7 @@ class ArticleController extends Controller
         $statuses = Status::all();
 
         //記事所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $user_id){
+        if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }
 
@@ -127,7 +127,7 @@ class ArticleController extends Controller
         $article = Article::find($article_id);
 
         //記事所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $user_id){
+        if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }
 
@@ -151,7 +151,7 @@ class ArticleController extends Controller
         $article = Article::find($article_id);
 
         //記事所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $user_id){
+        if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }   
 

@@ -82,7 +82,7 @@ class BlogController extends Controller
         $blog = Blog::find($blog_id);
 
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $user_id){
+        if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
         }
 
@@ -105,7 +105,7 @@ class BlogController extends Controller
         $blog = Blog::find($blog_id);
         
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== $user_id){
+        if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
         }
         

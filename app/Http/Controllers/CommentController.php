@@ -95,7 +95,6 @@ class CommentController extends Controller
         $comment = Comment::find($comment_id);
 
         //記事所有ユーザ以外ならリダイレクト
-        //動的に作られたフォームでパラメータが文字列判定されているため、intvalをかける。
         if(Auth::id() !== intval($user_id)){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }

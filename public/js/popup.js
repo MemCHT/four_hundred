@@ -9,7 +9,7 @@
  * @param {object} form_elements
  * form_elements = {method:'method_field', token:'csrf_token', url: 'route'}
  */
-function setDeletePopupEvent(form_elements){
+const setDeletePopupEvent = (form_elements) => {
     const btn_delete = document.getElementsByClassName('btn-delete');
 
     //btn_deleteクラスが適用されている全ての要素にイベントを付与
@@ -31,10 +31,10 @@ function setDeletePopupEvent(form_elements){
 /**
  * ポップアップの確定ボタンにイベントをセットする
  * 
- * @param {object} form_elements
- * form_elements = {method:'method_field', token:'csrf_token', url: 'route'}
+ * @param {object} delete_form
+ * delete_form = {method:'method_field', token:'csrf_token', url: 'route'}
  */
-function setApplyEvent(delete_form){
+const setApplyEvent = (delete_form) => {
     const btn_apply = document.getElementById('popup-btn-apply');
     //popup-btn-apply というidをもつ要素があったときに、applyイベントをセット
     if(btn_apply){
@@ -42,7 +42,7 @@ function setApplyEvent(delete_form){
     }
 }
 //削除を適用するイベントapply()
-function apply(event, delete_form){
+const apply = (event, delete_form) => {
     event.preventDefault();
     if(delete_form){
         delete_form.submit();
@@ -63,10 +63,9 @@ function apply(event, delete_form){
  * @param {string} button_id 
  * @return {HTMLElement} form
  */
-function createDeleteForm(button_id,form_elements){
+const createDeleteForm = (button_id,form_elements) => {
     /**
      * delete実行用タグ, token送信用タグを取得
-     * 
      */
 
     const form = document.createElement('form');
@@ -85,7 +84,7 @@ function createDeleteForm(button_id,form_elements){
     return form;
 }
 
-function submitDeleteForm(form){
+const submitDeleteForm = (form) => {
     form.submit();
 }
 
@@ -93,7 +92,7 @@ function submitDeleteForm(form){
  * route()で指定されたdestroy用のurlを受け取って、末尾の余計なパラメータ(/users/1/blogs/1/article/xx 等)を削除して返す
  * @param {string} url 
  */
-function formatUrl(url){
+const formatUrl = (url) => {
     let count=1;
     while(true){
         if(url.slice(-count).match(/\//)){
@@ -108,7 +107,7 @@ function formatUrl(url){
 /**
  * ポップアップのキャンセルボタンにイベントをセットする
  */
-function setCancelEvent(){
+const setCancelEvent = () => {
     const btn_cancel = document.getElementById('popup-btn-cancel');
     //popup-btn-cancel というidをもつ要素があったときに、cancelイベントをセット
     if(btn_cancel){
@@ -116,7 +115,7 @@ function setCancelEvent(){
     }
 }
 //ポップアップをキャンセルするイベントcancel()
-function cancel(event){
+const cancel = (event) => {
     event.preventDefault();
     document.getElementById('popup').setAttribute('style','display:none;');
 

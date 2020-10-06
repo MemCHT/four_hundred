@@ -17,16 +17,11 @@ use App\Models\Article;
 class BlogController extends Controller
 {
     /**
-     * コンストラクタでルートパラメータを取得する。
-     * blogパラメータに応じて、上の階層のパラメータを揃える。
+     * articleパラメータと上の階層のパラメータがそろっているかチェックする
      */
-    public function __construct(Router $router)
+    public function __construct()
     {
-        $allRouteParams = $router->getCurrentRoute()->parameters();
-        //dd($allRouteParams);
-        if(Blog::isExist($allRouteParams) === false){
-            return view('blogs.not_exist'); //returnじゃないかも。
-        }
+        $this->middleware('filterBy.routeParameters:blog');
     }
 
     /**

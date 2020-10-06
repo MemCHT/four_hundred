@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Facades\Auth;
-use App\Models\Status;
 
 class Blog extends Model
 {
@@ -59,9 +58,9 @@ class Blog extends Model
     public static function isExist($params){
         if(isset($params['blog']) && isset($params['user'])){
             $blog = self::find($params['blog']);
-            if($blog->user_id === $params['user']){
-                return true;
-            }
+
+            if($blog->user_id == $params['user'])
+                return User::isExist($params);
         }
         return false;
     }

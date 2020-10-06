@@ -24,4 +24,19 @@ class Article extends Model
     public function favorites(){
         return $this->hasMany(Favorite::class, 'article_id', 'id');
     }
+
+    /**
+     * パラメータに応じて、Articleインスタンス存在チェック
+     * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx]
+     * @return bool
+     */
+    public static function isExist($params){
+        if(isset($params['article']) && isset($params['blog'])){
+            $article = self::find($params['article']);
+
+            if($article->blog_id == $params['blog'])
+                return Blog::isExist($params);
+        }
+        return false;
+    }
 }

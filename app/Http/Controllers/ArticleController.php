@@ -15,6 +15,14 @@ use App\Models\Article;
 class ArticleController extends Controller
 {
     /**
+     * articleパラメータと上の階層のパラメータがそろっているかチェックする
+     */
+    public function __construct()
+    {
+        $this->middleware('filterBy.routeParameters:article');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

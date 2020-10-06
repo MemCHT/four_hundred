@@ -99,4 +99,19 @@ class User extends Authenticatable
             self::where('id', $user_id)->update(['name' => $inputs['name'], 'icon' => $filename]);
         }
     }
+
+    /**
+     * ルートパラメータに応じて、Userの存在チェック
+     * 
+     * @param  array  $params
+     * @return bool
+     */
+    public static function isExist($params){
+        if(isset($params['user'])){
+            $user = self::find($params['user']);
+
+            return isset($user);
+        }
+        return false;
+    }
 }

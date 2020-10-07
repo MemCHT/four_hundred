@@ -8,6 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use App\Notifications\JaPasswordReset;
 use \InterventionImage;
 
+use App\Models\Blog;
+
 class User extends Authenticatable
 {
     use Notifiable;
@@ -18,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','token'
     ];
 
     /**
@@ -113,5 +115,30 @@ class User extends Authenticatable
             return isset($user);
         }
         return false;
+    }
+
+    /**
+     * vendorに実装されているfirstOrCreateをオーバーライド
+     * Blogを同時作成する処理を追加
+     *
+     * @param  array  $attributes
+     * @param  array  $values
+     * @return \Illuminate\Database\Eloquent\Model|static
+     */
+    public static function firstOrCreate(array $attributes, array $values = [])
+    {
+        if (! is_null($instance = self::where($attributes)->first())) {
+            return $instance;
+        }
+
+        return tap(self::make($attributes + $values), function ($instance) {
+            $instance->save();
+
+            // User作成時にBlogも同時作成   ※要検証: save(), create()時に記述できるかも
+            Blog::create([
+                'user_id' => $instance->id,
+                'title' => $instance->name."さんのブログ"
+            ]);
+        });
     }
 }

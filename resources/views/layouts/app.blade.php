@@ -76,6 +76,8 @@
                                     <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
+
+                                    <a class="dropdown-item" href="{{ route('users.profile.edit') }}">プロフィール</a>
                                 </div>
                             </li>
                         @endguest

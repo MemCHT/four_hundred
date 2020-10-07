@@ -7,6 +7,11 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
+use \Socialite;
+use \Auth;
+use App\Models\User;
+use App\Models\Blog;
+
 class LoginController extends Controller
 {
     /*
@@ -50,5 +55,38 @@ class LoginController extends Controller
         // ステータスが1（凍結されていない）場合のみログイン可
         $request->merge(['status_id' => 1]);
         return $request->only($this->username(), 'password', 'status_id');
+    }
+
+    /**
+     * twitterログイン用メソッド
+     * twitterアプリに認証を求めに行く
+     */
+    public function redirectToTwitterProvider()
+    {
+        //dd(env('TWITTER_CLIENT_ID')."\n".env('TWITTER_CLIENT_SECRET'));
+        return Socialite::driver('twitter')->redirect();
+    }
+
+    /**
+     * twitterログイン用メソッド
+     * twitterアプリからのレスポンスを取得して認証処理
+     */
+    public function handleTwitterProviderCallback(){
+        try {
+            $user = Socialite::with('twitter')->user();
+            //throw new \Exception();
+        }catch(\Exception $e){  // 例外をハンドリングしたらログインページにリダイレクトする。
+            return redirect('/users/login')->with('oauth_error', 'SNSログインに失敗しました');
+        }
+
+        // 新規ユーザ時にusersテーブルに追加する属性
+        $attributes = [
+            'name' => $user->nickname,
+            'email' => $user->getEmail()
+        ];
+
+        $myinfo = User::firstOrCreate(['token' => $user->token], $attributes);
+        Auth::login($myinfo);
+        return redirect()->route('users.profile.edit');
     }
 }

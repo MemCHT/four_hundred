@@ -79,7 +79,7 @@
                                 <a class="btn btn-link" href="{{ route('users.login.twitter') }}">
                                     <img src="/images/login/icon_twitter.png" alt="Twitterでログイン">
                                 </a>
-                                <a class="btn btn-link" href="">
+                                <a class="btn btn-link" href="{{ route('users.login.facebook') }}">
                                     <img src="/images/login/icon_facebook.png" alt="Facebookでログイン">
                                 </a>
                             </div>

@@ -89,4 +89,36 @@ class LoginController extends Controller
         Auth::login($myinfo);
         return redirect()->route('users.profile.edit');
     }
+
+    /**
+     * facebookログイン用メソッド
+     * facebookアプリに認証を求めに行く
+     */
+    public function redirectToFacebookProvider()
+    {
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    /**
+     * facebookログイン用メソッド
+     * facebookアプリからのレスポンスを取得して認証処理
+     */
+    public function handleFacebookProviderCallback(){
+        try {
+            $user = Socialite::with('facebook')->user();
+            //throw new \Exception();
+        }catch(\Exception $e){  // 例外をハンドリングしたらログインページにリダイレクトする。
+            return redirect('/users/login')->with('oauth_error', 'SNSログインに失敗しました');
+        }
+
+        // 新規ユーザ時にusersテーブルに追加する属性
+        $attributes = [
+            'name' => $user->name,
+            'email' => $user->getEmail()
+        ];
+
+        $myinfo = User::firstOrCreate(['token' => $user->token], $attributes);
+        Auth::login($myinfo);
+        return redirect()->route('users.profile.edit');
+    }
 }

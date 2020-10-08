@@ -34,11 +34,11 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
 
     // twitterログイン
     Route::get('login/twitter', 'Auth\LoginController@redirectToTwitterProvider')->name('login.twitter');
-    Route::get('login/twitter/callback', 'Auth\LoginController@handleTwitterProviderCallback')->name('login.twitter.callback'); //ここのコールバック統一できそう
+    Route::get('login/twitter/callback', 'Auth\LoginController@handleTwitterProviderCallback')->name('login.twitter.callback');
 
     // facebookログイン
     Route::get('/login/facebook', 'Auth\LoginController@redirectToFacebookProvider')->name('login.facebook');
-    Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookProviderCallback')->name('login.facebook.callback');   //ここのコールバック統一できそう
+    Route::get('/login/facebook/callback', 'Auth\LoginController@handleFacebookProviderCallback')->name('login.facebook.callback');
 });
 
 

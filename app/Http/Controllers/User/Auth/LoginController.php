@@ -58,17 +58,14 @@ class LoginController extends Controller
     }
 
     /**
-     * twitterログイン用メソッド
      * twitterアプリに認証を求めに行く
      */
     public function redirectToTwitterProvider()
     {
-        //dd(env('TWITTER_CLIENT_ID')."\n".env('TWITTER_CLIENT_SECRET'));
         return Socialite::driver('twitter')->redirect();
     }
 
     /**
-     * twitterログイン用メソッド
      * twitterアプリからのレスポンスを取得して認証処理
      */
     public function handleTwitterProviderCallback(){
@@ -82,16 +79,18 @@ class LoginController extends Controller
         // 新規ユーザ時にusersテーブルに追加する属性
         $attributes = [
             'name' => $user->nickname,
-            'email' => $user->getEmail()
+            'email' => $user->email    //emailがuniqueで重なってしまう問題  email検索で対処
         ];
 
-        $myinfo = User::firstOrCreate(['token' => $user->token], $attributes);
+        //email確認後、firstOrCreate()
+        $registered = User::where('email', $user->email)->first();
+        $myinfo = isset($registered) ? $registered : User::firstOrCreate(['token' => $user->token], $attributes);
+        
         Auth::login($myinfo);
-        return redirect()->route('users.profile.edit');
+        return redirect()->route('users.profile.edit')->with('success','twitterアカウントでサインアップしました。');
     }
 
     /**
-     * facebookログイン用メソッド
      * facebookアプリに認証を求めに行く
      */
     public function redirectToFacebookProvider()
@@ -100,7 +99,6 @@ class LoginController extends Controller
     }
 
     /**
-     * facebookログイン用メソッド
      * facebookアプリからのレスポンスを取得して認証処理
      */
     public function handleFacebookProviderCallback(){
@@ -114,11 +112,17 @@ class LoginController extends Controller
         // 新規ユーザ時にusersテーブルに追加する属性
         $attributes = [
             'name' => $user->name,
-            'email' => $user->getEmail()
+            'email' => $user->email     // emailがuniqueで重なってしまう問題　email検索で対処
+                                        // アカウントに直接紐づけなど行っていない状態で、複数SNSアカウント間の判別はemail以外で不可
+                                            // →サインアップ画面ではemail || tokenで判断。その後の紐づけによって別アカウントログイン可能にできそう（追加機能？）。
         ];
+        $token = $user->id.'-'.substr($user->token,0,14);   // facebookのトークンは15文字以降が毎回変わっていたので、token = id+トークン先頭14文字 とした。
 
-        $myinfo = User::firstOrCreate(['token' => $user->token], $attributes);
+        //email確認後、firstOrCreate()
+        $registered = User::where('email', $user->email)->first();
+        $myinfo = isset($registered) ? $registered : User::firstOrCreate(['token' => $token], $attributes);
+
         Auth::login($myinfo);
-        return redirect()->route('users.profile.edit');
+        return redirect()->route('users.profile.edit')->with('success','facebookアカウントでサインアップしました。');
     }
 }

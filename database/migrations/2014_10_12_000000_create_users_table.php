@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name',255);
-            $table->string('email',255)->unique()->nullable();  //SNS認証用 nullable SNS認証でのみログイン可能になりそう。
+            $table->string('email',255)->unique()->nullable();  //SNS認証用 (主に不完全認証twitterAPI用)nullable SNS認証でのみログイン可能になりそう。
             $table->dateTime('email_verified_at')->nullable();
             $table->string('password',255)->nullable(); //SNS認証用 nullable
             $table->string('token')->nullable();    //SNS認証用 nullable

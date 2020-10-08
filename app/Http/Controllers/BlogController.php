@@ -83,7 +83,7 @@ class BlogController extends Controller
 
         //ブログ所有ユーザ以外ならリダイレクト
         if(Auth::id() !== intval($user_id)){
-            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+            return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
         }
 
         $articles = $blog->articles()->paginate(10);
@@ -106,12 +106,13 @@ class BlogController extends Controller
         
         //ブログ所有ユーザ以外ならリダイレクト
         if(Auth::id() !== intval($user_id)){
-            return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]));
+            return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
         }
         
         $blog->update(['title' => $title]);
 
-        return redirect(route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]))->with('success','ブログタイトルの編集を完了しました');
+        return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id])
+                         ->with('success','ブログタイトルの編集を完了しました');
     }
 
     /**

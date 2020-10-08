@@ -177,6 +177,9 @@ return [
 
         // 画像処理
         Intervention\Image\ImageServiceProvider::class,
+
+        // SNS認証（Socialite）
+        Laravel\Socialite\SocialiteServiceProvider::class
     ],
 
     /*
@@ -230,6 +233,9 @@ return [
 
         // 画像処理
         'InterventionImage' => Intervention\Image\Facades\Image::class,
+
+        // SNS認証（Socialite）
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

@@ -10,6 +10,12 @@
                 <div class="card-header">four hundredにログイン</div>
 
                 <div class="card-body">
+                    @if(session('oauth_error'))
+                        <div class="alert alert-danger" role="alert">
+                            {{ session('oauth_error') }}
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('users.login') }}">
                         @csrf
 
@@ -70,10 +76,10 @@
                                     <li><a href=""><img src="/images/login/icon_facebook.png" alt="Facebookでログイン"></a></li>
                                 </ul> -->
 
-                                <a class="btn btn-link" href="">
+                                <a class="btn btn-link" href="{{ route('users.login.twitter') }}">
                                     <img src="/images/login/icon_twitter.png" alt="Twitterでログイン">
                                 </a>
-                                <a class="btn btn-link" href="">
+                                <a class="btn btn-link" href="{{ route('users.login.facebook') }}">
                                     <img src="/images/login/icon_facebook.png" alt="Facebookでログイン">
                                 </a>
                             </div>

@@ -21,9 +21,13 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user_id)
     {
-        //
+        $user = User::find($user_id);
+
+        $blogs = Blog::getIndexObject();
+        
+        return view('blogs.index', compact('blogs'));
     }
 
     /**
@@ -59,13 +63,16 @@ class BlogController extends Controller
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
 
-        // ブログが非公開 && ブログ所有ユーザでない なら別のビューを表示
-        if($blog->isPrivate()){
-            return view('blogs.private');
-        }
-
         $articles = $blog->articles()->paginate(10);
 
+        // ブログが非公開 && ブログ所有ユーザでない なら別のビューを表示
+        if($blog->isPrivate())
+            return view('blogs.private');
+
+        if(Auth::id() !== $blog->user_id)
+            $articles = $blog->articles()->where('status_id', Status::getByName('公開')->id)->paginate(10);
+
+        //dd(Status::where('name', '公開')->get());
         return view('blogs.show',compact('user','blog','articles'));
     }
 

@@ -37,11 +37,11 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">ブログ一覧</a>
+                            <a class="nav-link" href="{{ route('users.blogs.index', ['user' => 1]) }}">ブログ一覧</a>
                         </li>
                         @auth
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('users.blogs.show', ['user' => Auth::user()->id, 'blog' => Auth::user()->blog->id])}}">
+                            <a class="nav-link" href="{{route('users.blogs.show', ['user' => Auth::id(), 'blog' => Auth::user()->blog->id])}}">
                                 マイブログ
                             </a>
                         </li>

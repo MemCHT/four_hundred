@@ -27,6 +27,7 @@ class UsersTableSeeder extends Seeder
         Blog::create([
             'user_id' => 1,
             'title' => 'First Blog Title',
+            'status_id' => 1
         ]);
 
         for($i=0;$i<100;$i++){

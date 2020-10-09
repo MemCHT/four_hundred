@@ -27,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
         //favorite, ステータス表示のエイリアス定義
         Blade::component('components.favorite', 'favorite');
         Blade::component('components.status', 'status');
+        Blade::component('components.article', 'article');
     }
 }

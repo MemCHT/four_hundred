@@ -57,6 +57,10 @@ Route::prefix('users')->name('users.')->group(function(){
             //コメント管理
             Route::resource('{article}/comments', 'CommentController',['only' => ['store']])->middleware('filterBy.routeParameters:article');
             Route::resource('{article}/comments', 'CommentController',['only' => ['destroy']])->middleware('filterBy.routeParameters:comment');
+
+            //お気に入り管理
+            Route::resource('{article}/favorites', 'FavoriteController',['only' => ['store']])->middleware('filterBy.routeParameters:article');
+            Route::resource('{article}/favorites', 'FavoriteController',['only' => ['update']])->middleware('filterBy.routeParameters:favorite');
         });
     });
 });

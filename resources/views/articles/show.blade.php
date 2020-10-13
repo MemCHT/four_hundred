@@ -10,15 +10,17 @@
                     <h2><a href="{{ route('users.blogs.show',['user' => $article->blog->user_id, 'blog' => $article->blog_id]) }}">{{$article->title}}</a></h2>
                 </div>
                 <div class="col-md-4 text-right">
+
                     @if(Auth::id() === $article->blog->user->id)
                     <a class="btn btn-secondary" href="{{route('users.blogs.articles.edit', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id])}}">
                         編集
                     </a>
                     @endif
+
                 </div>
                 <div class="col-md-12">
-                    @favorite
-                    {{ count($article->favorites) }}
+                    @favorite(['article' => $article, 'favorite' => $favorite])
+                    {{ count($article->validFavorites()) }}
                     @endfavorite
                 </div>
 
@@ -35,7 +37,7 @@
                 @foreach($article->comments as $comment)
                 <div class="comment row col-md-12 mt-2">
                     <div class="comment-header-left col-md-6">
-                        <img class="user-icon" src="{{asset('/images/icon').'/'.$comment->user->icon}}" alt="ユーザー画像">
+                        <img class="user-icon" src="{{ asset('/images/icon').'/'.$comment->user->icon }}" alt="ユーザー画像">
                         <!-- もしuser : blog が 1 : 多 になったら対応できない -->
                         <a href="{{ route('users.blogs.show', ['user' => $comment->user_id, 'blog' => $comment->user->blog->id]) }}">{{ $comment->user->name }}</a>
                     </div>
@@ -52,27 +54,35 @@
                     </div>
                 </div>
                 @endforeach
+
             </div>
 
             <div class="comment-form-wrapper row mt-3">
                 <p class="col-md-12"><strong>コメントを書く</strong></p>
+
                 @auth
-                <form class="col-md-12" action="{{ route('users.blogs.articles.comments.store',['user' => Auth::id(), 'blog' => $article->blog_id, 'article' => $article->id]) }}">
+                <form class="col-md-12" action="{{ route('users.blogs.articles.comments.store',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
+                    @csrf
+                    
                     <div class="form-group">
                         <label for="">名前：{{ Auth::user()->name }}</label>
-                        <textarea class="form-control" name="body" rows="3" placeholder="コメントを記入"></textarea>
+                        <textarea class="form-control" name="body" rows="3" placeholder="コメントを記入">{{ old('body') }}</textarea>
                     </div>
+
+                    @component('components.error',['name' => 'body']) @endcomponent
                     
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">送信</button>
                     </div>
                 </form>
                 @endauth
+
                 @guest
                 <div class="col-md-12">
                     <h2>ログインしてコメントを投稿しよう！</h2>
                 </div>
                 @endguest
+                
             </div>
         </div>
     </div>

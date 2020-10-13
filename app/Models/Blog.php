@@ -65,6 +65,7 @@ class Blog extends Model
         $favorites_count = self::where('blogs.id', $this->id)
                                 ->join('articles', 'blogs.id', 'articles.blog_id')
                                 ->join('favorites', 'articles.id', 'favorites.article_id')
+                                ->where('favorites.status', true)
                                 ->count();
         
         return $favorites_count;

@@ -40,7 +40,7 @@
                             <div class="col-md-10">{{$article->title}}</div>
                             <div class="col-md-2 text-right">
                                 @favorite
-                                {{ count($article->favorites) }}
+                                {{ count($article->validFavorites()) }}
                                 @endfavorite
                             </div>
                         </div>

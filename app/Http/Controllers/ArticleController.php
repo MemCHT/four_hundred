@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Blog;
 use App\Models\Status;
 use App\Models\Article;
+use App\Models\Favorite;
 
 class ArticleController extends Controller
 {
@@ -84,8 +85,9 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $article = Article::find($article_id);
+        $favorite = Favorite::firstOrNull(Auth::id(), $article_id);
 
-        return view('articles.show',compact('article','user'));
+        return view('articles.show',compact('article','user', 'favorite'));
     }
 
     /**

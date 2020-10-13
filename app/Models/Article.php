@@ -39,4 +39,12 @@ class Article extends Model
         }
         return false;
     }
+
+    /**
+     * articleインスタンスにある有効なお気に入りを取得
+     * @return Illuminate\Database\Eloquent\Collection (Favorite)
+     */
+    public function validFavorites(){
+        return Favorite::getValidFavorites($this->id);
+    }
 }

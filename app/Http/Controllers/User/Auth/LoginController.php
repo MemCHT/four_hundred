@@ -11,6 +11,8 @@ use \Socialite;
 use \Auth;
 use App\Models\User;
 use App\Models\Blog;
+use App\Models\IdentityProvider;
+use PHPUnit\Framework\MockObject\Builder\Identity;
 
 class LoginController extends Controller
 {
@@ -66,31 +68,6 @@ class LoginController extends Controller
     }
 
     /**
-     * twitterアプリからのレスポンスを取得して認証処理
-     */
-    public function handleTwitterProviderCallback(){
-        try {
-            $user = Socialite::with('twitter')->user();
-            //throw new \Exception();
-        }catch(\Exception $e){  // 例外をハンドリングしたらログインページにリダイレクトする。
-            return redirect('/users/login')->with('oauth_error', 'SNSログインに失敗しました');
-        }
-
-        // 新規ユーザ時にusersテーブルに追加する属性
-        $attributes = [
-            'name' => $user->nickname,
-            'email' => $user->email    //emailがuniqueで重なってしまう問題  email検索で対処
-        ];
-
-        //email確認後、firstOrCreate()
-        $registered = User::where('email', $user->email)->first();
-        $myinfo = isset($registered) ? $registered : User::firstOrCreate(['token' => $user->token], $attributes);
-        
-        Auth::login($myinfo);
-        return redirect()->route('users.profile.edit')->with('success','twitterアカウントでサインアップしました。');
-    }
-
-    /**
      * facebookアプリに認証を求めに行く
      */
     public function redirectToFacebookProvider()
@@ -99,30 +76,43 @@ class LoginController extends Controller
     }
 
     /**
-     * facebookアプリからのレスポンスを取得して認証処理
+     * SNS認証アプリからのレスポンスを取得して認証
+     * @param string $provider_name = [twitter|facebook]
      */
-    public function handleFacebookProviderCallback(){
+    public function handleProviderCallback($provider_name){
         try {
-            $user = Socialite::with('facebook')->user();
+            $provider_user = Socialite::with($provider_name)->user();
             //throw new \Exception();
         }catch(\Exception $e){  // 例外をハンドリングしたらログインページにリダイレクトする。
             return redirect('/users/login')->with('oauth_error', 'SNSログインに失敗しました');
         }
 
         // 新規ユーザ時にusersテーブルに追加する属性
-        $attributes = [
-            'name' => $user->name,
-            'email' => $user->email     // emailがuniqueで重なってしまう問題　email検索で対処
-                                        // アカウントに直接紐づけなど行っていない状態で、複数SNSアカウント間の判別はemail以外で不可
-                                            // →サインアップ画面ではemail || tokenで判断。その後の紐づけによって別アカウントログイン可能にできそう（追加機能？）。
+        $auth_attributes = [
+            'name' => $provider_user->getName(),
+            'email' => $provider_user->getEmail()    //emailがuniqueで重なってしまう問題 → email検索で対処
         ];
-        $token = $user->id.'-'.substr($user->token,0,14);   // facebookのトークンは15文字以降が毎回変わっていたので、token = id+トークン先頭14文字 とした。
+        
+        //snsアカウント重複確認
+        $sns_account = IdentityProvider::where('provider_name', $provider_name)
+                                        ->where('provider_id', $provider_user->id)
+                                        ->first();
+        
+        if(isset($sns_account) === false){
 
-        //email確認後、firstOrCreate()
-        $registered = User::where('email', $user->email)->first();
-        $myinfo = isset($registered) ? $registered : User::firstOrCreate(['token' => $token], $attributes);
+            //すでに登録済みのUserとemailが等しければ、そのUserにSNSアカウントを紐付ける。
+            $auth_user = User::firstOrCreate(['email' => $provider_user->email], $auth_attributes);
+            
+            $provider_attributes = [
+                'user_id' => $auth_user->id,
+                'provider_id' => $provider_user->id,
+                'provider_name' => $provider_name
+            ];
 
-        Auth::login($myinfo);
-        return redirect()->route('users.profile.edit')->with('success','facebookアカウントでサインアップしました。');
+            $sns_account = IdentityProvider::Create($provider_attributes);
+        }
+        
+        Auth::login($sns_account->user);
+        return redirect()->route('users.profile.edit')->with('success',$provider_name.'アカウントでサインアップしました。');
     }
 }

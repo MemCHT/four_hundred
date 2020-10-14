@@ -44,6 +44,7 @@
 
                     <div class="comment-header-right col-md-6 text-right">
                         <p>{{ $comment->created_at }}</p>
+                        
                         @if(Auth::id() === $article->blog->user->id)
                         <button id="btn-delete_{{ $comment->id }}" class="btn btn-secondary btn-delete"> 削除 </button>
                         @endif

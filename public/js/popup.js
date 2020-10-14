@@ -25,6 +25,7 @@ const setDeletePopupEvent = (form_elements) => {
             const button_id = event.currentTarget.id;
             const delete_form = createDeleteForm(button_id,form_elements);
 
+            //送信用フォームエレメントを適用
             setApplyEvent(delete_form);
             setCancelEvent();
         });

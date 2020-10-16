@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\CommentFormRequest;
+// use Illuminate\Support\Facades\Notification;//  → 複数のユーザーに対しても送れる
 
 use App\Models\User;
 use App\Models\Blog;
 use App\Models\Article;
 use App\Models\Comment;
+use App\Notifications\CommentNotification;
 
 class CommentController extends Controller
 {
@@ -36,12 +39,40 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\CommentFormRequest  $request
+     * @param  int  $user_id
+     * @param  int  $blog_id
+     * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CommentFormRequest $request, $user_id, $blog_id, $article_id)
     {
-        //
+        $user = User::find($user_id);
+        $blog = Blog::find($blog_id);
+        $article = Article::find($article_id);
+
+        $route = route('users.blogs.articles.show', ['user' => $article->blog->user_id, 'blog' => $blog_id, 'article' => $article_id]);
+        $redirect = redirect($route);
+
+        $input = $request->input();
+
+        $comment = Comment::create([
+            'user_id' => Auth::id(),
+            'article_id' => $article_id,
+            'body' => $input['body']
+        ]);
+
+        $data = (object)[];
+        $data->user = $user;
+        $data->blog = $blog;
+        $data->article = $article;
+        $data->comment = $comment;
+        $data->url = $route;
+
+        // Twitterは利用規約等が未認証のため、email取得できない ∴メール送信されない
+        $user->notify(new CommentNotification($data));
+
+        return $redirect->with('success', 'コメントを投稿しました');
     }
 
     /**

@@ -24,21 +24,13 @@ class Blog extends Model
     }
 
     /**
-     * ブログインスタンスと認証済みユーザが対応しているかどうか
-     * @param App\Models\Blog
-     * @return bool $isAuth
-     */
-    /*public function isAuth($blog){
-        return Auth::id() === $blog->user_id
-    }*/
-
-    /**
      * ブログが非公開かどうか
      * @return bool
      */
     public function isPrivate(){
         if(Auth::id() === $this->user_id)
-            return false;
+                return false;
+
         return Status::isPrivate($this->status);
     }
 
@@ -46,8 +38,11 @@ class Blog extends Model
      * ブログ所有ユーザ以外ならリダイレクト
      * @return \Illuminate\Http\Response
      */
-    public function redirectShow(){
-        return redirect(route('users.blogs.show', ['user' => $this->user->id, 'blog' => $this->id]));
+    public function authUser(){
+
+        if(Auth::id() !== intval($this->user_id)){
+            return response(redirect()->route('users.blogs.show', ['user' => $this->user_id, 'blog' => $this->id]));
+        }
     }
 
     /**
@@ -63,5 +58,68 @@ class Blog extends Model
                 return User::isExist($params);
         }
         return false;
+    }
+
+    /**
+     * 全記事のお気に入り総数を取得
+     * @return int
+     */
+    public function getFavoritesCount(){
+        $favorites_count = self::where('blogs.id', $this->id)
+                                ->join('articles', 'blogs.id', 'articles.blog_id')
+                                ->join('favorites', 'articles.id', 'favorites.article_id')
+                                ->where('favorites.status', true)
+                                ->count();
+        
+        return $favorites_count;
+    }
+
+    /**
+     * 公開済み記事総数を取得
+     * @return int
+     */
+    public function getArticlesCount(){
+        $articles_count = $this->articles()->where('articles.status_id', Status::getByName('公開')->id)
+                                         ->count();
+
+        return $articles_count;
+    }
+
+    /**
+     * ブログ一覧表示用オブジェクトを取得
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public static function getIndexObject(){
+        $status_id_public = Status::getByName('公開')->id;
+
+        $blogs = self::where('status_id', $status_id_public)->paginate(10);
+
+        foreach($blogs as $blog){
+            $blog->format();
+        }
+
+        return $blogs;
+    }
+
+    /**
+     * ブログインスタンスをフォーマット（お気に入り・記事総数を追加）する
+     * ※破壊的メソッド
+     * @return App\Models\Blog
+     */
+    public function format(){
+        $status_id_public = Status::getByName('公開')->id;
+
+        //記事全てのfavorite総数を取得
+        $favorites_count = $this->getFavoritesCount();
+        $this->favorites_count = $favorites_count;
+
+        //記事総数を取得
+        $this->articles_count = $this->getArticlesCount();
+
+        //ブログの最新記事を取得
+        $latest_article = Article::where('blog_id', $this->id)->where('status_id', $status_id_public)->orderBy('updated_at', 'DESC')->first();
+        $this->latest_article = $latest_article;
+
+        return $this;
     }
 }

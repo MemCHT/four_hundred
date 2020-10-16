@@ -11,9 +11,16 @@ use App\Models\User;
 use App\Models\Blog;
 use App\Models\Status;
 use App\Models\Article;
+use App\Models\Favorite;
 
 class ArticleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('redirect.unAuthUser:blog')->only(['create','store']);
+        $this->middleware('redirect.unAuthUser:article')->only(['edit','update', 'destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +28,7 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        //
+        // 
     }
 
     /**
@@ -36,11 +43,6 @@ class ArticleController extends Controller
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
         $statuses = Status::all();
-
-        //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
-        }
 
         return view('articles.create',compact('statuses', 'user', 'blog'));
     }
@@ -57,11 +59,6 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
-
-        //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
-        }
 
         $inputs = $request->all();
         $inputs['blog_id'] = $blog->id;
@@ -84,8 +81,9 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $article = Article::find($article_id);
+        $favorite = Favorite::firstOrNull(Auth::id(), $article_id);
 
-        return view('articles.show',compact('article','user'));
+        return view('articles.show',compact('article','user', 'favorite'));
     }
 
     /**
@@ -101,11 +99,6 @@ class ArticleController extends Controller
         $user = User::find($user_id);
         $article = Article::find($article_id);
         $statuses = Status::all();
-
-        //記事所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]);
-        }
 
         return view('articles.edit',compact('user','article','statuses'));
     }
@@ -127,11 +120,6 @@ class ArticleController extends Controller
         $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
 
-        //記事所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]);
-        }
-
         $article->update($inputs);
 
         return redirect()->route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id])
@@ -150,12 +138,7 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
-        $article = Article::find($article_id);
-
-        //記事所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]);
-        }   
+        $article = Article::find($article_id); 
 
         Article::destroy($article_id);
 

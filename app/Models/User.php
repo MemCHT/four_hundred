@@ -59,6 +59,10 @@ class User extends Authenticatable
         return $this->hasMany(Favorite::class, 'user_id', 'id');
     }
 
+    public function identityProviders(){
+        return $this->hasMany(IdentityProvider::class, 'user_id', 'id');
+    }
+
     /**
      * Userをidで取得
      * 
@@ -134,7 +138,7 @@ class User extends Authenticatable
         return tap(self::make($attributes + $values), function ($instance) {
             $instance->save();
 
-            // User作成時にBlogも同時作成   ※要検証: save(), create()時に記述できるかも
+            // User作成時にBlogも同時作成   ※save()はupdate時にも使うので辞めたほうが良い。
             Blog::create([
                 'user_id' => $instance->id,
                 'title' => $instance->name."さんのブログ"

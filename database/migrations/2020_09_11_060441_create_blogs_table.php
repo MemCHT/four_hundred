@@ -24,7 +24,7 @@ class CreateBlogsTable extends Migration
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onUpdate('cascade')
-                ->onDelete('restrict');
+                ->onDelete('cascade');
 
             $table->foreign('status_id')
                 ->references('id')->on('statuses')

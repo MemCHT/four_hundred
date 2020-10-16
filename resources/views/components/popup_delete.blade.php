@@ -1,5 +1,5 @@
 <!-- idに"btn-delete_N"、classに"btn-delete"と付与されている要素とセットで使うコンポーネント-->
-<!--※idは削除したいテーブルのレコードid-->
+<!-- ※Nは削除したいテーブルのレコードid -->
 
 <div id="popup" class="popup-wrapper row" style="display:none;">
     <div class="container col-md-3">
@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<script src="{{ asset('js/popup.js') }}"></script>
+<script src="{{ asset('js/popup_delete.js') }}"></script>
 <script>
     /**
      * 必要な要素を渡すためのメソッド

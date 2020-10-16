@@ -16,12 +16,16 @@ const setDeletePopupEvent = (form_elements) => {
     Array.from(btn_delete).forEach((element) => {
         element.addEventListener('click',(event) => {
             event.preventDefault();
-            document.getElementById('popup').style.display='flex';
+            $popup = document.getElementById('popup');
+            $popup.style.display='flex';
+            $popup.style.height = document.getElementById('app').clientHeight;  //コンテンツ縦幅に合わせる。
+
 
             //送信用フォームエレメントを作成
             const button_id = event.currentTarget.id;
             const delete_form = createDeleteForm(button_id,form_elements);
 
+            //送信用フォームエレメントを適用
             setApplyEvent(delete_form);
             setCancelEvent();
         });

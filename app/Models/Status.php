@@ -35,8 +35,18 @@ class Status extends Model
      * @return bool $isPrivate
      */
     public static function isPrivate($status){
-        $isPrivate = $status->id === Status::where('name', '非公開')->first()->id;
+        $isPrivate = $status->id === self::where('name', '非公開')->first()->id;
         
         return $isPrivate;
+    }
+
+    /**
+     * ステータス名でインスタンスを取得
+     * 
+     * @param string $name
+     * @return App\Models\Status 
+     */
+    public static function getByName($name){
+        return self::where('name', $name)->first();
     }
 }

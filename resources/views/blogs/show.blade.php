@@ -15,6 +15,11 @@
                         <a class="btn btn-secondary" href="{{route('users.blogs.edit', ['user' => $blog->user_id, 'blog' => $blog->id])}}"> 編集 </a>
                         @endif
                     </div>
+                    <div class="col-md-12">
+                        @status(['color' => $blog->status->color])
+                        {{ $blog->status->name }}
+                        @endstatus
+                    </div>
                 </div>
             </div>
 

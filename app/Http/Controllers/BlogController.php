@@ -16,6 +16,11 @@ use App\Models\Article;
 
 class BlogController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('redirect.unAuthUser:blog')->only(['edit','update']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -83,19 +88,18 @@ class BlogController extends Controller
      * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($user_id,$blog_id)     //URLに対応させるための排他処理が必要
+    public function edit($user_id,$blog_id)
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
+        $statuses = Status::all();
 
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
-        }
+        //$blog->authUser();
 
         $articles = $blog->articles()->paginate(10);
 
-        return view('blogs.edit',compact('user','blog','articles'));
+        return view('blogs.edit',compact('user','blog','articles', 'statuses'));
     }
 
     /**
@@ -106,17 +110,17 @@ class BlogController extends Controller
      * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function update(BlogFormRequest $request, $user_id, $blog_id)        //URLに対応させるための排他処理が必要
+    public function update(BlogFormRequest $request, $user_id, $blog_id)
     {
-        $title = $request->input('title');
+        $input = $request->input();
         $blog = Blog::find($blog_id);
         
         //ブログ所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
+        /*if(Auth::id() !== intval($user_id)){
             return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
-        }
+        }*/
         
-        $blog->update(['title' => $title]);
+        $blog->update($input);
 
         return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id])
                          ->with('success','ブログタイトルの編集を完了しました');

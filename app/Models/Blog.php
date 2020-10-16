@@ -38,8 +38,11 @@ class Blog extends Model
      * ブログ所有ユーザ以外ならリダイレクト
      * @return \Illuminate\Http\Response
      */
-    public function redirectShow(){
-        return redirect(route('users.blogs.show', ['user' => $this->user->id, 'blog' => $this->id]));
+    public function authUser(){
+
+        if(Auth::id() !== intval($this->user_id)){
+            return response(redirect()->route('users.blogs.show', ['user' => $this->user_id, 'blog' => $this->id]));
+        }
     }
 
     /**

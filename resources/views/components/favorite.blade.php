@@ -21,6 +21,7 @@
     <!-- コンポネント使用時に$favoriteがセットされているかどうか -->
     <!-- セットされていない → favoriteが登録されていない。 -->
 
+    @auth
     @if(isset($favorite))
     <!-- favoriteのupdate処理 -->
     <form id="favorite-form" action="{{ route('users.blogs.articles.favorites.update', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id, 'favorite' => $favorite->id]) }}" method="POST">
@@ -33,6 +34,10 @@
     <form id="favorite-form" action="{{ route('users.blogs.articles.favorites.store', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
         @csrf
     </form>
-
     @endif
+
+    @endauth
+    @guest
+        <form id="favorite-form" action="{{ route('users.login') }}" method="GET"></form>
+    @endguest
 @endif

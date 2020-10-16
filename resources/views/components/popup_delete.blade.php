@@ -16,7 +16,7 @@
     </div>
 </div>
 
-<script src="{{ asset('js/popup.js') }}"></script>
+<script src="{{ asset('js/popup_delete.js') }}"></script>
 <script>
     /**
      * 必要な要素を渡すためのメソッド

@@ -54,6 +54,7 @@
                         <button id="btn-delete_{{ $article->id }}" class="btn btn-danger btn-delete">
                             エッセイを削除する
                         </button>
+                        <a class="btn btn-secondary" onclick="history.back();">キャンセル</a>
                     </div>
                 </form>
             </div>

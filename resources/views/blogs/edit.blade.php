@@ -6,22 +6,30 @@
         <div class="col-md-8">
 
             <div class="title-wrapper mt-5">
-                <h3>ブログタイトル編集</h3>
+                <h3>ブログ編集</h3>
 
                 <form action="{{ route('users.blogs.update', ['user' => $blog->user_id, 'blog' => $blog->id]) }}" method="POST">
                     @method('PUT')
                     @csrf
 
                     <div class="form-group">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="title" value="{{ $errors->has('title') ? old('title') : $blog->title }}" placeholder="ブログ名を記入">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-outline-secondary">確定</button>
-                            </div>
-                        </div>
+                        <label>タイトル</label>
+                        <input type="text" class="form-control" name="title" value="{{ $errors->has('title') ? old('title') : $blog->title }}" placeholder="ブログ名を記入">
                         @component('components.error',['name' => 'title']) @endcomponent
+                    </div>
 
+                    <div class="form-group">
+                        <label>ステータス</label>
+                        <select class="form-control" name="status_id">
+                            @foreach($statuses as $status)
+                            <option value="{{ $status->id }}" {{ $blog->status_id === $status->id ? "selected" : "" }} style="opacity:0.5">{{ $status->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">確定</button>
+                        <a class="btn btn-secondary" onclick="history.back();">キャンセル</a>
                     </div>
                 </form>
             </div>

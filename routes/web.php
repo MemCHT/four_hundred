@@ -16,11 +16,12 @@ Route::get('/', function () {
 });
 
 Route::get('/test/model/{index}','TestController@index');
-Route::get('/home', 'HomeController@index')->name('home');
 
 
 
 Route::namespace('User')->prefix('users')->name('users.')->group(function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+
     // ログイン認証関連
     Auth::routes();
 
@@ -44,9 +45,20 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
 
 
 
+Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
+    Route::get('/home', 'HomeController@index')->name('home');
+
+    // ログイン認証関連;
+    Auth::routes([
+        'register' => false
+    ]);
+});
+
+
+
 Route::prefix('users')->name('users.')->group(function(){
     //ブログ管理
-    Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');   //ここのuserパラメータいらない。
+    Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');
     Route::resource('{user}/blogs', 'BlogController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:blog');
 
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){

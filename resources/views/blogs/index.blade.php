@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(Auth::guard('admin')->check() ? 'layouts.admin.app' : 'layouts.user.app')
 
 @section('content')
 <div class="container">

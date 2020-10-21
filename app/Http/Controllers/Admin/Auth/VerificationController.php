@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User\Auth;
+namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
@@ -31,7 +31,7 @@ class VerificationController extends Controller
     {
         return $request->user()->hasVerifiedEmail()
                         ? redirect($this->redirectPath())
-                        : view('users.auth.verify');
+                        : view('admins.auth.verify');
     }
 
     /**
@@ -39,7 +39,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = RouteServiceProvider::ADMIN_HOME;
 
     /**
      * Create a new controller instance.
@@ -48,7 +48,7 @@ class VerificationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:user');
+        $this->middleware('auth:admin');
         $this->middleware('signed')->only('verify');
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }

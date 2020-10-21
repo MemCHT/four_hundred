@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Blog;
 use App\Models\Status;
@@ -45,7 +46,19 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest:user');
+    }
+
+    // Guardの認証方法を指定
+    protected function guard()
+    {
+        return Auth::guard('user');
+    }
+
+    // 新規登録画面
+    public function showRegistrationForm()
+    {
+        return view('users.auth.register');
     }
 
     /**
@@ -117,7 +130,7 @@ class RegisterController extends Controller
             return redirect()->route('users.register');
         }
 
-        return view('auth.register_confirm', [
+        return view('users.auth.register_confirm', [
             'input' => $input,
         ]);
     }

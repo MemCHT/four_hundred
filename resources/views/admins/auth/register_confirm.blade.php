@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin.app')
 
 @section('content')
 <div class="container">
@@ -8,7 +8,7 @@
                 <div class="card-header">アカウント内容確認</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('users.register') }}">
+                    <form method="POST" action="{{ route('admins.register') }}">
                         @csrf
 
                         <div class="form-group row">

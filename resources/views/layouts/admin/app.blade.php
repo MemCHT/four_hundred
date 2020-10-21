@@ -26,7 +26,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ route('admins.home') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -39,10 +39,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('users.blogs.index', ['user' => 1]) }}">ブログ一覧</a>
                         </li>
-                        @auth
+                        @auth('admin')
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('users.blogs.show', ['user' => Auth::id(), 'blog' => Auth::user()->blog->id])}}">
-                                マイブログ
+                            <a class="nav-link" href="#">
+                                エッセイ一覧
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                ユーザ一覧
                             </a>
                         </li>
                         @endauth
@@ -51,36 +56,34 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('users.login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('users.register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('users.register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
+                        @auth('admin')
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle text-danger" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::guard('admin')->user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('users.logout') }}"
+                                    <a class="dropdown-item" href="{{ route('admins.logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
+                                    <form id="logout-form" action="{{ route('admins.logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-
-                                    <a class="dropdown-item" href="{{ route('users.profile.edit') }}">プロフィール</a>
                                 </div>
                             </li>
-                        @endguest
+                        @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admins.login') }}">{{ __('Login') }}</a>
+                            </li>
+                            @if (Route::has('admins.register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('admins.register') }}">{{ __('Register') }}</a>
+                                </li>
+                            @endif
+                        @endauth
                     </ul>
                 </div>
             </div>

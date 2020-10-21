@@ -46,12 +46,29 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
 
 
 Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
-    Route::get('/home', 'HomeController@index')->name('home');
-
+    
     // ログイン認証関連;
     Auth::routes([
         'register' => false
     ]);
+
+    Route::group(['middleware' => ['auth:admin']], function(){
+        
+        Route::get('/home', 'HomeController@index')->name('home');
+        
+        Route::prefix('users')->name('users.')->group(function(){
+
+            Route::get('index', 'UserController@index')->name('index');
+            Route::get('{user}', 'UserController@show')->name('show');
+        });
+
+        Route::prefix('articles')->name('articles.')->group(function(){
+
+            Route::get('index', function(){
+                return view('others.not_exist');
+            })->name('index');
+        });
+    });
 });
 
 

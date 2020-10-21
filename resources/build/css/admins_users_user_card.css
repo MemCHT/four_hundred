@@ -1,0 +1,18 @@
+.user-card .card-body img {
+  height: 60px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: white;
+}
+
+.user-card .card-body .component-article {
+  display: inline;
+}
+
+.user-card .card-body .component-favorite {
+  display: inline;
+}
+

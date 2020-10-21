@@ -145,4 +145,40 @@ class User extends Authenticatable
             ]);
         });
     }
+
+    /**
+     * ユーザインスタンスをuser_cardコンポーネント用にフォーマット（お気に入り・記事総数を追加）する
+     * ※破壊的メソッド
+     * @return App\Models\User
+     */
+    public function formatForUserCard(){
+
+        $statuses = ['公開' => '正常', '非公開' => '凍結'];
+
+        //記事全てのfavorite総数を取得
+        $favorites_count = $this->blog->getFavoritesCount();
+        $this->favorites_count = $favorites_count;
+
+        //記事総数を取得
+        $this->articles_count = $this->blog->getArticlesCount();
+
+        $this->status->name = $statuses[$this->status->name];
+
+        return $this;
+    }
+
+    /**
+     * ユーザー一覧表示用オブジェクトを取得
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public static function getIndexObject(){
+        
+        $users = self::paginate(9);
+
+        foreach($users as $user){
+            $user->formatForUserCard();
+        }
+
+        return $users;
+    }
 }

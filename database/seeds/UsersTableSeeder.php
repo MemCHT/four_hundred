@@ -22,7 +22,8 @@ class UsersTableSeeder extends Seeder
             'email' => 'user@example.com',
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
-            'icon' => 'default.png'
+            'icon' => 'default.png',
+            'status_id' => 1
         ]);
         Blog::create([
             'user_id' => 1,

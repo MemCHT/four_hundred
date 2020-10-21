@@ -41,12 +41,12 @@
                         </li>
                         @auth('admin')
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ route('admins.articles.index') }}">
                                 エッセイ一覧
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{ route('admins.users.index') }}">
                                 ユーザ一覧
                             </a>
                         </li>

@@ -86,22 +86,6 @@ class Blog extends Model
     }
 
     /**
-     * ブログ一覧表示用オブジェクトを取得
-     * @return Illuminate\Pagination\LengthAwarePaginator
-     */
-    public static function getIndexObject(){
-        $status_id_public = Status::getByName('公開')->id;
-
-        $blogs = self::where('status_id', $status_id_public)->paginate(10);
-
-        foreach($blogs as $blog){
-            $blog->format();
-        }
-
-        return $blogs;
-    }
-
-    /**
      * ブログインスタンスをフォーマット（お気に入り・記事総数を追加）する
      * ※破壊的メソッド
      * @return App\Models\Blog
@@ -121,5 +105,21 @@ class Blog extends Model
         $this->latest_article = $latest_article;
 
         return $this;
+    }
+
+    /**
+     * ブログ一覧表示用オブジェクトを取得
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public static function getIndexObject(){
+        $status_id_public = Status::getByName('公開')->id;
+
+        $blogs = self::where('status_id', $status_id_public)->paginate(10);
+
+        foreach($blogs as $blog){
+            $blog->format();
+        }
+
+        return $blogs;
     }
 }

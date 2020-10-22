@@ -8,7 +8,7 @@
         
         <div class="row">
             <p class="col-md-4">メール</p>
-            <p class="col-md-8 text-right">{{ $user->email }}</p>
+            <p class="col-md-8 text-right">{{ strlen($user->email) >= 20 ? substr($user->email,0,19).'...' : $user->email }}</p>
         </div>
 
         <div class="row">

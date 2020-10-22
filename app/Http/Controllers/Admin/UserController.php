@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\InvitationEmail;
 use App\Models\User;
+use App\Models\Status;
 
 class UserController extends Controller
 {
@@ -45,12 +49,19 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $user_id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($user_id)
     {
-        //
+        $user = User::find($user_id);
+        $user->formatForUserCard();
+
+        $statuses = (object)[];
+        $statuses->unlock_id = Status::getByName('公開')->id;
+        $statuses->lock_id = Status::getByName('非公開')->id;
+
+        return view('admins.users.show', compact('user','statuses'));
     }
 
     /**
@@ -71,9 +82,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $user_id)
     {
-        //
+        $user = User::find($user_id);
+        $status_id = $request->input('status_id');
+        //dd($request->input());
+
+
+        $user->update(['status_id' => $status_id]);
+
+        return redirect()->route('admins.users.show', ['user' => $user_id])->with('success', $user->name.'さんのステータスを更新しました。');
     }
 
     /**
@@ -85,5 +103,20 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * 該当ユーザにメールを送信
+     * @param  \Illuminate\Http\Request $request
+     * @param  int  $user_id
+     * @return \Illuminate\Http\Response
+     */
+    public function sendmail(Request $request, $user_id){
+        $user = User::find($user_id);
+        $data = $request->input();
+        $data = json_decode(json_encode($data));
+
+        Mail::to($user)->send(new InvitationEmail($data));
+        return redirect()->route('admins.users.show', ['user' => $user_id])->with('success', $user->name.'さんへメールを送信しました。');
     }
 }

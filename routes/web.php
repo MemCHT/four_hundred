@@ -60,6 +60,8 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
 
             Route::get('index', 'UserController@index')->name('index');
             Route::get('{user}', 'UserController@show')->name('show');
+            Route::put('{user}', 'UserController@update')->name('update');
+            Route::post('sendmail\{user}', 'UserController@sendmail')->name('sendmail');
         });
 
         Route::prefix('articles')->name('articles.')->group(function(){

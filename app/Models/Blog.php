@@ -101,10 +101,21 @@ class Blog extends Model
         $this->articles_count = $this->getArticlesCount();
 
         //ブログの最新記事を取得
-        $latest_article = Article::where('blog_id', $this->id)->where('status_id', $status_id_public)->orderBy('updated_at', 'DESC')->first();
-        $this->latest_article = $latest_article;
+        
+        $this->latest_article = $this->getLatestArticle();
 
         return $this;
+    }
+
+    /**
+     * ブログの最新記事を取得
+     * 
+     * @return App\Models\Article
+     */
+    public function getLatestArticle(){
+        $latest_article = Article::where('blog_id', $this->id)->where('status_id', Status::getByName('公開')->id)->orderBy('updated_at', 'DESC')->first();
+
+        return $latest_article;
     }
 
     /**

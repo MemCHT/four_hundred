@@ -66,9 +66,7 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
 
         Route::prefix('articles')->name('articles.')->group(function(){
 
-            Route::get('index', function(){
-                return view('others.not_exist');
-            })->name('index');
+            Route::get('index', 'ArticleController@index')->name('index');
         });
     });
 });

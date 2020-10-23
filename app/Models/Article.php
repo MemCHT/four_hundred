@@ -47,4 +47,13 @@ class Article extends Model
     public function validFavorites(){
         return Favorite::getValidFavorites($this->id);
     }
+
+    /**
+     * 公開済みのarticleを全件取得
+     * @return Illuminate\Database\Eloquent\Collection (Article)
+     */
+    public static function getPublicArticles(){
+        $articles = Article::where('status_id', Status::getByName('公開')->id)->get();
+        return $articles;
+    }
 }

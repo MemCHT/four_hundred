@@ -1,6 +1,6 @@
 <div class="card user-card">
 
-    <div class="card-header">{{ $user->name }}</div>
+    <div class="card-header font-weight-bold">{{ $user->name }}</div>
 
     <div class="card-body">
 

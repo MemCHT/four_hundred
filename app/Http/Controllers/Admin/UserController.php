@@ -15,12 +15,12 @@ class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * @param  Illuminate\Http\Request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::getIndexObject();
+        $users = User::searchUserByKeyword($request);
 
         return view('admins.users.index', compact('users'));
     }

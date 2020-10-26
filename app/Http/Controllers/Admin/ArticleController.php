@@ -13,11 +13,12 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  Illuminate\Http\Request;
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::where('status_id', Status::getByName('公開')->id)->paginate(10);
+        $articles = Article::searchArticlesByKeyword($request);
 
         return view('admins.articles.index', compact('articles'));
     }

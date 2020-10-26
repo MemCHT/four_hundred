@@ -181,4 +181,39 @@ class User extends Authenticatable
 
         return $users;
     }
+
+    /**
+     * ユーザ一覧表示用インスタンスを取得
+     * @param  Illuminate\Http\Request
+     * @return  Illuminate\Pagination\LengthAwarePaginator (article)
+     */
+    public static function searchUserByKeyword($request){
+        $users = User::select('*');
+
+        $keyword = $request->input('keyword');
+        $session_has_keyword = $request->session()->has('keyword');
+        $request_has_page = $request->has('page');
+
+        // 検索もページ移動もしていないとき、セッションを破棄する。（ヘッダから直接飛んだ時）
+        if(isset($keyword) == false && $request_has_page == false){
+            $request->session()->forget('keyword');
+        }
+
+        // 検索後にページボタン押下時、セッションからkeywordを取得
+        if( $session_has_keyword && $request_has_page)
+            $keyword = $request->session()->get('keyword');
+        
+        // キーワード（name, email）によって検索処理
+        if(isset($keyword)){
+            $users = $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');
+            $request->session()->put('keyword', $keyword);
+        }
+        $users = $users->orderBy('updated_at', 'DESC')->paginate(9);
+
+        foreach($users as $user){
+            $user->formatForUserCard();
+        }
+
+        return $users;
+    }
 }

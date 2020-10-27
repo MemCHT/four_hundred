@@ -20,9 +20,15 @@
                 </a>
             </div>
 
-            <div class="col-md-9 row">
-                <p class="col-md-12">{{ $article->blog->user->name }}</p>
-                <p class="col-md-12">{{ $article->updated_at }} 更新</p>
+            <div class="col-md-9">
+                <div class="row">
+                    <p class="col-md-8">{{ $article->blog->user->name }}</p>
+                    <div class="col-md-3 text-right">
+                        @status(['color' => $article->status->color]) {{ $article->status->name }} @endstatus
+                    </div>
+
+                    <p class="col-md-12">{{ $article->updated_at }} 更新</p>
+                </div>
             </div>
 
         </div>

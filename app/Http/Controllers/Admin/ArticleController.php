@@ -19,7 +19,9 @@ class ArticleController extends Controller
     public function index(Request $request)
     {
         $articles = Article::searchArticlesByKeyword($request);
+        $statuses = Status::all();
+        $current_status = Status::find($request->session()->get('status_id'));
 
-        return view('admins.articles.index', compact('articles'));
+        return view('admins.articles.index', compact('articles', 'statuses', 'current_status'));
     }
 }

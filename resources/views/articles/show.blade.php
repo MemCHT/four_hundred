@@ -9,15 +9,24 @@
                 <div class="col-md-8">
                     <h2><a href="{{ route('users.blogs.show',['user' => $article->blog->user_id, 'blog' => $article->blog_id]) }}">{{$article->title}}</a></h2>
                 </div>
+                
                 <div class="col-md-4 text-right">
 
-                    @if(Auth::id() === $article->blog->user->id)
-                    <a class="btn btn-secondary" href="{{route('users.blogs.articles.edit', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id])}}">
-                        編集
-                    </a>
+                    @if(Auth::guard('user')->id() === $article->blog->user->id)
+                        <a class="btn btn-secondary" href="{{route('users.blogs.articles.edit', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id])}}">
+                            編集
+                        </a>
+                    @elseif(Auth::guard('admin')->check())
+                        <form action="{{ route('users.blogs.articles.destroy', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
+                            @method('DELETE')
+                            @csrf
+                            
+                            <button type="submit" class="btn btn-danger" onclick="event.preventDefault(); confirmAlert(event)">削除</button>
+                        </form>
                     @endif
 
                 </div>
+
                 <div class="col-md-12">
                     @favorite(['article' => $article, 'favorite' => $favorite])
                     {{ count($article->validFavorites()) }}
@@ -45,8 +54,8 @@
                     <div class="comment-header-right col-md-6 text-right">
                         <p>{{ $comment->created_at }}</p>
                         
-                        @if(Auth::id() === $article->blog->user->id)
-                        <button id="btn-delete_{{ $comment->id }}" class="btn btn-secondary btn-delete"> 削除 </button>
+                        @if(Auth::guard('user')->id() === $article->blog->user->id || Auth::guard('admin')->check())
+                            <button id="btn-delete_{{ $comment->id }}" class="btn btn-secondary btn-delete"> 削除 </button>
                         @endif
                     </div>
 
@@ -66,7 +75,7 @@
                     @csrf
                     
                     <div class="form-group">
-                        <label for="">名前：{{ Auth::user()->name }}</label>
+                        <label for="">名前：{{ Auth::guard('user')->user()->name }}</label>
                         <textarea class="form-control" name="body" rows="3" placeholder="コメントを記入">{{ old('body') }}</textarea>
                     </div>
 
@@ -93,3 +102,15 @@
 @include('components.popup_delete',[
     'route' => route('users.blogs.articles.comments.destroy',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id, 'comment' => 0])
 ])
+
+<script>
+    function confirmAlert(e){
+        if(!window.confirm('本当に操作を行いますか？')){
+            window.alert('キャンセルされました');
+            return false;
+        }
+
+        let target = e.target.parentNode;
+        target.submit();
+    }
+</script>

@@ -24,7 +24,7 @@ class RedirectUnAuthUser
         $user_id = $request->route()->parameters()['user'];
 
         // 不正ユーザアクセス時にリダイレクト
-        if(Auth::id() !== intval($user_id)){
+        if(Auth::guard('user')->id() !== intval($user_id) && Auth::guard('admin')->check() == false){
             return response($this->getResponseByLayer($layer, $request));
         }
 

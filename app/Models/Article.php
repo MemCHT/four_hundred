@@ -63,26 +63,45 @@ class Article extends Model
      * @return  Illuminate\Pagination\LengthAwarePaginator (article)
      */
     public static function searchArticlesByKeyword($request){
-        $articles = Article::where('status_id', Status::getByName('公開')->id);
+        $articles = Article::select('*');
 
         $keyword = $request->input('keyword');
+        $status_id = $request->input('status_id');
+
         $session_has_keyword = $request->session()->has('keyword');
+        $session_has_status_id = $request->session()->has('status_id');
         $request_has_page = $request->has('page');
 
-        // 検索もページ移動もしていないとき、セッションを破棄する。（ヘッダから直接飛んだ時）
-        if(isset($keyword) == false && $request_has_page == false){
+        // 1. 検索もページ移動もしていないとき、keywordセッションを破棄する。（ヘッダから直接飛んだ時）
+        if(isset($keyword) === false && $request_has_page === false){
             $request->session()->forget('keyword');
         }
 
-        // 検索後にページボタン押下時、セッションからkeywordを取得
+        // 1. 絞り込みもページ移動もしていないとき、status_idセッションを破棄する。
+        if( (isset($status_id) === false || $status_id === "all") && $request_has_page === false){
+            $request->session()->forget('status_id');
+        }
+
+        // 2. 検索後にページボタン押下時、セッションからkeywordを取得
         if( $session_has_keyword && $request_has_page)
             $keyword = $request->session()->get('keyword');
         
-        // キーワード（name, email）によって検索処理
+        // 2. 絞り込み後にページボタン押下時、セッションからkeywordを取得
+        if( $session_has_status_id && $request_has_page)
+            $status_id = $request->session()->get('status_id');
+        
+        // 3. キーワード（name, email）によって検索処理
         if(isset($keyword)){
-            $articles = $articles->where('title', 'like', '%'.$keyword.'%')->orWhere('body', 'like', '%'.$keyword.'%')->where('status_id', Status::getByName('公開')->id);
+            $articles = $articles->where('title', 'like', '%'.$keyword.'%')->orWhere('body', 'like', '%'.$keyword.'%');
             $request->session()->put('keyword', $keyword);
         }
+
+        // 4. all以外のステータス(status_id)によって絞り込み
+        if(isset($status_id) && $status_id !== "all"){
+            $articles = $articles->where('status_id', $status_id);
+            $request->session()->put('status_id', $status_id);
+        }
+
         $articles = $articles->orderBy('updated_at', 'DESC')->paginate(10);
 
         return $articles;

@@ -7,4 +7,5 @@
             </button>
         </div>
     </div>
+    {{ $slot }}
 </form>

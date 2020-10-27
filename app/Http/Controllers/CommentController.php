@@ -126,7 +126,7 @@ class CommentController extends Controller
         $comment = Comment::find($comment_id);
 
         //記事所有ユーザ以外ならリダイレクト
-        if(Auth::id() !== intval($user_id)){
+        if(Auth::id() !== intval($user_id) && Auth::guard('admin')->check() === false){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }
 

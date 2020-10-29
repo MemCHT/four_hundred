@@ -4,8 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+use App\Models\Interfaces\AssurableRouteParameters;
+use App\Models\Traits\AssurableRouteParametersTrait;
+
+class Comment extends Model implements AssurableRouteParameters
 {
+    use AssurableRouteParametersTrait;
+
     protected $fillable = ['article_id','user_id','body'];
 
     //
@@ -22,7 +27,7 @@ class Comment extends Model
      * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx, 'comment' => xx]
      * @return bool
      */
-    public static function isExist($params){
+    /* public static function isExist($params){
         if(isset($params['comment']) && isset($params['article'])){
             $comment = self::find($params['comment']);
 
@@ -30,5 +35,5 @@ class Comment extends Model
                 return Article::isExist($params);
         }
         return false;
-    }
+    }*/
 }

@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\JaPasswordReset;
 use \InterventionImage;
+
+use App\Notifications\JaPasswordReset;
+use App\Models\Interfaces\AssurableRouteParameters;
+use App\Models\Traits\AssurableRouteParametersTrait;
 
 use App\Models\Blog;
 
-class User extends Authenticatable
+class User extends Authenticatable implements AssurableRouteParameters
 {
     use Notifiable;
+    use AssurableRouteParametersTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -112,14 +116,14 @@ class User extends Authenticatable
      * @param  array  $params
      * @return bool
      */
-    public static function isExist($params){
+    /*public static function isExist($params){
         if(isset($params['user'])){
             $user = self::find($params['user']);
 
             return isset($user);
         }
         return false;
-    }
+    }*/
 
     /**
      * vendorに実装されているfirstOrCreateをオーバーライド
@@ -194,18 +198,18 @@ class User extends Authenticatable
         $session_has_keyword = $request->session()->has('keyword');
         $request_has_page = $request->has('page');
 
-        // 検索もページ移動もしていないとき、セッションを破棄する。（ヘッダから直接飛んだ時）
+        // 1. 検索もページ移動もしていないとき、セッションを破棄する。（ヘッダから直接飛んだ時）
         if(isset($keyword) == false && $request_has_page == false){
             $request->session()->forget('keyword');
         }
 
-        // 検索後にページボタン押下時、セッションからkeywordを取得
+        // 2. 検索後にページボタン押下時、セッションからkeywordを取得
         if( $session_has_keyword && $request_has_page)
             $keyword = $request->session()->get('keyword');
         
-        // キーワード（name, email）によって検索処理
+        // 3. キーワード（name, email）によって検索処理
         if(isset($keyword)){
-            $users = $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');
+            $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');
             $request->session()->put('keyword', $keyword);
         }
         $users = $users->orderBy('updated_at', 'DESC')->paginate(9);

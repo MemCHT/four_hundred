@@ -44,7 +44,7 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
 });
 
 
-
+// 管理者機能
 Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
     
     // ログイン認証関連;
@@ -58,7 +58,7 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
         
         Route::prefix('users')->name('users.')->group(function(){
 
-            Route::get('index', 'UserController@index')->name('index');
+            Route::get('', 'UserController@index')->name('index');
             Route::get('{user}', 'UserController@show')->name('show');
             Route::put('{user}', 'UserController@update')->name('update');
             Route::post('sendmail\{user}', 'UserController@sendmail')->name('sendmail');
@@ -66,13 +66,13 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
 
         Route::prefix('articles')->name('articles.')->group(function(){
 
-            Route::get('index', 'ArticleController@index')->name('index');
+            Route::get('', 'ArticleController@index')->name('index');
         });
     });
 });
 
 
-
+// 一般機能
 Route::prefix('users')->name('users.')->group(function(){
     //ブログ管理
     Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');

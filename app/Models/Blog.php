@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use Illuminate\Support\Facades\Auth;
 
-class Blog extends Model
+use App\Models\Interfaces\AssurableRouteParameters;
+use App\Models\Traits\AssurableRouteParametersTrait;
+
+class Blog extends Model implements AssurableRouteParameters
 {
+    use AssurableRouteParametersTrait;
+
     protected $fillable = ['user_id','title','status_id'];
 
     //
@@ -50,7 +54,7 @@ class Blog extends Model
      * @param array params = ['user' => xx , 'blog' => xx]
      * @return bool
      */
-    public static function isExist($params){
+    /* public static function isExist($params){
         if(isset($params['blog']) && isset($params['user'])){
             $blog = self::find($params['blog']);
 
@@ -58,7 +62,7 @@ class Blog extends Model
                 return User::isExist($params);
         }
         return false;
-    }
+    }*/
 
     /**
      * 全記事のお気に入り総数を取得

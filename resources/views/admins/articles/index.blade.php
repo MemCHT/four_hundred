@@ -7,22 +7,18 @@
         <h2 class="col-md-4 offset-md-4 text-center font-weight-bold">エッセイ一覧</h2>
 
         <div class="col-md-4">
-            @component('components.search', ['route' => route('admins.articles.index')])
+            @component('components.search', ['route' => route('admins.articles.index'), 'placeholder' => 'タイトル/本文で検索'])
                 <div class="input-group">
 
                     <div class="input-group-append">
-                        <label class="input-group-text">
-                            ステータス
-                        </label>
+                        <label class="input-group-text">ステータス</label>
                     </div>
 
                     <select class="form-control" name="status_id">
                         <option value="all">全て</option>
                         
                         @foreach($statuses as $status)
-                        
-                        <option value="{{ $status->id }}" @if(session()->get('status_id') == $status->id) selected @endif>{{ $status->name }}</option>
-                        
+                            <option value="{{ $status->id }}" @if(session()->get('status_id') == $status->id) selected @endif>{{ $status->name }}</option>
                         @endforeach
                     </select>
 
@@ -33,6 +29,7 @@
         @if(session()->has('keyword'))
             <h3 class="col-md-12 text-center">検索ワード「{{ session()->get('keyword') }}」</h3>
         @endif
+        
         @if(session()->has('status_id'))
             <h3 class="col-md-12 text-center">ステータス:「{{ $current_status->name }}」</h3>
         @endif

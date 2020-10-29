@@ -3,9 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
-class Article extends Model
+use App\Models\Interfaces\AssurableRouteParameters;
+use App\Models\Traits\AssurableRouteParametersTrait;
+
+class Article extends Model implements AssurableRouteParameters
 {
+    use AssurableRouteParametersTrait;
+
     protected $fillable = ['blog_id','title','body','status_id'];
 
     //
@@ -30,7 +36,7 @@ class Article extends Model
      * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx]
      * @return bool
      */
-    public static function isExist($params){
+    /*public static function isExist($params){
         if(isset($params['article']) && isset($params['blog'])){
             $article = self::find($params['article']);
 
@@ -38,7 +44,7 @@ class Article extends Model
                 return Blog::isExist($params);
         }
         return false;
-    }
+    }*/
 
     /**
      * articleインスタンスにある有効なお気に入りを取得
@@ -63,6 +69,8 @@ class Article extends Model
      * @return  Illuminate\Pagination\LengthAwarePaginator (article)
      */
     public static function searchArticlesByKeyword($request){
+        // DB::enableQueryLog();
+
         $articles = Article::select('*');
 
         $keyword = $request->input('keyword');
@@ -90,19 +98,38 @@ class Article extends Model
         if( $session_has_status_id && $request_has_page)
             $status_id = $request->session()->get('status_id');
         
+        /**
+         * ? 以下3,4で同時検索されない
+         * -- 出力されているクエリを参照することで解決
+         * DB::enableQueryLog();
+         * ~
+         * dd(DB::getQueryLog();)
+         * で参照可能
+         */
+        
         // 3. キーワード（name, email）によって検索処理
         if(isset($keyword)){
-            $articles = $articles->where('title', 'like', '%'.$keyword.'%')->orWhere('body', 'like', '%'.$keyword.'%');
+            // これだと (where 'title'=hoge) + (where 'body'=hoge) ∴A+BC
+            // $articles->where('title', 'like', '%'.$keyword.'%')->orWhere('body', 'like', '%'.$keyword.'%');
+            
+            // これで ((where 'title=hoge) + (where 'body'=hoge)) ∴(A+B)C
+            $articles->where(function($articles) use($keyword){
+                $articles->where('title', 'like', '%'.$keyword.'%')
+                         ->orWhere('body', 'like', '%'.$keyword.'%');
+            });
+
             $request->session()->put('keyword', $keyword);
         }
 
         // 4. all以外のステータス(status_id)によって絞り込み
         if(isset($status_id) && $status_id !== "all"){
-            $articles = $articles->where('status_id', $status_id);
+            $articles->where('status_id', $status_id);
             $request->session()->put('status_id', $status_id);
         }
 
         $articles = $articles->orderBy('updated_at', 'DESC')->paginate(10);
+
+        // dd(DB::getQueryLog());
 
         return $articles;
     }

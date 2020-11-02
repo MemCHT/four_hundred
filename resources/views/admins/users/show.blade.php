@@ -55,6 +55,7 @@
                         <form action="{{ route('admins.users.sendmail', ['user' => $user->id]) }}" method="POST">
                             @csrf
 
+                            @include('components.error', ['name' => 'body'])
                             <textarea class="form-control col-md-12" name="body" cols="30" rows="10">@php
                                 echo("$user->name 様\n");
                                 echo("\n");
@@ -63,9 +64,9 @@
                                 echo("[body] \n");
                                 echo("\n");
                                 echo("hoge社 執筆企画チーム\n");
-                                echo(Auth::guard('admin')->user()->name."より\n");
-                                @endphp
-                            </textarea>
+                                echo(Auth::guard('admin')->user()->name."より");
+                            @endphp</textarea>
+
                             <button type="submit" class="btn btn-secondary mt-3" onclick="event.preventDefault();confirmAlert(event);">送信する</button>
                         </form>
                     </div>

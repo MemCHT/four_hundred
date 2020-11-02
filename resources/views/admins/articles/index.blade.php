@@ -10,12 +10,8 @@
             @component('components.search', ['route' => route('admins.articles.index'), 'placeholder' => 'タイトル/本文で検索'])
                 <div class="input-group">
 
-                    <div class="input-group-append">
-                        <label class="input-group-text">ステータス</label>
-                    </div>
-
                     <select class="form-control" name="status_id">
-                        <option value="all">全て</option>
+                        <option value="all">ステータスで絞り込み</option>
                         
                         @foreach($statuses as $status)
                             <option value="{{ $status->id }}" @if(session()->get('status_id') == $status->id) selected @endif>{{ $status->name }}</option>

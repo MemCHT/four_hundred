@@ -199,9 +199,8 @@ class User extends Authenticatable implements AssurableRouteParameters
         $request_has_page = $request->has('page');
 
         // 1. 検索もページ移動もしていないとき、セッションを破棄する。（ヘッダから直接飛んだ時）
-        if(isset($keyword) == false && $request_has_page == false){
+        if(isset($keyword) == false && $request_has_page == false)
             $request->session()->forget('keyword');
-        }
 
         // 2. 検索後にページボタン押下時、セッションからkeywordを取得
         if( $session_has_keyword && $request_has_page)

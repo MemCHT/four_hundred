@@ -68,7 +68,7 @@ class BlogController extends Controller
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
 
-        $articles = $blog->articles()->paginate(10);
+        $articles = $blog->articles()->orderBy('updated_at', 'DESC')->paginate(10);
 
         // ブログが非公開 && ブログ所有ユーザでない なら別のビューを表示
         if($blog->isPrivate())
@@ -77,7 +77,6 @@ class BlogController extends Controller
         if(Auth::id() !== $blog->user_id)
             $articles = $blog->articles()->where('status_id', Status::getByName('公開')->id)->paginate(10);
 
-        //dd(Status::where('name', '公開')->get());
         return view('blogs.show',compact('user','blog','articles'));
     }
 

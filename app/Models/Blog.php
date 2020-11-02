@@ -90,28 +90,6 @@ class Blog extends Model implements AssurableRouteParameters
     }
 
     /**
-     * ブログインスタンスをフォーマット（お気に入り・記事総数を追加）する
-     * ※破壊的メソッド
-     * @return App\Models\Blog
-     */
-    public function format(){
-        $status_id_public = Status::getByName('公開')->id;
-
-        //記事全てのfavorite総数を取得
-        $favorites_count = $this->getFavoritesCount();
-        $this->favorites_count = $favorites_count;
-
-        //記事総数を取得
-        $this->articles_count = $this->getArticlesCount();
-
-        //ブログの最新記事を取得
-        
-        $this->latest_article = $this->getLatestArticle();
-
-        return $this;
-    }
-
-    /**
      * ブログの最新記事を取得
      * 
      * @return App\Models\Article
@@ -123,16 +101,39 @@ class Blog extends Model implements AssurableRouteParameters
     }
 
     /**
+     * ブログインスタンスをフォーマット（お気に入り・記事総数を追加）する
+     * ※破壊的メソッド
+     * @return App\Models\Blog
+     */
+    public function formatForIndex(){
+        $status_id_public = Status::getByName('公開')->id;
+
+        //記事全てのfavorite総数を取得
+        $favorites_count = $this->getFavoritesCount();
+        $this->favorites_count = $favorites_count;
+
+        //記事総数を取得
+        $this->articles_count = $this->getArticlesCount();
+
+        //ブログの最新記事を取得
+        $this->latest_article = $this->getLatestArticle();
+
+        return $this;
+    }
+
+    /**
      * ブログ一覧表示用オブジェクトを取得
      * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public static function getIndexObject(){
         $status_id_public = Status::getByName('公開')->id;
 
-        $blogs = self::where('status_id', $status_id_public)->paginate(10);
+        $blogs = self::where('status_id', $status_id_public)
+                     ->orderBy('updated_at', 'DESC')
+                     ->paginate(10);
 
         foreach($blogs as $blog){
-            $blog->format();
+            $blog->formatForIndex();
         }
 
         return $blogs;

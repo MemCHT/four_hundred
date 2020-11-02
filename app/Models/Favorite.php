@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
-class Favorite extends Model
+class Favorite extends Model implements AssurableRouteParameters
 {
     use AssurableRouteParametersTrait;
 

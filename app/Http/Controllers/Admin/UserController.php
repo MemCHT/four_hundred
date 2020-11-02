@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Mail;
 
+use App\Http\Requests\AdminUserSendMailRequestForm;
 use App\Mail\InvitationEmail;
 use App\Models\User;
 use App\Models\Status;
@@ -107,11 +108,11 @@ class UserController extends Controller
 
     /**
      * 該当ユーザにメールを送信
-     * @param  \Illuminate\Http\Request $request
+     * @param  App\Http\Requests\AdminUserSendMailRequestForm $request
      * @param  int  $user_id
      * @return \Illuminate\Http\Response
      */
-    public function sendmail(Request $request, $user_id){
+    public function sendmail(AdminUserSendMailRequestForm $request, $user_id){
         $user = User::find($user_id);
         $data = $request->input();
         $data = json_decode(json_encode($data));

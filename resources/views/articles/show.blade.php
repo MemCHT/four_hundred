@@ -55,7 +55,7 @@
                         <p>{{ $comment->created_at }}</p>
                         
                         @if(Auth::guard('user')->id() === $article->blog->user->id || Auth::guard('admin')->check())
-                            <button id="btn-delete_{{ $comment->id }}" class="btn btn-secondary btn-delete"> 削除 </button>
+                            <button id="btn-delete_{{ $comment->id }}" class="btn btn-secondary btn-delete ml-2"> 削除 </button>
                         @endif
                     </div>
 

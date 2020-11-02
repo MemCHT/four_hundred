@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
+use App\Models\Blog;
+
 class Article extends Model implements AssurableRouteParameters
 {
     use AssurableRouteParametersTrait;
@@ -30,6 +32,8 @@ class Article extends Model implements AssurableRouteParameters
     public function favorites(){
         return $this->hasMany(Favorite::class, 'article_id', 'id');
     }
+
+    
 
     /**
      * パラメータに応じて、Articleインスタンス存在チェック
@@ -64,7 +68,7 @@ class Article extends Model implements AssurableRouteParameters
     }
 
     /**
-     * Article一覧表示用インスタンス取得
+     * Article一覧表示用インスタンス取得 + Article検索処理
      * @param  Illuminate\Http\Request
      * @return  Illuminate\Pagination\LengthAwarePaginator (article)
      */
@@ -74,33 +78,21 @@ class Article extends Model implements AssurableRouteParameters
         $articles = Article::select('*');
 
         $keyword = $request->input('keyword');
-        $status_id = $request->input('status_id');
 
         $session_has_keyword = $request->session()->has('keyword');
-        $session_has_status_id = $request->session()->has('status_id');
         $request_has_page = $request->has('page');
 
         // 1. 検索もページ移動もしていないとき、keywordセッションを破棄する。（ヘッダから直接飛んだ時）
-        if(isset($keyword) === false && $request_has_page === false){
+        if(isset($keyword) === false && $request_has_page === false)
             $request->session()->forget('keyword');
-        }
-
-        // 1. 絞り込みもページ移動もしていないとき、status_idセッションを破棄する。
-        if( (isset($status_id) === false || $status_id === "all") && $request_has_page === false){
-            $request->session()->forget('status_id');
-        }
 
         // 2. 検索後にページボタン押下時、セッションからkeywordを取得
         if( $session_has_keyword && $request_has_page)
             $keyword = $request->session()->get('keyword');
         
-        // 2. 絞り込み後にページボタン押下時、セッションからkeywordを取得
-        if( $session_has_status_id && $request_has_page)
-            $status_id = $request->session()->get('status_id');
-        
         /**
          * ? 以下3,4で同時検索されない
-         * -- 出力されているクエリを参照することで解決
+         *   -- 出力されているクエリを参照することで解決
          * DB::enableQueryLog();
          * ~
          * dd(DB::getQueryLog();)
@@ -121,15 +113,41 @@ class Article extends Model implements AssurableRouteParameters
             $request->session()->put('keyword', $keyword);
         }
 
-        // 4. all以外のステータス(status_id)によって絞り込み
-        if(isset($status_id) && $status_id !== "all"){
-            $articles->where('status_id', $status_id);
-            $request->session()->put('status_id', $status_id);
-        }
+        $articles = self::narrowArticlesFromStatus($request, $articles);
 
         $articles = $articles->orderBy('updated_at', 'DESC')->paginate(10);
 
         // dd(DB::getQueryLog());
+
+        return $articles;
+    }
+
+    /**
+     * ArticleをStatusで絞り込み
+     * 
+     * @param Illuminate\Database\Eloquent\Builder $articles
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    private static function narrowArticlesFromStatus($request, $articles){
+
+        $status_id = $request->input('status_id');
+
+        $session_has_status_id = $request->session()->has('status_id');
+        $request_has_page = $request->has('page');
+
+        // 1. 絞り込みもページ移動もしていないとき、status_idセッションを破棄する。
+        if( (isset($status_id) === false || $status_id === "all") && $request_has_page === false)
+            $request->session()->forget('status_id');
+
+        // 2. 絞り込み後にページボタン押下時、セッションからstatus_idを取得
+        if( $session_has_status_id && $request_has_page)
+            $status_id = $request->session()->get('status_id');
+        
+        // 3. all以外のステータス(status_id)によって絞り込み
+        if(isset($status_id) && $status_id !== "all"){
+            $articles->where('status_id', $status_id);
+            $request->session()->put('status_id', $status_id);
+        }
 
         return $articles;
     }

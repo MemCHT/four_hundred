@@ -31,7 +31,7 @@ trait AssurableRouteParametersTrait
             
             // パラメータから現レイヤー取得
             $currentInstance = self::find($params[$currentLayer]);
-
+            
             // 親レイヤーに対応したid名, ex) blog_id
             $parentId = $parentLayer.'_id';
 

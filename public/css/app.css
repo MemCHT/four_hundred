@@ -10899,3 +10899,11 @@ a.text-dark:focus {
   }
 }
 
+html {
+  min-height: 100%;
+}
+
+html body {
+  min-height: 100%;
+}
+

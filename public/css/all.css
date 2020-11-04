@@ -31,7 +31,7 @@
 .fade-item {
   margin: 0;
   text-align: center;
-  background: rgba(0, 0, 0, 0.2);
+  background: #bdc3c7;
   padding: 15px 0;
   position: absolute;
   left: 0;
@@ -68,5 +68,24 @@
 
 .container .row .col-md-8 .comment-wrapper .comment .comment-body {
   border-bottom: 1px dotted #707070;
+}
+
+
+.user-card .card-body img {
+  height: 60px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: white;
+}
+
+.user-card .card-body .component-article {
+  display: inline;
+}
+
+.user-card .card-body .component-favorite {
+  display: inline;
 }
 

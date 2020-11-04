@@ -12,6 +12,7 @@ use App\Models\Favorite;
 
 class FilterByRouteParameters
 {
+
     /**
      * Handle an incoming request.
      *
@@ -27,9 +28,12 @@ class FilterByRouteParameters
         // middleware呼び出し時の引数によって処理のレイヤーを設定
         $model = $this->selectLayer($route_layer);
 
+        $currentUrl = $request->url();
+        // dd($currentUrl);
+
         // 設定したレイヤーに対応したパラメータ確認処理を行う
         // パラメータに異常がある場合、not_existビューを表示
-        if($model::isExist($allRouteParams) === false)
+        if($model::isExistParent($allRouteParams, $currentUrl) === false)
             return response(view('others.not_exist'));
 
         return $next($request);

@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\JaPasswordReset;
 use \InterventionImage;
+
+use App\Notifications\JaPasswordReset;
+use App\Models\Interfaces\AssurableRouteParameters;
+use App\Models\Traits\AssurableRouteParametersTrait;
 
 use App\Models\Blog;
 
-class User extends Authenticatable
+class User extends Authenticatable implements AssurableRouteParameters
 {
     use Notifiable;
+    use AssurableRouteParametersTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -20,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','token'
+        'name', 'email', 'password','token', 'status_id'
     ];
 
     /**
@@ -112,14 +116,14 @@ class User extends Authenticatable
      * @param  array  $params
      * @return bool
      */
-    public static function isExist($params){
+    /*public static function isExist($params){
         if(isset($params['user'])){
             $user = self::find($params['user']);
 
             return isset($user);
         }
         return false;
-    }
+    }*/
 
     /**
      * vendorに実装されているfirstOrCreateをオーバーライド
@@ -144,5 +148,75 @@ class User extends Authenticatable
                 'title' => $instance->name."さんのブログ"
             ]);
         });
+    }
+
+    /**
+     * ユーザインスタンスをuser_cardコンポーネント用にフォーマット（お気に入り・記事総数を追加）する
+     * ※破壊的メソッド
+     * @return App\Models\User
+     */
+    public function formatForUserCard(){
+
+        $statuses = ['公開' => '正常', '非公開' => '凍結'];
+
+        //記事全てのfavorite総数を取得
+        $favorites_count = $this->blog->getFavoritesCount();
+        $this->favorites_count = $favorites_count;
+
+        //記事総数を取得
+        $this->articles_count = $this->blog->getArticlesCount();
+
+        $this->status->name = $statuses[$this->status->name];
+
+        return $this;
+    }
+
+    /**
+     * ユーザー一覧表示用オブジェクトを取得
+     * @return Illuminate\Pagination\LengthAwarePaginator
+     */
+    public static function getIndexObject(){
+        
+        $users = self::paginate(9);
+
+        foreach($users as $user){
+            $user->formatForUserCard();
+        }
+
+        return $users;
+    }
+
+    /**
+     * ユーザ一覧表示用インスタンスを取得
+     * @param  Illuminate\Http\Request
+     * @return  Illuminate\Pagination\LengthAwarePaginator (article)
+     */
+    public static function searchUserByKeyword($request){
+        $users = User::select('*');
+
+        $keyword = $request->input('keyword');
+        $session_has_keyword = $request->session()->has('keyword');
+        $request_has_page = $request->has('page');
+
+        // 1. 検索もページ移動もしていないとき、セッションを破棄する。（ヘッダから直接飛んだ時）
+        if(isset($keyword) == false && $request_has_page == false)
+            $request->session()->forget('keyword');
+
+        // 2. 検索後にページボタン押下時、セッションからkeywordを取得
+        if( $session_has_keyword && $request_has_page)
+            $keyword = $request->session()->get('keyword');
+        
+        // 3. キーワード（name, email）によって検索処理
+        if(isset($keyword)){
+            $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');
+            $request->session()->put('keyword', $keyword);
+        }
+        $users = $users->orderBy('updated_at', 'DESC')->paginate(9);
+
+        foreach($users as $user){
+            $user->formatForUserCard();
+        }
+
+        return $users;
     }
 }

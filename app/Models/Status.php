@@ -49,4 +49,15 @@ class Status extends Model
     public static function getByName($name){
         return self::where('name', $name)->first();
     }
+
+    /**
+     * 公開かどうか判定する（公開ならtrue）
+     * 
+     * @return bool
+     */
+    public function isPublic(){
+        $isPublic = $this->id === self::where('name', '公開')->first()->id;
+
+        return $isPublic;
+    }
 }

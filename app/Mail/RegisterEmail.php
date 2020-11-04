@@ -31,7 +31,7 @@ class RegisterEmail extends Mailable
     public function build()
     {
         return $this->from('noreply@example.com')
-                ->view('auth.register_email')
+                ->view('users.auth.register_email')
                 ->subject('four hundredへの登録が完了しました。')
                 ->with([
                     'data' => $this->data,

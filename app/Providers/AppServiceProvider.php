@@ -28,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('components.favorite', 'favorite');
         Blade::component('components.status', 'status');
         Blade::component('components.article', 'article');
+        Blade::component('components.comment', 'comment');
     }
 }

@@ -22,6 +22,16 @@ class ConfirmPasswordController extends Controller
     use ConfirmsPasswords;
 
     /**
+     * Display the password confirmation view.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showConfirmForm()
+    {
+        return view('users.auth.passwords.confirm');
+    }
+
+    /**
      * Where to redirect users when the intended url fails.
      *
      * @var string
@@ -35,6 +45,6 @@ class ConfirmPasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth:user');
     }
 }

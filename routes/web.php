@@ -16,11 +16,12 @@ Route::get('/', function () {
 });
 
 Route::get('/test/model/{index}','TestController@index');
-Route::get('/home', 'HomeController@index')->name('home');
 
 
 
 Route::namespace('User')->prefix('users')->name('users.')->group(function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+
     // ログイン認証関連
     Auth::routes();
 
@@ -43,10 +44,38 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
 });
 
 
+// 管理者機能
+Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
+    
+    // ログイン認証関連;
+    Auth::routes([
+        'register' => false
+    ]);
 
+    Route::group(['middleware' => ['auth:admin']], function(){
+        
+        Route::get('/home', 'HomeController@index')->name('home');
+        
+        Route::prefix('users')->name('users.')->group(function(){
+
+            Route::get('', 'UserController@index')->name('index');
+            Route::get('{user}', 'UserController@show')->name('show');
+            Route::put('{user}', 'UserController@update')->name('update');
+            Route::post('sendmail\{user}', 'UserController@sendmail')->name('sendmail');
+        });
+
+        Route::prefix('articles')->name('articles.')->group(function(){
+
+            Route::get('', 'ArticleController@index')->name('index');
+        });
+    });
+});
+
+
+// 一般機能
 Route::prefix('users')->name('users.')->group(function(){
     //ブログ管理
-    Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');   //ここのuserパラメータいらない。
+    Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');
     Route::resource('{user}/blogs', 'BlogController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:blog');
 
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){

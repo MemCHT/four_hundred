@@ -4,8 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Favorite extends Model
+use App\Models\Interfaces\AssurableRouteParameters;
+use App\Models\Traits\AssurableRouteParametersTrait;
+
+class Favorite extends Model implements AssurableRouteParameters
 {
+    use AssurableRouteParametersTrait;
+
     protected $fillable = ['article_id','user_id','status'];
 
     //
@@ -22,7 +27,7 @@ class Favorite extends Model
      * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx, 'favorite' => xx]
      * @return bool
      */
-    public static function isExist($params){
+    /* public static function isExist($params){
         if(isset($params['favorite']) && isset($params['article'])){
             $favorite = self::find($params['favorite']);
 
@@ -30,7 +35,7 @@ class Favorite extends Model
                 return Article::isExist($params);
         }
         return false;
-    }
+    }*/
 
     /**
      * 該当エッセイに対して、ユーザがお気に入り登録をしているかどうか確認

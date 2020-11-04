@@ -62,7 +62,8 @@ trait AssurableRouteParametersTrait
         $layers = explode('/', $currentUrl);
 
         // 2. index, create等最下層がパラメータではないもののcurrentLayerを一つ上げるため、予め最下層を取り除く
-        array_pop($layers);
+        if(array_pop($layers) === 'create')
+            array_pop($layers);
         
         // 3. 現在のレイヤーを取り出す ex) blogs
         while( preg_match('/^[a-zA-Z]+$/', $currentLayer = array_pop($layers) ) == false );

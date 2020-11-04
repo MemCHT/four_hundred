@@ -19,11 +19,14 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *
+     * @param Illuminate\Http\Request
+     * 
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Request $request)
     {
+        // $route = $request->route();
+
         return view('users.home');
     }
 }

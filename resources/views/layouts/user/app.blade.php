@@ -28,7 +28,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md bg-white shadow-sm pb-0 pt-4">
+        <nav class="navbar navbar-expand-md bg-white shadow-sm pb-0 pt-4 mb-5">
             <div class="container flex-column">
                 <div class="nav-first col-md-12 d-flex">
                     <a class="navbar-brand" href="{{ route('users.home') }}">
@@ -88,6 +88,10 @@
                                 @elseif (Route::has('users.register') && request()->is('*login*'))
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('users.register') }}">{{ __('layouts.register') }}</a>
+                                    </li>
+                                @else
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('users.login') }}">{{ __('layouts.login') }}</a>
                                     </li>
                                 @endif
                             @endauth

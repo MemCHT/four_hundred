@@ -1,0 +1,38 @@
+#app .auth-view .card {
+  border: 0px solid #AAAAAA;
+  border-radius: 0%;
+  border-bottom: 1px solid #AAAAAA;
+  padding-bottom: 5em;
+}
+
+#app .auth-view .card .card-body form button {
+  padding: 0.5em 2em;
+}
+
+#app .auth-view .sns-link label {
+  background-color: white;
+  margin-top: -1.25em;
+  font-weight: bold;
+}
+
+#app .auth-view .sns-link i {
+  margin: 0 1em;
+}
+
+#app .auth-view .sns-link .btn-link {
+  width: 17em;
+  padding: 0.75em 1.5em 0.75em 0.5em;
+  margin: 0 1em;
+  font-size: 1em;
+}
+
+#app .auth-view .sns-link .twitter-link {
+  background-color: #1DA1F2;
+  color: white;
+}
+
+#app .auth-view .sns-link .facebook-link {
+  background-color: #1877F2;
+  color: white;
+}
+

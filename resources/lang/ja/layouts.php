@@ -8,5 +8,5 @@ return [
 
     'login' => 'ログインはこちら',
     'logout' => 'ログアウト',
-    'register' => '新規登録はこちら'
+    'register' => '会員登録はこちら'
 ];

@@ -49893,6 +49893,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/sass/auth.scss":
+/*!**********************************!*\
+  !*** ./resources/sass/auth.scss ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./resources/sass/layout.scss":
 /*!************************************!*\
   !*** ./resources/sass/layout.scss ***!
@@ -49927,9 +49938,9 @@ __webpack_require__.r(__webpack_exports__);
 /***/ }),
 
 /***/ 0:
-/*!*************************************************************************************************************************************************************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/sass/popup.scss ./resources/sass/success.scss ./resources/sass/articles_show.scss ./resources/sass/admins_users_user_card.scss ./resources/sass/layout.scss ***!
-  \*************************************************************************************************************************************************************************************************************************************/
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ./resources/sass/popup.scss ./resources/sass/success.scss ./resources/sass/articles_show.scss ./resources/sass/admins_users_user_card.scss ./resources/sass/layout.scss ./resources/sass/auth.scss ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -49939,7 +49950,8 @@ __webpack_require__(/*! /var/www/resources/sass/popup.scss */"./resources/sass/p
 __webpack_require__(/*! /var/www/resources/sass/success.scss */"./resources/sass/success.scss");
 __webpack_require__(/*! /var/www/resources/sass/articles_show.scss */"./resources/sass/articles_show.scss");
 __webpack_require__(/*! /var/www/resources/sass/admins_users_user_card.scss */"./resources/sass/admins_users_user_card.scss");
-module.exports = __webpack_require__(/*! /var/www/resources/sass/layout.scss */"./resources/sass/layout.scss");
+__webpack_require__(/*! /var/www/resources/sass/layout.scss */"./resources/sass/layout.scss");
+module.exports = __webpack_require__(/*! /var/www/resources/sass/auth.scss */"./resources/sass/auth.scss");
 
 
 /***/ })

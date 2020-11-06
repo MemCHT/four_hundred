@@ -21,12 +21,14 @@ mix.sass('resources/sass/app.scss', 'public/css')
    .sass('resources/sass/success.scss', '../resources/build/css')
    .sass('resources/sass/articles_show.scss', '../resources/build/css')
    .sass('resources/sass/admins_users_user_card.scss', '../resources/build/css')
-   .sass('resources/sass/layout.scss','../resources/build/css');
+   .sass('resources/sass/layout.scss','../resources/build/css')
+   .sass('resources/sass/auth.scss','../resources/build/css');
 
 mix.styles([
    'resources/build/css/popup.css',
    'resources/build/css/success.css',
    'resources/build/css/articles_show.css',
    'resources/build/css/admins_users_user_card.css',
-   'resources/build/css/layout.css'
+   'resources/build/css/layout.css',
+   'resources/build/css/auth.css'
 ], 'public/css/all.css');

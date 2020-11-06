@@ -98,7 +98,7 @@ class BlogController extends Controller
 
         $articles = $blog->articles()->paginate(10);
 
-        return view('blogs.edit',compact('user','blog','articles', 'statuses'));
+        return view('users.blogs.edit',compact('user','blog','articles', 'statuses'));
     }
 
     /**

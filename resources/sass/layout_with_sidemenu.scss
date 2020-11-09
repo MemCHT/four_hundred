@@ -1,0 +1,54 @@
+@import 'variables';
+
+#app{
+    nav{
+        z-index: 1000;
+    }
+
+    main{
+        .sidemenu-bg{
+            position: absolute;
+            background-color:$bg-secondary;
+            top: 0;
+            left: 0;
+            width:20%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .with-sidemenu{
+            .sidemenu{
+                z-index: 1;
+                flex: 1 0 20%;
+
+                .container{
+                    padding-left: 3em;
+                    padding-right: 0;
+
+                    .sidemenu-item .list-group .list-group-item{
+                        border:0 solid white;
+                        padding:0;
+                        background-color: transparent;
+                        transition: background-color 0.2s ease;
+
+                        a{
+                            display:block;
+                            padding:1.5em 1em;
+                            color: $black;
+                        }
+                        a:hover{
+                            text-decoration: none;
+                        }
+                    }
+                    .sidemenu-item .list-group .list-group-item:hover{
+                        background-color: $bg;
+                    }
+                }
+            }
+
+            .main-content{
+                flex: 4 0 80%;
+            }
+        }
+    }
+}

@@ -1,0 +1,49 @@
+#app nav {
+  z-index: 1000;
+}
+
+#app main .sidemenu-bg {
+  position: absolute;
+  background-color: #F4F8FA;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 100%;
+  z-index: 0;
+}
+
+#app main .with-sidemenu .sidemenu {
+  z-index: 1;
+  flex: 1 0 20%;
+}
+
+#app main .with-sidemenu .sidemenu .container {
+  padding-left: 3em;
+  padding-right: 0;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item {
+  border: 0 solid white;
+  padding: 0;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item a {
+  display: block;
+  padding: 1.5em 1em;
+  color: #333333;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item a:hover {
+  text-decoration: none;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item:hover {
+  background-color: white;
+}
+
+#app main .with-sidemenu .main-content {
+  flex: 4 0 80%;
+}
+

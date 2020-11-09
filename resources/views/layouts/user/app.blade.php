@@ -99,7 +99,8 @@
                     </div>
                 </div>
 
-                @auth('user')
+                <!-- sidemenuから派生したコンポーネントは、以下を表示しない -->
+                @if(Auth::guard('user')->check() && View::hasSection('content'))
                     <div class="nav-second col-md-12 d-flex mt-3">
                         <div class="collapse navbar-collapse">
                             <ul class="navbar-nav ml-auto mr-auto">
@@ -109,11 +110,12 @@
                             </ul>
                         </div>
                     </div>
-                @endauth
+                @endif
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="pt-4">
+            @yield('sidemenu')
             @yield('content')
         </main>
     </div>
@@ -121,3 +123,5 @@
     @include('layouts.success')
 </body>
 </html>
+
+

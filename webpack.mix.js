@@ -23,7 +23,8 @@ mix.sass('resources/sass/app.scss', 'public/css')
    .sass('resources/sass/admins_users_user_card.scss', '../resources/build/css')
    .sass('resources/sass/layout.scss','../resources/build/css')
    .sass('resources/sass/auth.scss','../resources/build/css')
-   .sass('resources/sass/user_config.scss','../resources/build/css');
+   .sass('resources/sass/layout_with_sidemenu.scss','../resources/build/css')
+   .sass('resources/sass/badge_outlined.scss','../resources/build/css');
 
 mix.styles([
    'resources/build/css/popup.css',
@@ -32,5 +33,6 @@ mix.styles([
    'resources/build/css/admins_users_user_card.css',
    'resources/build/css/layout.css',
    'resources/build/css/auth.css',
-   'resources/build/css/user_config.css'
+   'resources/build/css/layout_with_sidemenu.css',
+   'resources/build/css/badge_outlined.css'
 ], 'public/css/all.css');

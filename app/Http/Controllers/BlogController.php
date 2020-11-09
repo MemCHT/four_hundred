@@ -70,11 +70,15 @@ class BlogController extends Controller
 
         $articles = $blog->articles()->orderBy('updated_at', 'DESC')->paginate(10);
 
+        // 所有者がリンクに飛んだ場合、管理者ビューを表示 
+        if(Auth::guard('user')->id() === $blog->user_id)
+            return view('users.blogs.show', compact('user', 'blog', 'articles'));
+
         // ブログが非公開 && ブログ所有ユーザでない なら別のビューを表示
         if($blog->isPrivate())
             return view('blogs.private');
 
-        if(Auth::id() !== $blog->user_id)
+        if(Auth::guard('user')->id() !== $blog->user_id)
             $articles = $blog->articles()->where('status_id', Status::getByName('公開')->id)->paginate(10);
 
         return view('blogs.show',compact('user','blog','articles'));

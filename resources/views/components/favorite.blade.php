@@ -5,17 +5,17 @@
 
 <!-- articleを渡さなければ、ただのアイコンとして使える -->
 @if(isset($article) == false)
-<div class="component-favorite">
-    <i class="far fa-star text-info"></i><span>{{ $slot }}</span>
+<div class="component-favorite icon">
+    <i class="fas fa-heart text-danger"></i><span class="text-danger"> {{ $slot }}</span>
 </div>
 
 @else
 
-<a class="component-favorite btn btn-secondary" onclick="event.preventDefault();
+<a class="component-favorite btn btn-secondary icon" onclick="event.preventDefault();
                                                     document.getElementById('favorite-form').submit()">
 
     <!-- favoriteのステータスによってアイコンを変える -->
-    <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-star text-info"></i><span>{{ $slot }}</span>
+    <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $slot }}</span>
 </a>
 
     <!-- コンポネント使用時に$favoriteがセットされているかどうか -->

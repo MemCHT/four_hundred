@@ -1,4 +1,4 @@
-<div class="component-comment">
-    <i class="far fa-comment secondary"></i>
-    <span>{{ $slot }}</span>
+<div class="component-comment icon">
+    <i class="far fa-comment text-primary"></i>
+    <span class="text-primary">{{ $slot }}</span>
 </div>

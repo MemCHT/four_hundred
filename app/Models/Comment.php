@@ -22,6 +22,13 @@ class Comment extends Model implements AssurableRouteParameters
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    // 管理者側機能：コメント一覧のデザイン実装時に変更必要
+    // commentにステータスを設ける
+    public static function getValidComments($article_id){
+        $comments = Comment::where('id', $article_id)->get();
+        return $comments;
+    }
+
     /**
      * パラメータに応じて、Commentインスタンス存在チェック
      * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx, 'comment' => xx]

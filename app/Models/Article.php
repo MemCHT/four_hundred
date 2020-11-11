@@ -9,6 +9,8 @@ use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
 use App\Models\Blog;
+use App\Models\Favorite;
+use App\Models\Comment;
 
 class Article extends Model implements AssurableRouteParameters
 {
@@ -33,7 +35,7 @@ class Article extends Model implements AssurableRouteParameters
         return $this->hasMany(Favorite::class, 'article_id', 'id');
     }
 
-    
+
 
     /**
      * パラメータに応じて、Articleインスタンス存在チェック
@@ -56,6 +58,14 @@ class Article extends Model implements AssurableRouteParameters
      */
     public function validFavorites(){
         return Favorite::getValidFavorites($this->id);
+    }
+
+    /**
+     * commentインスタンスにある有効なお気に入りを取得
+     * @return Illuminate\Database\Eloquent\Collection (Comment)
+     */
+    public function validComments(){
+        return Comment::getValidComments($this->id);
     }
 
     /**
@@ -89,7 +99,7 @@ class Article extends Model implements AssurableRouteParameters
         // 2. 検索後にページボタン押下時、セッションからkeywordを取得
         if( $session_has_keyword && $request_has_page)
             $keyword = $request->session()->get('keyword');
-        
+
         /**
          * ? 以下3,4で同時検索されない
          *   -- 出力されているクエリを参照することで解決
@@ -98,12 +108,12 @@ class Article extends Model implements AssurableRouteParameters
          * dd(DB::getQueryLog();)
          * で参照可能
          */
-        
+
         // 3. キーワード（name, email）によって検索処理
         if(isset($keyword)){
             // これだと (where 'title'=hoge) + (where 'body'=hoge) ∴A+BC
             // $articles->where('title', 'like', '%'.$keyword.'%')->orWhere('body', 'like', '%'.$keyword.'%');
-            
+
             // これで ((where 'title=hoge) + (where 'body'=hoge)) ∴(A+B)C
             $articles->where(function($articles) use($keyword){
                 $articles->where('title', 'like', '%'.$keyword.'%')
@@ -124,7 +134,7 @@ class Article extends Model implements AssurableRouteParameters
 
     /**
      * ArticleをStatusで絞り込み
-     * 
+     *
      * @param Illuminate\Database\Eloquent\Builder $articles
      * @return Illuminate\Database\Eloquent\Builder
      */
@@ -142,7 +152,7 @@ class Article extends Model implements AssurableRouteParameters
         // 2. 絞り込み後にページボタン押下時、セッションからstatus_idを取得
         if( $session_has_status_id && $request_has_page)
             $status_id = $request->session()->get('status_id');
-        
+
         // 3. all以外のステータス(status_id)によって絞り込み
         if(isset($status_id) && $status_id !== "all"){
             $articles->where('status_id', $status_id);

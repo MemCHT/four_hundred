@@ -43,7 +43,7 @@ class ArticleController extends Controller
         $blog = Blog::find($blog_id);
         $statuses = Status::all();
 
-        return view('articles.create',compact('statuses', 'user', 'blog'));
+        return view('users.articles.create',compact('statuses', 'user', 'blog'));
     }
 
     /**
@@ -61,7 +61,7 @@ class ArticleController extends Controller
 
         $inputs = $request->all();
         $inputs['blog_id'] = $blog->id;
-        
+
         $article = Article::create($inputs);
 
         return redirect()->route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article->id])
@@ -98,6 +98,9 @@ class ArticleController extends Controller
         $user = User::find($user_id);
         $article = Article::find($article_id);
         $statuses = Status::all();
+
+        if(Auth::guard('user')->user()->id === $user->id)
+            return view('users.articles.edit', compact('user', 'article', 'statuses'));
 
         return view('articles.edit',compact('user','article','statuses'));
     }
@@ -137,7 +140,7 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
-        $article = Article::find($article_id); 
+        $article = Article::find($article_id);
 
         Article::destroy($article_id);
 

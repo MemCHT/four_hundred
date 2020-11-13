@@ -9,13 +9,12 @@
 
     <form method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
 
         <div class="form-group mb-4">
             <label for="title" class="control-label">記事タイトル</label>
 
             <div>
-                <input id="title" type="text" class="form-control" name="title" value="{{ $article->title }}" required autofocus placeholder="記事タイトル">
+                <input id="title" type="text" class="form-control" name="title" required autofocus placeholder="記事タイトル">
             </div>
         </div>
 
@@ -50,7 +49,7 @@
             <label for="body" class="control-label">本文</label>
 
             <div>
-                <textarea id="body" type="body" class="form-control" name="body" rows="10" required >{{ $article->body }}</textarea>
+                <textarea id="body" type="body" class="form-control" name="body" rows="10" required placeholder="本文"></textarea>
             </div>
             <p class="text-right">xxx/xxx文字</p>
         </div>

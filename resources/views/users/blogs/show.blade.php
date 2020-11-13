@@ -56,8 +56,10 @@
                                 </div>
                             </div>
                             <div class="col-md-3 text-center d-flex flex-column btn-group">
-                                <a href="#" class="btn btn-outline-primary">編集する</a>
-                                <a href="#" class="btn btn-outline-primary">コメント管理</a>
+                                <a href="{{ route('users.blogs.articles.edit', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}"
+                                    class="btn btn-outline-primary">編集する</a>
+                                <a href="{{ route('users.blogs.articles.comments.index', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}"
+                                    class="btn btn-outline-primary">コメント管理</a>
                                 <a href="#" class="btn btn-outline-danger">削除する</a>
                             </div>
                         </div>
@@ -65,5 +67,13 @@
                 </div>
             @endforeach
         </div>
+        <div class="text-center mb-5">
+            <a href="{{ route('users.blogs.articles.create', ['user' => $user->id, 'blog' => $blog->id]) }}"
+                class="btn btn-primary col-md-2">登録する</a>
+        </div>
+        <div>
+            {{ $articles->links('vendor.pagination.modified') }}
+        </div>
+
     </div>
 @endsection

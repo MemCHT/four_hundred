@@ -46,16 +46,16 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
 
 // 管理者機能
 Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
-    
+
     // ログイン認証関連;
     Auth::routes([
         'register' => false
     ]);
 
     Route::group(['middleware' => ['auth:admin']], function(){
-        
+
         Route::get('/home', 'HomeController@index')->name('home');
-        
+
         Route::prefix('users')->name('users.')->group(function(){
 
             Route::get('', 'UserController@index')->name('index');
@@ -85,7 +85,7 @@ Route::prefix('users')->name('users.')->group(function(){
 
         Route::prefix('{blog}/articles')->name('articles.')->group(function(){
             //コメント管理
-            Route::resource('{article}/comments', 'CommentController',['only' => ['store']])->middleware('filterBy.routeParameters:article');
+            Route::resource('{article}/comments', 'CommentController',['only' => ['store', 'index']])->middleware('filterBy.routeParameters:article');
             Route::resource('{article}/comments', 'CommentController',['only' => ['destroy']])->middleware('filterBy.routeParameters:comment');
 
             //お気に入り管理

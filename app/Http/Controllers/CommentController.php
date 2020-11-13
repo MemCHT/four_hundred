@@ -16,14 +16,25 @@ use App\Notifications\CommentNotification;
 
 class CommentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('redirect.unAuthUser:article')->only(['index']);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($user_id, $blog_id, $article_id)
     {
-        //
+        $user = User::find($user_id);
+        // $blog = Blog::find($blog_id);
+        $article = Article::find($article_id);
+
+        $comments = $article->comments;
+
+        return view('users.comments.index', compact('user', 'comments'));
     }
 
     /**

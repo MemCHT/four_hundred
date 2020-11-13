@@ -197,7 +197,7 @@ body {
 }
 
 #app main .sidemenu-bg {
-  position: absolute;
+  position: fixed;
   background-color: #F4F8FA;
   top: 0;
   left: 0;

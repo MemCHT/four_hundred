@@ -20,11 +20,11 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
-    
+
     <style>
-        
+
     </style>
-    
+
 </head>
 <body>
     <div id="app">
@@ -37,12 +37,12 @@
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-    
+
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <!-- Left Side Of Navbar -->
                         <ul class="navbar-nav mr-auto">
                         </ul>
-    
+
                         <!-- Right Side Of Navbar -->
                         <ul class="navbar-nav ml-auto align-items-center">
                             <!-- Authentication Links -->
@@ -57,7 +57,7 @@
                                         <i class="far fa-bell"></i>
                                     </span>
                                 </li>
-                            
+
                                 <li class="nav-item dropdown">
                                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                         {{ Auth::user()->name }}
@@ -65,9 +65,9 @@
                                             <img src="{{ asset('images/icon/'.Auth::user()->icon) }}" alt="user_icon">
                                         </span>
                                     </a>
-    
+
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        
+
                                         <a class="dropdown-item" href="{{route('users.blogs.show', ['user' => Auth::id(), 'blog' => Auth::user()->blog->id])}}">マイブログ</a>
                                         <a class="dropdown-item" href="{{ route('users.profile.edit') }}">設定</a>
                                         <a class="dropdown-item" href="{{ route('users.logout') }}"
@@ -119,7 +119,7 @@
             @yield('content')
         </main>
     </div>
-    
+
     @include('layouts.success')
 </body>
 </html>

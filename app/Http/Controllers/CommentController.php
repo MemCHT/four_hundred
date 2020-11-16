@@ -34,7 +34,7 @@ class CommentController extends Controller
 
         $comments = $article->comments;
 
-        return view('users.comments.index', compact('user', 'comments'));
+        return view('users.comments.index', compact('user', 'article', 'comments'));
     }
 
     /**

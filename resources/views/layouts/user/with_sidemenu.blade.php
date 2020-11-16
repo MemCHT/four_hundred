@@ -20,6 +20,7 @@
     </div>
     <div class="main-content">
         @yield('content-with-sidemenu')
+        @include('layouts.user.footer')
     </div>
 </div>
 @endsection

@@ -46,11 +46,7 @@
             <div>
                 <input id="email" type="email" class="form-control" name="email" value="{{ $user->email }}" required >
 
-                @if ($errors->has('email'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('name') }}</strong>
-                </span>
-                @endif
+                @include('components.error', ['name' => 'email'])
             </div>
         </div>
 
@@ -60,24 +56,29 @@
 
             <div id="birthday" class="row">
                 <div class="col-md-2">
-                    <input type="number" class="form-control" placeholder="yyyy">
+                    <input type="number" class="form-control" name="birth_year" value="{{ $user->birthday->format('Y') }}" required placeholder="yyyy">
                 </div>
                 <div class="">
                     <p>年</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" placeholder="mm">
+                    <input type="number" class="form-control" name="birth_month" value="{{ $user->birthday->format('m') }}" required placeholder="mm">
                 </div>
                 <div class="">
                     <p>月</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" placeholder="dd">
+                    <input type="number" class="form-control" name="birth_day" value="{{ $user->birthday->format('d') }}" required placeholder="dd">
                 </div>
                 <div class="">
                     <p>日</p>
                 </div>
             </div>
+            <span class="help-block">
+                @include('components.error', ['name' => 'birth_day'])
+                @include('components.error', ['name' => 'birth_month'])
+                @include('components.error', ['name' => 'birth_year'])
+            </span>
         </div>
 
         <div class="form-group row">

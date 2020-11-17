@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
             $table->string('icon',255)->default('default.png');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
+            $table->dateTime('birthday');
 
             $table->foreign('status_id')
                 ->references('id')->on('statuses')

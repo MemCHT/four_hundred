@@ -12,7 +12,7 @@ class Blog extends Model implements AssurableRouteParameters
 {
     use AssurableRouteParametersTrait;
 
-    protected $fillable = ['user_id','title','status_id'];
+    protected $fillable = ['user_id','title','status_id','overview'];
 
     //
     public function user(){
@@ -74,7 +74,7 @@ class Blog extends Model implements AssurableRouteParameters
                                 ->join('favorites', 'articles.id', 'favorites.article_id')
                                 ->where('favorites.status', true)
                                 ->count();
-        
+
         return $favorites_count;
     }
 
@@ -91,7 +91,7 @@ class Blog extends Model implements AssurableRouteParameters
 
     /**
      * ブログの最新記事を取得
-     * 
+     *
      * @return App\Models\Article
      */
     public function getLatestArticle(){

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 use App\Models\Blog;
+use Illuminate\Support\Carbon;
 
 class UsersTableSeeder extends Seeder
 {
@@ -23,12 +24,14 @@ class UsersTableSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
             'icon' => 'default.png',
-            'status_id' => 1
+            'status_id' => 1,
+            'birthday' => new Carbon()
         ]);
         Blog::create([
             'user_id' => 1,
             'title' => 'First Blog Title',
-            'status_id' => 1
+            'status_id' => 1,
+            'overview' => 'First Blog Overview'
         ]);
 
         for($i=0;$i<100;$i++){

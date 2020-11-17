@@ -24,7 +24,7 @@ class User extends Authenticatable implements AssurableRouteParameters
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','token', 'status_id'
+        'name', 'email', 'password','token', 'status_id', 'birthday'
     ];
 
     /**
@@ -43,6 +43,10 @@ class User extends Authenticatable implements AssurableRouteParameters
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+
+    protected $dates = [
+        'birthday'
     ];
 
     public function status(){
@@ -67,9 +71,17 @@ class User extends Authenticatable implements AssurableRouteParameters
         return $this->hasMany(IdentityProvider::class, 'user_id', 'id');
     }
 
+    public function follows(){
+        return $this->hasMany(Follow::class, 'from_user_id', 'id');
+    }
+
+    public function followers(){
+        return $this->hasMany(Follow::class, 'to_user_id', 'id');
+    }
+
     /**
      * Userをidで取得
-     * 
+     *
      * @param int $id
      * @return App\Models\User
      */
@@ -99,20 +111,22 @@ class User extends Authenticatable implements AssurableRouteParameters
     {
         // iconが空(null)だったらnameのみupdate
         if(empty($inputs['icon'])) { // 空(null)の場合真
-            self::where('id', $user_id)->update(['name' => $inputs['name']]);
+            unset($inputs['icon']);
+            self::where('id', $user_id)->update($inputs);
         } else {
             $filename = 'icon_'. $user_id. '.'. $inputs['icon']->getClientOriginalExtension();
             InterventionImage::make($inputs['icon'])
                 ->fit(200, 200)
                 ->save(public_path('/images/icon/' . $filename));
+            $inputs['icon'] = $filename;
 
-            self::where('id', $user_id)->update(['name' => $inputs['name'], 'icon' => $filename]);
+            self::where('id', $user_id)->update($inputs);
         }
     }
 
     /**
      * ルートパラメータに応じて、Userの存在チェック
-     * 
+     *
      * @param  array  $params
      * @return bool
      */
@@ -176,7 +190,7 @@ class User extends Authenticatable implements AssurableRouteParameters
      * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public static function getIndexObject(){
-        
+
         $users = self::paginate(9);
 
         foreach($users as $user){
@@ -205,7 +219,7 @@ class User extends Authenticatable implements AssurableRouteParameters
         // 2. 検索後にページボタン押下時、セッションからkeywordを取得
         if( $session_has_keyword && $request_has_page)
             $keyword = $request->session()->get('keyword');
-        
+
         // 3. キーワード（name, email）によって検索処理
         if(isset($keyword)){
             $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');

@@ -16,7 +16,7 @@ class Article extends Model implements AssurableRouteParameters
 {
     use AssurableRouteParametersTrait;
 
-    protected $fillable = ['blog_id','title','body','status_id'];
+    protected $fillable = ['blog_id','title','body','status_id','published_at'];
 
     //
     public function blog(){

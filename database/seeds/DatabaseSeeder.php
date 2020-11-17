@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Follow;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,5 +19,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ArticlesTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(FavoritesTableSeeder::class);
+        $this->call(FollowsTableSeeder::class);
     }
 }

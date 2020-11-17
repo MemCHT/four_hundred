@@ -17,11 +17,7 @@
                 <label for="icon" class="btn btn-outline-primary">画像を変更する</label>
                 <input id="icon" type="file" class="" name="icon" accept="image/jpeg,image/png" hidden>
 
-                @if ($errors->has('icon'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('icon') }}</strong>
-                </span>
-                @endif
+                @include('components.error', ['name' => 'icon'])
             </div>
         </div>
 
@@ -31,11 +27,7 @@
             <div>
                 <input id="name" type="text" class="form-control" name="name" value="{{ $user->name }}" required autofocus>
 
-                @if ($errors->has('name'))
-                <span class="help-block">
-                    <strong>{{ $errors->first('name') }}</strong>
-                </span>
-                @endif
+                @include('components.error', ['name' => 'name'])
             </div>
         </div>
 

@@ -10,13 +10,19 @@
             <!-- 要処理追加 -->
             <div class="form-group mb-4">
                 <label for="title" class="control-label">ブログタイトル</label>
-                <input id="title" type="text" class="form-control" name="title" value="{{ $blog->title }}">
+
+                <input id="title" type="text" class="form-control" name="title" value="{{ $blog->title }}" required>
+
+                @include('components.error', ['name' => 'title'])
             </div>
 
             <!-- 要処理追加 -->
             <div class="form-group mb-5">
                 <label for="overview" class="control-label">ブログ説明文</label>
-                <textarea id="overview" type="text" class="form-control" name="overview" rows="4">{{ "新しく追加する必要がありま～～～～す" }}</textarea>
+
+                <textarea id="overview" type="text" class="form-control" name="overview" rows="4" required>{{ $blog->overview }}</textarea>
+
+                @include('components.error', ['name' => 'overview'])
             </div>
 
             <div class="form-group row">

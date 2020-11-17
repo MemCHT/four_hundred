@@ -123,27 +123,41 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $user_id
      * @param  int  $blog_id
      * @param  int  $article_id
      * @param  int  $comment_id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($user_id,$blog_id,$article_id,$comment_id)
+    public function destroy(Request $request, $user_id,$blog_id,$article_id,$comment_id)
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
         $comment = Comment::find($comment_id);
+        $inputs = $request->all();
+
+        $selected_comments = array_filter(array_map(function($key, $value){
+            if(preg_match('/comment_/', $key))
+                return $value;
+            // dd($key);
+        },array_keys($inputs), array_values($inputs))
+        ,function($value){ return $value; });
+
+
+        // dd($selected_comments);
 
         //記事所有ユーザ以外ならリダイレクト
         if(Auth::id() !== intval($user_id) && Auth::guard('admin')->check() === false){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }
 
-        $comment_user = $comment->user;
-        Comment::destroy($comment_id);
+        // $comment_user = $comment->user;
+        // Comment::destroy($comment_id);
 
-        return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','「'.$comment_user->name.'」さんのコメントを削除しました');
+        Comment::whereIn('id', $selected_comments)->delete();
+
+        return redirect(route('users.blogs.articles.comments.index', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','コメントを削除しました');
     }
 }

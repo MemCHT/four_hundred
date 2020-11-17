@@ -23,10 +23,16 @@ class ArticleFormRequest extends FormRequest
      */
     public function rules()
     {
+        // dd($this->all());
+
+
         return [
             'status_id' => 'required',
             'title' => 'required|max:40',
-            'body' => 'required|max:400'
+            'body' => 'required|max:400',
+            'published_year' => 'required',
+            'published_month' => 'required',
+            'published_day' => 'required',
         ];
     }
 }

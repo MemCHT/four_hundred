@@ -14,7 +14,7 @@
         margin: auto 0;
     }
 
-    #app .user-articles-management .card .card-body .btn-group a{
+    #app .user-articles-management .card .card-body .btn-group a, #app .user-articles-management .card .card-body .btn-group form{
         flex: none;
         margin: 0.9em 0;
     }
@@ -60,7 +60,14 @@
                                     class="btn btn-outline-primary">編集する</a>
                                 <a href="{{ route('users.blogs.articles.comments.index', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}"
                                     class="btn btn-outline-primary">コメント管理</a>
-                                <a href="#" class="btn btn-outline-danger">削除する</a>
+                                <!--<a href="#" class="btn btn-outline-danger">削除する</a>-->
+                                <form action="{{ route('users.blogs.articles.destroy', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <div class="form-group mb-0">
+                                        <button type="submit" name="article_id" value={{ $article->id }} class="btn btn-outline-danger input-group text-center d-block">削除する</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>

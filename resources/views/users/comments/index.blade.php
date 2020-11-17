@@ -49,7 +49,11 @@
         {{$article->title}}
     </h3>
 
-    <form class="comment-index-form">
+    @if(isset($comments[0]))
+    <form action="{{ route('users.blogs.articles.comments.destroy', ['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id, 'comment' => $comments[0]->id]) }}" method="POST" class="comment-index-form">
+        @csrf
+        @method('DELETE')
+
         <div class="form-group row">
            <div class="col-md-12">
 
@@ -70,7 +74,7 @@
 
                 @foreach ($comments as $comment)
                     <div class="form-check pl-0 pb-3 mb-3">
-                        <input id="{{'comment_'.$comment->id}}" type="checkbox" class="commentCheckbox" style="display:none;">
+                        <input id="{{'comment_'.$comment->id}}" name="{{'comment_'.$comment->id}}" value="{{ $comment->id }}" type="checkbox" class="commentCheckbox" style="display:none;">
 
                         <label for="{{'comment_'.$comment->id}}" class="d-flex align-items-center mb-4">
                             <span class="checkbox-icon" style=""><i class="fas fa-check"></i></span>
@@ -97,6 +101,11 @@
             <button type="submit" class="form-control btn btn-outline-danger col-md-2 offset-md-5">削除する</button>
         </div>
     </form>
+    @else
+        <h3 class="text-secondary mt-5">
+            コメントが投稿されていません。
+        </h3>
+    @endif
 </div>
 @endsection
 
@@ -104,6 +113,9 @@
 
     window.addEventListener('DOMContentLoaded',()=>{
         const allSelectBtn = document.getElementById('commentCheckBoxAll');
+
+        if(!allSelectBtn)
+            return;
 
         const checkboxes = document.getElementsByClassName('commentCheckbox');
 

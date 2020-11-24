@@ -130,12 +130,28 @@ class Blog extends Model implements AssurableRouteParameters
 
         $blogs = self::where('status_id', $status_id_public)
                      ->orderBy('updated_at', 'DESC')
-                     ->paginate(10);
+                     ->paginate(4);
 
         foreach($blogs as $blog){
             $blog->formatForIndex();
         }
 
         return $blogs;
+    }
+
+    /**
+     * Articleを指定数getする
+     *
+     * @param int $limit
+     * @param Illuminate\Database\Eloquent\Collection ($articles)
+     */
+    public function getArticles($limit){
+        $articles = Article::where('blog_id', $this->id)
+                            ->where('status_id', Status::getByName('公開')->id)
+                            ->orderBy('updated_at', 'DESC')
+                            ->limit($limit)
+                            ->get();
+
+        return $articles;
     }
 }

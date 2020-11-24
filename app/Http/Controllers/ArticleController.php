@@ -25,10 +25,18 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  Illuminate\Http\Request;
+     * @param  int  $user_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $user_id, $blog_id)
     {
+        $articles = Article::paginate(8); // Article::searchArticlesByKeyword($request);
+        // $statuses = Status::all();
+        // $current_status = Status::find($request->session()->get('status_id'));
+
+        return view('users.articles.index', compact('articles'));
     }
 
     /**

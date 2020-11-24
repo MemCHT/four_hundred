@@ -27,6 +27,6 @@ class ArticlesTableSeeder extends Seeder
             'blog_id' => 1
         ]);
 
-        factory(Article::class,200)->create();
+        factory(Article::class,1000)->create();
     }
 }

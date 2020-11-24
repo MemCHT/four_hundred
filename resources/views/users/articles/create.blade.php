@@ -1,6 +1,6 @@
-@extends('layouts.user.with_sidemenu')
+@extends('layouts.user.app')
 
-@section('content-with-sidemenu')
+@section('content')
 <div class="container">
 
     <h4 class="font-weight-bold mb-5">
@@ -22,9 +22,10 @@
 
         <!-- 要処理追加 -->
         <div class="form-group mb-5">
-            <label for="releaseDay" class="control-label">公開日</label>
 
-            <div id="releaseDay" class="row">
+
+            <div id="releaseDay" class="row align-items-center">
+                <label for="releaseDay" class="control-label pl-3 mb-0">公開日</label>
                 <div class="col-md-2">
                     <input type="number" class="form-control" name="published_year" value={{ old('published_year') ? old('published_year') : date('Y') }} required placeholder="yyyy">
                 </div>

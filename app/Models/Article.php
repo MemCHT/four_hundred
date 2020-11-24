@@ -162,4 +162,16 @@ class Article extends Model implements AssurableRouteParameters
 
         return $articles;
     }
+
+    /**
+     * 該当ユーザがArticleインスタンスをいいねしているか確認
+     *
+     * @param int $user_id
+     * @return bool
+     */
+    public function getFavorite($user_id){
+        $isFavorite = Favorite::where('article_id', $this->id)->where('user_id', $user_id)->get();
+
+        return $isFavorite;
+    }
 }

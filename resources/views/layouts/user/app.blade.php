@@ -31,7 +31,7 @@
         <nav class="navbar navbar-expand-md bg-white shadow-sm pb-0 pt-4 mb-5">
             <div class="container flex-column">
                 <div class="nav-first col-md-12 d-flex">
-                    <a class="navbar-brand" href="{{ route('users.home') }}">
+                    <a class="navbar-brand" href="{{ route('users.blogs.index', ['user' => 0]) }}">
                         {{ config('app.name', 'Laravel') }}
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -68,7 +68,7 @@
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                        <a class="dropdown-item" href="{{route('users.blogs.show', ['user' => Auth::id(), 'blog' => Auth::user()->blog->id])}}">マイブログ</a>
+                                        <a class="dropdown-item" href="{{route('users.show', ['user' => Auth::id()])}}">マイブログ</a>
                                         <a class="dropdown-item" href="{{ route('users.profile.edit') }}">設定</a>
                                         <a class="dropdown-item" href="{{ route('users.logout') }}"
                                            onclick="event.preventDefault();
@@ -105,7 +105,7 @@
                         <div class="collapse navbar-collapse">
                             <ul class="navbar-nav ml-auto mr-auto">
                                 <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.index', ['user'=>Auth::guard('user')->user()->id]) }}">ブログ一覧</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.show', ['user'=>Auth::guard('user')->user()->id,'blog'=>Auth::guard('user')->user()->blog->id]) }}">記事一覧</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.index', ['user'=>0,'blog'=>0]) }}">記事一覧</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.create', ['user'=>Auth::guard('user')->user()->id,'blog'=>Auth::guard('user')->user()->blog->id]) }}">記事を書く</a></li>
                             </ul>
                         </div>

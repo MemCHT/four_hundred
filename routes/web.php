@@ -33,6 +33,9 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
     Route::get('edit', 'ProfilesController@index')->name('profile.edit');
     Route::post('edit/update', 'ProfilesController@update')->name('profile.update');
 
+    // プロフィール詳細
+    Route::get('/{user}' , 'ProfilesController@show')->name('show');
+
     // twitterログイン
     Route::get('login/twitter', 'Auth\LoginController@redirectToTwitterProvider')->name('login.twitter');
 
@@ -80,6 +83,7 @@ Route::prefix('users')->name('users.')->group(function(){
 
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
         //記事管理
+        Route::resource('{blog}/articles', 'ArticleController',['only' => ['index']]);  // indexはルートパラメータが必要ない。
         Route::resource('{blog}/articles', 'ArticleController',['only' => ['create','store']])->middleware('filterBy.routeParameters:blog');
         Route::resource('{blog}/articles', 'ArticleController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:article');
 

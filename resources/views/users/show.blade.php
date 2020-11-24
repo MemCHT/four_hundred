@@ -11,19 +11,49 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
 
-            <div class="search-dropdown-wrapper mt-5 mr-3 ml-3">
+            <div class="profile-title-wrapper pb-5 mb-3" style="border-bottom: 1px solid #AAAAAA">
+                <div class="row">
+                    <div class="title col-md-12 row align-items-end mb-4">
+                        <div class="col-md-10">
+                            <h2>{{ strlen($user->blog->title) > 60 ? substr($user->blog->title,0 , 60).'...' : $user->blog->title }}</h2>
+                        </div>
+                        <div class="col-md-2 text-right">
+                            <form class="mb-0">
+                                <div class="form-group mb-0">
+                                    <button type="submit" class="btn btn-outline-primary form-control">フォローする</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="profile col-md-12 d-flex">
+                        <div class="mr-4">
+                            <img src="{{ asset('images/icon/'.$user->icon) }}" alt="user_icon" style="width:120px;">
+                        </div>
+                        <div style="flex-grow:1;">
+                            <h3><strong>{{ $user->name }}</strong></h3>
+                            <p>{{ $user->blog->overview }}</p>
+                            <div class="col-md-12 row">
+                                <span class="col-md-2 pr-0 pl-0">{{ count($user->follows) }}フォロー</span>
+                                <span class="col-md-2 pr-0 pl-0">{{ count($user->followers) }}フォロワー</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-dropdown-wrapper mr-3 ml-3">
                 <div class="row">
                     <div class="col-md-12 dropdown">
-                        <a id="articleIndexMenuLink" class="dropdown-toggle text-dark" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;">
-                            <h2>新着記事　<i class="fas fa-chevron-down text-secondary"></i></h2>
+                        <a id="articleIndexMenuLink" class="dropdown-toggle text-dark text-right" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;">
+                            <h3>新着記事　<i class="fas fa-chevron-down text-secondary"></i></h3>
                         </a>
 
-                        <div class="dropdown-menu" aria-labelledby="articleIndexMenuLink">
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="articleIndexMenuLink">
 
                             <a class="dropdown-item" href="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0]) }}">新着記事</a>
                             <a class="dropdown-item" href="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0]) }}">人気記事</a>
 
-                            <!--<form id="logout-form" action="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0]) }}" method="GET" style="display: none;">
+                            <!--<form id="logout-form" action="{{ route('users.show', ['user' => 0]) }}" method="GET" style="display: none;">
                                 @csrf
                             </form>-->
                         </div>

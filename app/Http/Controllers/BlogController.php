@@ -30,7 +30,8 @@ class BlogController extends Controller
     {
         $user = User::find($user_id);
 
-        $blogs = Blog::getIndexObject();
+        // $blogs = Blog::getIndexObject();
+        $blogs = Blog::buildPublic()->paginate(4);
 
         return view('blogs.index', compact('blogs'));
     }

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
-class Blog extends Model implements AssurableRouteParameters
+class Blog extends Model
 {
     use AssurableRouteParametersTrait;
 
@@ -125,7 +125,7 @@ class Blog extends Model implements AssurableRouteParameters
      * ブログ一覧表示用オブジェクトを取得
      * @return Illuminate\Pagination\LengthAwarePaginator
      */
-    public static function getIndexObject(){
+    /*public static function getIndexObject(){
         $status_id_public = Status::getByName('公開')->id;
 
         $blogs = self::where('status_id', $status_id_public)
@@ -137,10 +137,18 @@ class Blog extends Model implements AssurableRouteParameters
         }
 
         return $blogs;
+    }*/
+    public static function buildPublic(){
+        $status_id_public = Status::getByName('公開')->id;
+
+        $blogs = self::where('status_id', $status_id_public)
+                     ->orderBy('updated_at', 'DESC');
+
+        return $blogs;
     }
 
     /**
-     * Articleを指定数getする
+     * 閲覧用Articleを指定数getする
      *
      * @param int $limit
      * @param Illuminate\Database\Eloquent\Collection ($articles)
@@ -152,6 +160,38 @@ class Blog extends Model implements AssurableRouteParameters
                             ->limit($limit)
                             ->get();
 
+        return $articles;
+    }
+
+    /**
+     * 閲覧用Articleを新着順にbuildする
+     *
+     * @param Illuminate\Database\Eloquent\Collection ($articles)
+     */
+    public function buildArticlesNewest(){
+        $articles = Article::where('blog_id', $this->id)
+                            ->where('status_id', Status::getByName('公開')->id)
+                            ->orderBy('updated_at', 'DESC');
+        return $articles;
+    }
+
+    /**
+     * 閲覧用Articleを新着順にbuildする
+     *
+     * @param Illuminate\Database\Eloquent\Collection ($articles)
+     */
+    public function buildArticlesPopularity(){
+
+        $articles = Article::where('articles.blog_id', $this->id)
+                            ->where('articles.status_id', Status::getByName('公開')->id)
+                            ->join(
+                                \DB::raw('(SELECT articles.id AS popularity_articles_id, count(favorites.id) AS sum_favorites FROM articles
+                                    LEFT JOIN favorites ON favorites.article_id = articles.id
+                                    GROUP BY articles.id) AS popularity'),
+                                'articles.id', '=', 'popularity.popularity_articles_id'
+                            )
+                            ->orderBy('popularity.sum_favorites', 'DESC');
+        // dd($articles);
         return $articles;
     }
 }

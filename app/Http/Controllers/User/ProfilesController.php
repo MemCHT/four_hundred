@@ -56,13 +56,23 @@ class ProfilesController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($user_id)
+    public function show(Request $request, $user_id)
     {
         $user = User::find($user_id);
-        $articles = $user->blog->articles()->paginate(8);
+        $type = $request->input('type');
+        $type = isset($type) ? $type : 'newest';
+        $methods = [
+            'newest' => function($user, $type){return $user->blog->buildArticlesNewest($type);},
+            'popularity' => function($user, $type){return $user->blog->buildArticlesPopularity($type);}
+        ];
+        // $articles = $user->blog->articles()->paginate(8);
+        // $articles = $user->blog->buildArticlesPopularity();
+
+        $articles = $methods[$type]($user, $type)->paginate(8);
 
         return view('users.show', compact('user', 'articles'));
     }

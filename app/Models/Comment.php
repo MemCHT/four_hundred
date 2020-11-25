@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
-class Comment extends Model implements AssurableRouteParameters
+class Comment extends Model
 {
     use AssurableRouteParametersTrait;
 

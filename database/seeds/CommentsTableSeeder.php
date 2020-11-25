@@ -21,6 +21,6 @@ class CommentsTableSeeder extends Seeder
             'body' => 'First Comment Text'
         ]);
 
-        factory(Comment::class,400)->create();
+        factory(Comment::class,1600)->create();
     }
 }

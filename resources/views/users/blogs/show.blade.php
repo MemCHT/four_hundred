@@ -32,13 +32,15 @@
         <h2 class="mb-5 font-weight-bold">記事管理</h2>
 
         <div>
+
             @foreach($articles as $article)
                 <div class="card mb-5">
                     <div class="card-body">
                         <div class="row">
+
                             <div class="col-md-9">
                                 <div class="row mb-3">
-                                    <div class="col-md-1 mr-3">
+                                    <div class="col-md-1 mr-3">指摘事項
                                         @status(['color' => $article->status->color]){{ $article->status->name }}@endstatus
                                     </div>
                                     <h3 class="col-md-10 mb-0 d-flex align-items-center">{{ $article->title }}</h3>
@@ -47,7 +49,7 @@
                                 <div class="row">
                                     <div class="col-md-6 d-flex align-items-center icon-group">
                                         @favorite {{ count($article->validFavorites()) }} @endfavorite
-                                        @comment {{ count($article->validComments()) }} @endcomment
+                                        @comment {{ /*count($article->validComments())*/ count($article->comments) }} @endcomment
                                         <div class="offset"></div>
                                     </div>
                                     <div class="col-md-6 text-right text-secondary">
@@ -55,6 +57,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-md-3 text-center d-flex flex-column btn-group">
                                 <a href="{{ route('users.blogs.articles.edit', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}"
                                     class="btn btn-outline-primary">編集する</a>
@@ -69,10 +72,12 @@
                                     </div>
                                 </form>
                             </div>
+
                         </div>
                     </div>
                 </div>
             @endforeach
+
         </div>
         <div class="text-center mb-5">
             <a href="{{ route('users.blogs.articles.create', ['user' => $user->id, 'blog' => $blog->id]) }}"

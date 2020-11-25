@@ -12,6 +12,9 @@ use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
 use App\Models\Blog;
+use App\Models\Comment;
+use App\Models\Favorite;
+use App\Models\Follow;
 
 class User extends Authenticatable implements AssurableRouteParameters
 {
@@ -232,5 +235,28 @@ class User extends Authenticatable implements AssurableRouteParameters
         }
 
         return $users;
+    }
+
+    /**
+     * 対象ユーザをfollowできるかどうか判定
+     *
+     * @param int $other_user_id
+     * @return bool
+     */
+    public function canFollow($other_user_id){
+
+        return $this->id !== $other_user_id
+                    && !Follow::where('from_user_id', $this->id)->where('to_user_id', $other_user_id)->exists();
+    }
+
+    /**
+     * 対象ユーザをfollowしているか判定
+     *
+     * @param int $other_user_id
+     * @return bool
+     */
+    public function isFollow($other_user_id){
+
+        return Follow::where('from_user_id', $this->id)->where('to_user_id', $other_user_id)->exists();
     }
 }

@@ -81,6 +81,9 @@ Route::prefix('users')->name('users.')->group(function(){
     Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');
     Route::resource('{user}/blogs', 'BlogController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:blog');
 
+    //フォロー管理
+    Route::resource('{user}/follows', 'FollowController', ['only' => ['store', 'destroy']]);
+
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
         //記事管理
         Route::resource('{blog}/articles', 'ArticleController',['only' => ['index']]);  // indexはルートパラメータが必要ない。

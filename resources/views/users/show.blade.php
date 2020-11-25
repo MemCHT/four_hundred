@@ -18,11 +18,24 @@
                             <h2>{{ strlen($user->blog->title) > 60 ? substr($user->blog->title,0 , 60).'...' : $user->blog->title }}</h2>
                         </div>
                         <div class="col-md-2 text-right">
-                            <form class="mb-0">
-                                <div class="form-group mb-0">
-                                    <button type="submit" class="btn btn-outline-primary form-control">フォローする</button>
-                                </div>
-                            </form>
+                            @if(Auth::guard('user')->user()->canFollow($user->id))
+                                <form class="mb-0" action="{{ route( 'users.follows.store', ['user' => $user->id]) }}" method="POST">
+                                    @csrf
+
+                                    <div class="form-group mb-0">
+                                        <button type="submit" class="btn btn-outline-primary form-control">フォローする</button>
+                                    </div>
+                                </form>
+                            @else
+                                <form class="mb-0" action="{{ route( 'users.follows.destroy', ['user' => $user->id, 'follow' => 0]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <div class="form-group mb-0">
+                                        <button type="submit" class="btn btn-primary form-control">フォロー解除</button>
+                                    </div>
+                                </form>
+                            @endif
                         </div>
                     </div>
                     <div class="profile col-md-12 d-flex">
@@ -50,8 +63,8 @@
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="articleIndexMenuLink">
 
-                            <a class="dropdown-item" href="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0]) }}">新着記事</a>
-                            <a class="dropdown-item" href="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0]) }}">人気記事</a>
+                            <a class="dropdown-item" href="{{ route('users.show', ['user' => $user->id]) }}?type=newest">新着記事</a>
+                            <a class="dropdown-item" href="{{ route('users.show', ['user' => $user->id]) }}?type=popularity">人気記事</a>
 
                             <!--<form id="logout-form" action="{{ route('users.show', ['user' => 0]) }}" method="GET" style="display: none;">
                                 @csrf

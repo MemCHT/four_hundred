@@ -12,7 +12,7 @@ use App\Models\Blog;
 use App\Models\Favorite;
 use App\Models\Comment;
 
-class Article extends Model implements AssurableRouteParameters
+class Article extends Model
 {
     use AssurableRouteParametersTrait;
 

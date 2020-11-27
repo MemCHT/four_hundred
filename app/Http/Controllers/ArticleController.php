@@ -32,11 +32,36 @@ class ArticleController extends Controller
      */
     public function index(Request $request, $user_id, $blog_id)
     {
-        $articles = Article::paginate(8); // Article::searchArticlesByKeyword($request);
-        // $statuses = Status::all();
-        // $current_status = Status::find($request->session()->get('status_id'));
 
-        return view('users.articles.index', compact('articles'));
+        $page = $request->input('page');
+        $type = $request->input('type');
+        $session_type = session()->get('type');
+
+
+        // リンクからページに移動した場合
+        if( !$type && !$page)
+            session()->forget('type');
+
+        if($type){
+            session()->put('type', $type);
+
+        }else if($session_type && $page){
+            $type = $session_type;
+
+        }else{
+            $type = 'newest';
+        }
+
+        $methods = [
+            'newest' => function(){ return Article::sortNewest(); },
+            'popularity' => function(){ return Article::sortPopularity(); }
+        ];
+
+        $articles = $methods[$type]();
+        $articles = Article::buildToPublic($articles);
+        $articles = $articles->paginate(8);
+
+        return view('users.articles.index', compact('articles', 'type'));
     }
 
     /**

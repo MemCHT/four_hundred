@@ -36,8 +36,6 @@ class Article extends Model
         return $this->hasMany(Favorite::class, 'article_id', 'id');
     }
 
-
-
     /**
      * パラメータに応じて、Articleインスタンス存在チェック
      * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx]
@@ -76,6 +74,54 @@ class Article extends Model
     public static function getPublicArticles(){
         $articles = Article::where('status_id', Status::getByName('公開')->id)->get();
         return $articles;
+    }
+
+    /**
+     * 新着順に一覧をビルド
+     * @param Illuminate\Database\Eloquent\Builder $builder = Article::hoge()
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function sortNewest($builder=null){
+        if(is_null($builder))
+            $builder = Article::select('*');
+
+        $builder->orderBy('updated_at', 'DESC');
+
+        return $builder;
+    }
+
+    /**
+     * 人気順に一覧をビルド
+     * @param Illuminate\Database\Eloquent\Builder $builder = Article::hoge()
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function sortPopularity($builder=null){
+        if(is_null($builder))
+            $builder = Article::select('*');
+
+        $builder->join(
+                    \DB::raw('(SELECT articles.id AS popularity_articles_id, count(favorites.id) AS sum_favorites FROM articles
+                        LEFT JOIN favorites ON favorites.article_id = articles.id
+                        GROUP BY articles.id) AS popularity'),
+                    'articles.id', '=', 'popularity.popularity_articles_id'
+        )
+        ->orderBy('popularity.sum_favorites', 'DESC');
+
+        return $builder;
+    }
+
+    /**
+     * 公開済み一覧をビルド
+     * @param Illuminate\Database\Eloquent\Builder $builder = Article::hoge()
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function buildToPublic($builder=null){
+        if(is_null($builder))
+            $builder = Article::select('*');
+
+        $builder->where('status_id', Status::getByName("公開")->id);
+
+        return $builder;
     }
 
     /**
@@ -173,5 +219,35 @@ class Article extends Model
         $isFavorite = Favorite::where('article_id', $this->id)->where('user_id', $user_id)->get();
 
         return $isFavorite;
+    }
+
+    /**
+     * 投稿主の一つ次の記事を取得
+     *
+     * @return App\Models\Article
+     */
+    public function getNext(){
+        $next = Article::where('blog_id', $this->blog_id)
+                        ->where('status_id', Status::getByName('公開')->id)
+                        ->where('updated_at', '>', $this->updated_at)
+                        ->orderBy('updated_at', 'ASC')
+                        ->first();
+
+        return $next;
+    }
+
+    /**
+     * 投稿主の一つ前の記事を取得
+     *
+     * @return App\Models\Article
+     */
+    public function getPrev(){
+        $prev = Article::where('blog_id', $this->blog_id)
+                        ->where('status_id', Status::getByName('公開')->id)
+                        ->where('updated_at', '<', $this->updated_at)
+                        ->orderBy('updated_at', 'DESC')
+                        ->first();
+
+        return $prev;
     }
 }

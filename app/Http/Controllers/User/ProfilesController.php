@@ -69,12 +69,10 @@ class ProfilesController extends Controller
             'newest' => function($user, $type){return $user->blog->buildArticlesNewest($type);},
             'popularity' => function($user, $type){return $user->blog->buildArticlesPopularity($type);}
         ];
-        // $articles = $user->blog->articles()->paginate(8);
-        // $articles = $user->blog->buildArticlesPopularity();
 
         $articles = $methods[$type]($user, $type)->paginate(8);
 
-        return view('users.show', compact('user', 'articles'));
+        return view('users.show', compact('user', 'articles', 'type'));
     }
 
     /**

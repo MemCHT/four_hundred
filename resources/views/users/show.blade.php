@@ -58,7 +58,7 @@
                 <div class="row">
                     <div class="col-md-12 dropdown">
                         <a id="articleIndexMenuLink" class="dropdown-toggle text-dark text-right" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;">
-                            <h3>新着記事　<i class="fas fa-chevron-down text-secondary"></i></h3>
+                            <h3>{{$type == 'newest' ? '新着記事' : '人気記事'}}　<i class="fas fa-chevron-down text-secondary"></i></h3>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="articleIndexMenuLink">

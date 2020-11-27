@@ -31,9 +31,22 @@
                 <p class="mb-5" style="height:20em;">{{ $article->body }}</p>
 
                 <div class="d-flex">
-                    <button class="btn btn-outline-primary" style="flex-grow:1;">< 前記事</button>
+
+                    @if($prev = $article->getPrev())
+                        <a href="{{ route('users.blogs.articles.show', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $prev->id]) }}"
+                            class="btn btn-outline-primary pr-0 pl-0" style="flex-grow:1;">< @include('components.text_substring', ['text' => $prev->title, 'length' => 10])</a>
+                    @else
+                        <a class="btn btn-outline-primary pr-0 pl-0 disabled" style="flex-grow:1;">< 前記事無し</a>
+                    @endif
+
                     <div style="flex-grow:1;"></div>
-                    <button class="btn btn-outline-primary" style="flex-grow:1;">次記事 ></button>
+
+                    @if($next = $article->getNext())
+                        <a href="{{ route('users.blogs.articles.show', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $next->id]) }}"
+                            class="btn btn-outline-primary pr-0 pl-0" style="flex-grow:1;">@include('components.text_substring', ['text' => $next->title, 'length' => 10]) ></a>
+                    @else
+                        <a class="btn btn-outline-primary pr-0 pl-0 disabled" style="flex-grow:1;">次記事無し ></a>
+                    @endif
                 </div>
             </div>
 
@@ -43,7 +56,7 @@
                 <!-- 後ほど人気記事をソートして代入する必要あり -->
                 @if($article->blog->getArticles(1)->isEmpty() === false)
                     <div class="row mr-0 ml-0">
-                        @foreach($article->blog->getArticles(3) as $nav_article)
+                        @foreach($article->blog->buildArticlesPopularity()->limit(3)->get() as $nav_article)
                             <div class="col-md-4 pr-2 pl-2">
                                 <a href="{{ route('users.blogs.articles.show', ['user' => $nav_article->blog->user->id, 'blog' => $nav_article->blog_id, 'article' => $nav_article->id]) }}"
                                     class="card card-body text-dark text-left p-5">
@@ -77,15 +90,23 @@
                         @comment コメント{{ count($article->comments) }}件@endcomment
                     </div>
                     @foreach($article->comments as $comment)
-                        <div class="pb-5 mb-4 col-md-12 pl-0 pr-0" style="border-bottom: 1px solid #AAAAAA">
+                        <div class="pb-5 mb-4 col-md-12 pr-0 pl-0" style="border-bottom: 1px solid #AAAAAA">
                             <div class="mb-3">
                                 @include('components.user', ['user' => $comment->user, 'updated_at' => $comment->updated_at])
                             </div>
                             <p>{{ $comment->body }}</p>
                         </div>
                     @endforeach
-                    <div class="col-md-12 text-center">
-                        <button class="btn btn-primary mb-5">コメントを投稿する</button>
+                    <div class="col-md-12 pr-0 pl-0 text-center">
+                        <form id="commentForm" action="{{ route('users.blogs.articles.comments.store', ['user'=>$article->blog->user_id, 'blog'=>$article->blog_id, 'article'=>$article->id]) }}"
+                            class="form-group" method="POST"{{ old('body') ?:'hidden' }}>
+                            @csrf
+
+                            <textarea id="commentBody" type="text" class="form-control mb-4" name="body" rows="5" placeholder="コメントを入力" required>{{ old('body') }}</textarea>
+                        </form>
+                        @include('components.error', ['name' => 'body'])
+
+                        <button id="commentFormBtn" type="submit" class="btn btn-primary mb-5" form="commentForm">コメントを投稿する</button>
                     </div>
                 </div>
             </div>
@@ -93,3 +114,40 @@
     </div>
 </div>
 @endsection
+
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const commentForm = document.getElementById('commentForm');
+        const commentFormBtn = document.getElementById('commentFormBtn');
+        const CommentBody = document.getElementById('commentBody');
+
+        if(commentForm.hidden){
+            commentFormBtn.addEventListener('click', (event)=>{
+                event.preventDefault();
+
+                commentForm.hidden = false;
+
+                commentFormBtn.addEventListener('click', (event)=>{
+                    commentForm.submit();
+                });
+            });
+        }else{
+            commentBody.focus();
+        }
+    });
+
+    /*const handleClick = () => {
+        const commentForm = document.getElementById('commentForm');
+        const commentFormBtn = document.getElementById('commentFormBtn');
+
+        return (event: MouseEvent) => {
+            event.preventDefault();
+
+            commentForm.hidden = false;
+
+            commentFormBtn.addEventListener('click', (event)=>{
+                commentForm.submit();
+            });
+        }
+    }*/
+</script>

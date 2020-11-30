@@ -213,12 +213,23 @@ class Article extends Model
      * 該当ユーザがArticleインスタンスをいいねしているか確認
      *
      * @param int $user_id
-     * @return bool
+     * @return App\Models\Favorite | null
      */
     public function getFavorite($user_id){
-        $isFavorite = Favorite::where('article_id', $this->id)->where('user_id', $user_id)->get();
+        $favorite = Favorite::where('article_id', $this->id)->where('user_id', $user_id);
 
-        return $isFavorite;
+        return $favorite->count() > 0 ? $favorite->first() : null;
+    }
+
+    /**
+     * 該当記事の有効favorite数を取得
+     *
+     * @return int
+     */
+    public function getFavoritesCount(){
+        $count = $this->favorites()->where('status', true)->count();
+
+        return $count;
     }
 
     /**

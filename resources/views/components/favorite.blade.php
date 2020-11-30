@@ -10,19 +10,22 @@
     </div>
 
 @elseif(isset($article) && isset($canSubmit) && $canSubmit === false)
+<?php $favorite = $article->getFavorite(Auth::guard('user')->user()->id) ?>
 
 <div class="component-favorite icon">
         <!-- favoriteのステータスによってアイコンを変える TODO_元々表示に使っていた画面のエラー解消！ -->
-        <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $slot }}</span>
+        <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $article->getFavoritesCount() }}</span>
 </div>
 
 @else
+<?php $favorite = $article->getFavorite(Auth::guard('user')->user()->id) ?>
+
     <div class="component-favorite icon" style="cursor: pointer;">
         <a onclick="event.preventDefault();
                     document.getElementById('favorite-form').submit()">
 
             <!-- favoriteのステータスによってアイコンを変える -->
-            <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $slot }}</span>
+            <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $article->getFavoritesCount() }}</span>
         </a>
     </div>
 

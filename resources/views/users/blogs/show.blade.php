@@ -40,7 +40,7 @@
 
                             <div class="col-md-9">
                                 <div class="row mb-3">
-                                    <div class="col-md-1 mr-3">指摘事項
+                                    <div class="col-md-1 mr-3">
                                         @status(['color' => $article->status->color]){{ $article->status->name }}@endstatus
                                     </div>
                                     <h3 class="col-md-10 mb-0 d-flex align-items-center">{{ $article->title }}</h3>

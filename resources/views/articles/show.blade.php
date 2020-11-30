@@ -17,7 +17,7 @@
                 <h2 class="mb-3">{{ $article->title }}</h2>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        @include('components.user', ['user' => $article->blog->user, 'updated_at' => $article->updated_at])
+                        @include('components.user', ['user' => $article->blog->user, 'sub_info' => $article->updated_at])
                     </div>
                     <div class="col-md-6 d-flex flex-row-reverse">
                         <div class="ml-2">
@@ -92,7 +92,7 @@
                     @foreach($article->comments as $comment)
                         <div class="pb-5 mb-4 col-md-12 pr-0 pl-0" style="border-bottom: 1px solid #AAAAAA">
                             <div class="mb-3">
-                                @include('components.user', ['user' => $comment->user, 'updated_at' => $comment->updated_at])
+                                @include('components.user', ['user' => $comment->user, 'sub_info' => $comment->updated_at])
                             </div>
                             <p>{{ $comment->body }}</p>
                         </div>

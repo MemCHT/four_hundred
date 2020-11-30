@@ -4,6 +4,6 @@
     </div>
     <div class="ml-3">
         <p class="mb-0"><strong>{{ $user->name }}</strong></p>
-        <p class="mb-0"><small>{{ $updated_at }}</small></p>
+        <p class="mb-0"><small>{{ $sub_info }}</small></p>
     </div>
 </div>

@@ -52,8 +52,12 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
 
     // ログイン認証関連;
     Auth::routes([
-        'register' => false
+        'register' => false,
+        'reset' => false
     ]);
+
+    // アカウント作成確認画面 TODO_試しにアカウントを作ってみる
+    Route::get('register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
 
     Route::group(['middleware' => ['auth:admin']], function(){
 

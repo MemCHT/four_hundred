@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center text-secondary">
 
-        <h2 class="col-md-8 font-weight-bold">エッセイ一覧</h2>
+        <h2 class="col-md-4 offset-md-4 text-center font-weight-bold">エッセイ一覧</h2>
 
         <div class="col-md-4">
             @component('components.search', ['route' => route('admins.articles.index'), 'placeholder' => 'タイトル/本文で検索'])
@@ -33,7 +33,7 @@
         <div class="col-md-12 row">
             @foreach($articles as $article)
                 <div class="col-md-6 mt-3">
-                    @include('admins.articles.article_card', ['article' => $article])
+                    @include('admins.articles.old_article_card', ['article' => $article])
                 </div>
             @endforeach
         </div>

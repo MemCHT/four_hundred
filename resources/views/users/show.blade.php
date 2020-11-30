@@ -96,12 +96,13 @@
 
                                     <!-- コメント一覧と同じ、ユーザー表示をコンポーネント化してもよい -->
                                     <div class="comment-header d-flex align-items-center col-md-6">
-                                        <img src="{{asset('images/icon/'.$article->blog->user->icon)}}" alt="comment-icon" style="height: 1.8em">
+                                        <!--<img src="{{asset('images/icon/'.$article->blog->user->icon)}}" alt="comment-icon" style="height: 1.8em">
 
                                         <div class="ml-3">
                                             <p class="mb-0"><strong>{{$article->blog->user->name}}</strong></p>
                                             <p class="mb-0 comment-created-at"><small>{{$article->updated_at}}</small></p>
-                                        </div>
+                                        </div>-->
+                                        @include('components.user', ['user' => $article->blog->user, 'sub_info' => $article->updated_at])
                                     </div>
 
                                     <div class="col-md-6 d-flex flex-row-reverse">

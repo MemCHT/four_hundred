@@ -1,31 +1,18 @@
-<div class="card user-card">
-
-    <div class="card-header font-weight-bold">{{ $user->name }}</div>
-
+<div class="card user-card p-4">
     <div class="card-body">
+        <h3 class="mb-3">@include('components.text_substring',['text' => $user->blog->title, 'length' => 25])</h3>
 
-        <img src="{{ asset('images/icon/'.$user->icon) }}" alt="icon">
-        
-        <div class="row">
-            <p class="col-md-4">メール</p>
-            <p class="col-md-8 text-right">{{ strlen($user->email) >= 20 ? substr($user->email,0,19).'...' : $user->email }}</p>
+        <div class="mb-4">
+            @include('components.user',['user' => $user, 'sub_info' => $user->email])
         </div>
 
-        <div class="row">
-            <p class="col-md-4">ステータス</p>
-            <div class="col-md-8 text-right">@status(['color' => $user->status->color]) {{ $user->status->name }} @endstatus</div>
-        </div>
-
-        <div class="row">
-            <div class="offset-md-6"></div>
-            <div class="col-md-6 text-right">
-                @article{{ $user->articles_count }}@endarticle
-                @favorite{{ $user->favorites_count }}@endfavorite
+        <div class="d-flex">
+            <div class="text-primary" style="flex:1;">
+                <button class="btn btn-outline-primary col-md-11">メールを送る</button>
             </div>
-        </div>
-
-        <div class="text-center">
-            <a href="{{ route('admins.users.show', ['user' => $user->id]) }}" class="btn btn-secondary mx-auto">詳細</a>
+            <div class="text-danger text-right" style="flex:1;">
+                <button class="btn btn-outline-danger col-md-11">アカウントを停止する</button>
+            </div>
         </div>
     </div>
 </div>

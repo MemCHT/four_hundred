@@ -15,6 +15,9 @@ use App\Models\Blog;
 use App\Models\Comment;
 use App\Models\Favorite;
 use App\Models\Follow;
+use Exception;
+
+use function PHPSTORM_META\map;
 
 class User extends Authenticatable implements AssurableRouteParameters
 {
@@ -208,7 +211,7 @@ class User extends Authenticatable implements AssurableRouteParameters
      * @param  Illuminate\Http\Request
      * @return  Illuminate\Pagination\LengthAwarePaginator (article)
      */
-    public static function searchUserByKeyword($request){
+    /*public static function searchUserByKeyword($request){
         $users = User::select('*');
 
         $keyword = $request->input('keyword');
@@ -228,10 +231,51 @@ class User extends Authenticatable implements AssurableRouteParameters
             $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');
             $request->session()->put('keyword', $keyword);
         }
-        $users = $users->orderBy('updated_at', 'DESC')->paginate(9);
+        $users = $users->/*orderBy('updated_at', 'DESC')->*//*paginate(8);
 
         foreach($users as $user){
             $user->formatForUserCard();
+        }
+
+        return $users;
+    }*/
+
+    /**
+     * name検索
+     * @param  Illuminate\Database\Eloquent\Builder
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchName($builder, $name){
+        $builder->where('name', 'like',  "%$name%");
+
+        return $builder;
+    }
+
+    /**
+     * email検索
+     * @param  Illuminate\Database\Eloquent\Builder
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchEmail($builder, $email){
+        $builder->where('email', 'like',  "%$email%");
+
+        return $builder;
+    }
+
+    /**
+     * 連想配列（キーと値）で検索する
+     * @param  array  ['name' => 'hoge', 'email' => 'hoge']
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static $search_keys = ['name','email'];
+    public static function search( $inputs ){
+        $users = self::select('*');
+
+        foreach($inputs as $key => $value){
+            $method = 'search'.ucfirst($key);
+
+            if(in_array($key, self::$search_keys))
+                $users = self::$method($users, $value);
         }
 
         return $users;

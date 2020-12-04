@@ -129,7 +129,7 @@ class Article extends Model
      * @param  Illuminate\Http\Request
      * @return  Illuminate\Pagination\LengthAwarePaginator (article)
      */
-    public static function searchArticlesByKeyword($request){
+    /*public static function searchArticlesByKeyword($request){
         // DB::enableQueryLog();
 
         $articles = Article::select('*');
@@ -157,7 +157,7 @@ class Article extends Model
          */
 
         // 3. キーワード（name, email）によって検索処理
-        if(isset($keyword)){
+        /*if(isset($keyword)){
             // これだと (where 'title'=hoge) + (where 'body'=hoge) ∴A+BC
             // $articles->where('title', 'like', '%'.$keyword.'%')->orWhere('body', 'like', '%'.$keyword.'%');
 
@@ -172,9 +172,63 @@ class Article extends Model
 
         $articles = self::narrowArticlesFromStatus($request, $articles);
 
-        $articles = $articles->orderBy('updated_at', 'DESC')->paginate(10);
+        $articles = $articles->orderBy('updated_at', 'DESC')->paginate(8);
 
         // dd(DB::getQueryLog());
+
+        return $articles;
+    }*/
+
+    /**
+     * title検索
+     * @param  Illuminate\Database\Eloquent\Builder
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchTitle($builder, $title){
+        $builder->where('title', 'like',  "%$title%");
+
+        return $builder;
+    }
+    /**
+     * blogTitle検索
+     * @param  Illuminate\Database\Eloquent\Builder
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchBlogTitle($builder, $blog_title){
+        $blog_ids = Blog::where('title', 'like', "%$blog_title%")->get(['id']);
+
+        // whereInはパラメータがEloquent/Collectionでも良い...!すげ
+        $builder->whereIn('blog_id', $blog_ids);
+
+        return $builder;
+    }
+
+    /**
+     * body検索
+     * @param  Illuminate\Database\Eloquent\Builder
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchBody($builder, $body){
+        $builder->where('body', 'like',  "%$body%");
+
+        return $builder;
+    }
+
+    /**
+     * 連想配列（キーと値）で検索する
+     * @param  array  ['title' => 'hoge', 'body' => 'hoge', 'blogTitle' => 'hoge]
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static $search_keys = ['title','body','blogTitle'];
+    public static function search( $inputs ){
+        $articles = self::select('*');
+
+        foreach($inputs as $key => $value){
+            $method = 'search'.ucfirst($key);
+
+            if(in_array($key, self::$search_keys))
+                $articles = self::$method($articles, $value);
+        }
 
         return $articles;
     }
@@ -185,7 +239,7 @@ class Article extends Model
      * @param Illuminate\Database\Eloquent\Builder $articles
      * @return Illuminate\Database\Eloquent\Builder
      */
-    private static function narrowArticlesFromStatus($request, $articles){
+    /*private static function narrowArticlesFromStatus($request, $articles){
 
         $status_id = $request->input('status_id');
 
@@ -207,7 +261,7 @@ class Article extends Model
         }
 
         return $articles;
-    }
+    }*/
 
     /**
      * 該当ユーザがArticleインスタンスをいいねしているか確認

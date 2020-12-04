@@ -106,7 +106,7 @@
                         </form>
                         @include('components.error', ['name' => 'body'])
 
-                        <button id="commentFormBtn" type="submit" class="btn btn-primary mb-5" form="commentForm">コメントを投稿する</button>
+                        <button id="commentFormBtn" type="submit" class="btn btn-primary mb-5" form="commentForm" {{ Auth::guard('admin')->check() ? 'disabled' : '' }}>コメントを投稿する</button>
                     </div>
                 </div>
             </div>

@@ -49,7 +49,7 @@
                             @auth('user')
 
                                 <li class="nav-item search-form mr-5">
-                                    @component('components.search', ['route' => '#', 'placeholder' => 'キーワードや作者名で検索'])@endcomponent
+                                    @include('components.search', ['name' => 'keyword', 'placeholder' => 'キーワードや作者名で検索'])
                                 </li>
 
                                 <li class="nav-item mr-5">

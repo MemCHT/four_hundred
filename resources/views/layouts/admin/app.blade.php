@@ -86,7 +86,7 @@
                             <ul class="navbar-nav ml-auto mr-auto">
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admins.users.index') }}">ユーザー管理</a></li>
                                 <li class="nav-item"><a class="nav-link" href="{{ route('admins.articles.index') }}">記事管理</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#">コメント一覧</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('admins.comments.index') }}">コメント一覧</a></li>
                             </ul>
                         </div>
                     </div>

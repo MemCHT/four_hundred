@@ -74,6 +74,12 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
         Route::prefix('articles')->name('articles.')->group(function(){
 
             Route::get('', 'ArticleController@index')->name('index');
+            Route::delete('{article}', 'ArticleController@destroy')->name('destroy');
+        });
+
+        Route::prefix('comments')->name('comments.')->group(function(){
+
+            Route::get('', 'CommentController@index')->name('index');
         });
     });
 });

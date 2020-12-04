@@ -4,9 +4,9 @@
 
 
 <!-- articleを渡さなければ、ただのアイコンとして使える -->
-@if(isset($article) == false)
+@if(isset($article) == false || Auth::guard('admin')->check() || Auth::check() == false)
     <div class="component-favorite icon">
-        <i class="fas fa-heart text-danger"></i><span class="text-danger"> {{ $slot }}</span>
+        <i class="far fa-heart text-danger"></i><span class="text-danger"> {{ $slot }}</span>
     </div>
 
 @elseif(isset($article) && isset($canSubmit) && $canSubmit === false)

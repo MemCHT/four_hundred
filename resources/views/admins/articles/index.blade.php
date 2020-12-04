@@ -4,42 +4,37 @@
 <div class="container">
     <div class="row justify-content-center">
 
-        <h2 class="col-md-8 font-weight-bold">エッセイ一覧</h2>
+        <h2 class="col-md-4 font-weight-bold">記事一覧</h2>
 
-        <div class="col-md-4">
-            @component('components.search', ['route' => route('admins.articles.index'), 'placeholder' => 'タイトル/本文で検索'])
-                <div class="input-group">
-
-                    <select class="form-control" name="status_id">
-                        <option value="all">ステータスで絞り込み</option>
-
-                        @foreach($statuses as $status)
-                            <option value="{{ $status->id }}" @if(session()->get('status_id') == $status->id) selected @endif>{{ $status->name }}</option>
-                        @endforeach
-                    </select>
-
+        <div class="col-md-8">
+            <form class="d-flex">
+                <div style="flex:1;">
+                    <div class="pr-2">@include('components.search', [
+                        'name' => 'blogTitle',
+                        'placeholder' => 'ブログ名で検索',
+                        'value' => request()->input('blogTitle') ?? ''
+                    ])</div>
                 </div>
-            @endcomponent
+                <div style="flex:1;">
+                    <div class="pl-2">@include('components.search', [
+                        'name' => 'title',
+                        'placeholder' => '記事タイトルで検索',
+                        'value' => request()->input('title') ?? ''
+                    ])</div>
+                </div>
+            </form>
         </div>
 
-        @if(session()->has('keyword'))
-            <h3 class="col-md-12 text-center">検索ワード「{{ session()->get('keyword') }}」</h3>
-        @endif
-
-        @if(session()->has('status_id'))
-            <h3 class="col-md-12 text-center">ステータス:「{{ $current_status->name }}」</h3>
-        @endif
-
-        <div class="col-md-12 row">
+        <div class="col-md-12 row pr-0 pl-0 mt-5">
             @foreach($articles as $article)
-                <div class="col-md-6 mt-3">
+                <div class="col-md-6 mb-4">
                     @include('admins.articles.article_card', ['article' => $article])
                 </div>
             @endforeach
         </div>
 
         <div class="mt-4">
-            {{ $articles->links('vendor.pagination.modified') }}
+            {{ $articles->appends(request()->input())->links('vendor.pagination.modified') }}
         </div>
     </div>
 </div>

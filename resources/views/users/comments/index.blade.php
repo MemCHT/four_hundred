@@ -57,7 +57,7 @@
         <div class="form-group row">
            <div class="col-md-12">
 
-            <!-- 全選択機能 -> JavaScriptの実装が必要 -->
+            <!-- 全選択機能 -->
                 <div class="form-check pl-0 pb-3 mb-3">
                     <input id="commentCheckBoxAll" type="checkbox" style="display:none;">
 
@@ -79,14 +79,6 @@
                         <label for="{{'comment_'.$comment->id}}" class="d-flex align-items-center mb-4">
                             <span class="checkbox-icon" style=""><i class="fas fa-check"></i></span>
 
-                            <!--<div class="comment-header d-flex col-md-11">
-                                <img src="{{asset('images/icon/'.$comment->user->icon)}}" alt="comment-icon" style="height: 3em">
-
-                                <div class="ml-3">
-                                    <p class="mb-0"><strong>{{$comment->user->name}}</strong></p>
-                                    <p class="mb-0 comment-created-at">{{$comment->created_at}}</p>
-                                </div>
-                            </div>-->
                             <div class="comment-header col-md-11">
                                 @include('components.user',['user' => $comment->user, 'sub_info' => $comment->created_at])
                             </div>

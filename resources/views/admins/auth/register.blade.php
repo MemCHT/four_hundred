@@ -8,7 +8,7 @@
                 <div class="card-header">アカウント作成</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admins.register.confirm') }}">
+                    <form method="POST" action="{{ route('admins.register') }}">
                         @csrf
 
                         <div class="form-group row">

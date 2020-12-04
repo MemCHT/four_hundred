@@ -71,21 +71,228 @@
 }
 
 
-.user-card .card-body img {
-  height: 60px;
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+/*.user-card{
+    .card-body{
+        img{
+            height:60px;
+            position:absolute;
+            top:8px;
+            right:8px;
+            border-radius:50%;
+            border:1px solid rgba(0, 0, 0, 0.125);
+            background-color:white;
+        }
+        .component-article{
+            display:inline;
+        }
+        .component-favorite{
+            display:inline;
+        }
+    }
+}*/
+
+
+@charset "UTF-8";
+
+html,
+body {
   background-color: white;
 }
 
-.user-card .card-body .component-article {
-  display: inline;
+#app {
+  color: #333333;
+  font-family: "\6E38\30B4\30B7\30C3\30AF   Medium", "Yu Gothic Medium";
+  font-size: 16px;
 }
 
-.user-card .card-body .component-favorite {
-  display: inline;
+#app nav {
+  border-color: #AAAAAA;
+}
+
+#app nav .container {
+  max-width: 90%;
+  font-size: 1.125em;
+}
+
+#app nav .container .nav-first .navbar-brand {
+  font-size: 1.75em;
+  font-weight: bolder;
+  font-family: "Avenir Next";
+  color: #3c7d9b;
+}
+
+#app nav .container .nav-first #navbarSupportedContent .search-form {
+  width: 20em;
+}
+
+#app nav .container .nav-first #navbarSupportedContent .notification-icon {
+  font-size: 1.5em;
+  color: #AAAAAA;
+}
+
+#app nav .container .nav-first #navbarSupportedContent #navbarDropdown .caret img {
+  width: 60px;
+  border-radius: 50%;
+  background-color: #f4f8fa;
+}
+
+#app nav .container .nav-first #navbarSupportedContent .dropdown-menu {
+  font-size: 1.125em;
+}
+
+#app nav .container .nav-second .navbar-collapse .navbar-nav .nav-item .nav-link {
+  color: #3c7d9b;
+  padding: 0.5em 2em;
+  transition: border 0.3s ease;
+}
+
+#app nav .container .nav-second .navbar-collapse .navbar-nav .nav-item .nav-link:hover {
+  border-bottom: 3px solid #3c7d9b;
+}
+
+#app main {
+  background-color: white;
+}
+
+
+#app .auth-view .card {
+  border: 0px solid #AAAAAA;
+  border-radius: 0%;
+  border-bottom: 1px solid #AAAAAA;
+  padding-bottom: 5em;
+}
+
+#app .auth-view .card .card-body form button {
+  padding: 0.5em 2em;
+}
+
+#app .auth-view .sns-link label {
+  background-color: white;
+  margin-top: -1.25em;
+  font-weight: bold;
+}
+
+#app .auth-view .sns-link i {
+  margin: 0 1em;
+}
+
+#app .auth-view .sns-link .btn-link {
+  width: 17em;
+  padding: 0.75em 1.5em 0.75em 0.5em;
+  margin: 0 1em;
+  font-size: 1em;
+}
+
+#app .auth-view .sns-link .twitter-link {
+  background-color: #1DA1F2;
+  color: white;
+}
+
+#app .auth-view .sns-link .facebook-link {
+  background-color: #1877F2;
+  color: white;
+}
+
+
+#app nav {
+  z-index: 1000;
+}
+
+#app main .sidemenu-bg {
+  position: fixed;
+  background-color: #F4F8FA;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 100%;
+  z-index: 0;
+}
+
+#app main .with-sidemenu .sidemenu {
+  z-index: 1;
+  flex: 1 0 20%;
+}
+
+#app main .with-sidemenu .sidemenu .container {
+  padding-left: 3em;
+  padding-right: 0;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item {
+  border: 0 solid white;
+  padding: 0;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item a {
+  display: block;
+  padding: 1.5em 1em;
+  color: #333333;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item a:hover {
+  text-decoration: none;
+}
+
+#app main .with-sidemenu .sidemenu .container .sidemenu-item .list-group .list-group-item:hover {
+  background-color: white;
+}
+
+#app main .with-sidemenu .main-content {
+  flex: 4 0 80%;
+}
+
+
+.badge {
+  display: inline-block;
+  font-size: 0.7em;
+  font-weight: 600;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  min-width: 0.9em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.badge.badge-outlined {
+  background-color: transparent;
+}
+
+.badge.badge-outlined.badge-default {
+  border-color: #B0BEC5;
+  color: #B0BEC5;
+}
+
+.badge.badge-outlined.badge-primary {
+  border-color: #3c7d9b;
+  color: #3c7d9b;
+}
+
+.badge.badge-outlined.badge-secondary {
+  border-color: #AAAAAA;
+  color: #AAAAAA;
+}
+
+.badge.badge-outlined.badge-success {
+  border-color: #64DD17;
+  color: #64DD17;
+}
+
+.badge.badge-outlined.badge-warning {
+  border-color: #FFD600;
+  color: #FFD600;
+}
+
+.badge.badge-outlined.badge-info {
+  border-color: #29B6F6;
+  color: #29B6F6;
+}
+
+.badge.badge-outlined.badge-danger {
+  border-color: #c03619;
+  color: #c03619;
 }
 

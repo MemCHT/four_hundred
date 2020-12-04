@@ -5,5 +5,9 @@
     "/../resources/build/css/success.css": "/../resources/build/css/success.css",
     "/../resources/build/css/articles_show.css": "/../resources/build/css/articles_show.css",
     "/../resources/build/css/admins_users_user_card.css": "/../resources/build/css/admins_users_user_card.css",
+    "/../resources/build/css/layout.css": "/../resources/build/css/layout.css",
+    "/../resources/build/css/auth.css": "/../resources/build/css/auth.css",
+    "/../resources/build/css/layout_with_sidemenu.css": "/../resources/build/css/layout_with_sidemenu.css",
+    "/../resources/build/css/badge_outlined.css": "/../resources/build/css/badge_outlined.css",
     "/css/all.css": "/css/all.css"
 }

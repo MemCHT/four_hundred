@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileFormRequest extends FormRequest
 {
@@ -32,7 +34,11 @@ class ProfileFormRequest extends FormRequest
                 'mimes:jpeg,png',
                 'dimensions:min_width=200,min_height=200',
                 'max:5120'// 5MB
-            ]
+            ],
+            'email' => ['required', Rule::unique('users')->ignore(Auth::guard('user')->user()->id)],
+            'birth_year' => ['required'],
+            'birth_month' => ['required'],
+            'birth_day' => ['required'],
         ];
     }
 }

@@ -15,8 +15,8 @@ class StatusesTableSeeder extends Seeder
     {
         //
         $statuses = [
-            ['公開','success'],
-            ['非公開','danger'],
+            ['公開','primary'],
+            ['非公開','secondary'],
             ['下書き','warning']
         ];
 

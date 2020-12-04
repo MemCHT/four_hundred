@@ -1,29 +1,40 @@
 @extends('layouts.admin.app')
-
+<!-- 2020/11/30 TODO_レイアウト整える -->
 @section('content')
 <div class="container">
-    <div class="row justify-content-center text-secondary">
+    <div class="row justify-content-center">
 
-        <h2 class="col-md-4 offset-md-4 text-center font-weight-bold">ユーザー一覧</h2>
+        <h2 class="col-md-4 font-weight-bold">ユーザー管理</h2>{{ old('name') ? dd(old('name')) : '' }}
 
-        <div class="col-md-4">
-            @component('components.search', ['route' => route('admins.users.index'), 'placeholder' => 'ユーザー名/emailで検索']) @endcomponent
+        <div class="col-md-8">
+            <form class="d-flex">
+                <div style="flex:1;">
+                    <div class="pr-2">@include('components.search', [
+                        'name' => 'name',
+                        'placeholder' => 'ユーザー名で検索',
+                        'value' => request()->input('name') ?? ''
+                    ])</div>
+                </div>
+                <div style="flex:1;">
+                    <div class="pl-2">@include('components.search', [
+                        'name' => 'email',
+                        'placeholder' => 'メールアドレスで検索',
+                        'value' => request()->input('email') ?? ''
+                    ])</div>
+                </div>
+            </form>
         </div>
 
-        @if(session()->has('keyword'))
-            <h3 class="col-md-12 text-center">検索ワード:「{{ session()->get('keyword') }}」</h3>
-        @endif
-
-        <div class="col-md-12 row">
+        <div class="col-md-12 row pr-0 pl-0 mt-5">
             @foreach($users as $user)
-                <div class="col-md-4 mt-3">
+                <div class="col-md-6 mb-4">
                     @include('admins.users.user_card', ['user' => $user])
                 </div>
             @endforeach
         </div>
 
         <div class="mt-4">
-            {{ $users->links('vendor.pagination.modified') }}
+            {{ $users->appends(request()->input())->links('vendor.pagination.modified') }}
         </div>
 
     </div>

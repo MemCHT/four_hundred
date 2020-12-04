@@ -1,31 +1,44 @@
-<div class="card user-card">
-
-    <div class="card-header font-weight-bold">{{ $user->name }}</div>
-
+<div class="card user-card p-4">
     <div class="card-body">
-
-        <img src="{{ asset('images/icon/'.$user->icon) }}" alt="icon">
-        
-        <div class="row">
-            <p class="col-md-4">メール</p>
-            <p class="col-md-8 text-right">{{ strlen($user->email) >= 20 ? substr($user->email,0,19).'...' : $user->email }}</p>
-        </div>
-
-        <div class="row">
-            <p class="col-md-4">ステータス</p>
-            <div class="col-md-8 text-right">@status(['color' => $user->status->color]) {{ $user->status->name }} @endstatus</div>
-        </div>
-
-        <div class="row">
-            <div class="offset-md-6"></div>
-            <div class="col-md-6 text-right">
-                @article{{ $user->articles_count }}@endarticle
-                @favorite{{ $user->favorites_count }}@endfavorite
+        <div class="d-flex">
+            <div style="flex:5;">
+                <h3 class="mb-3">@include('components.text_substring',['text' => $user->blog->title, 'length' => 25])</h3>
+            </div>
+            <div class="text-right" style="flex:1;">
+                <button class="btn btn-outline-danger" {{$user->status->name == '公開' ? 'hidden' : ''}} disabled>停止中</button>
             </div>
         </div>
 
-        <div class="text-center">
-            <a href="{{ route('admins.users.show', ['user' => $user->id]) }}" class="btn btn-secondary mx-auto">詳細</a>
+        <div class="mb-4">
+            @include('components.user',['user' => $user, 'sub_info' => $user->email])
+        </div>
+
+        <div class="d-flex">
+            <div class="text-primary" style="flex:1;">
+                <form action="{{ route('admins.users.sendmail', ['user' => $user->id]) }}" method="POST">
+                    @csrf
+
+                    <button name="btn" value="btn" class="btn btn-outline-primary col-md-11">メールを送る</button>
+                </form>
+            </div>
+
+            <div class="text-danger text-right" style="flex:1;">
+                <form action="{{ route('admins.users.update', ['user' => $user->id]) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    @if($user->status->name == '公開')
+                        <button name="status_id" value="{{ $user->status->getByName('非公開')->id }}" class="btn btn-outline-danger col-md-11">
+                            アカウントを停止する
+                        </button>
+                    @else
+                        <button name="status_id" value="{{ $user->status->getByName('公開')->id }}" class="btn btn-danger col-md-11">
+                            アカウントを再開する
+                        </button>
+                    @endif
+
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -21,7 +21,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::searchUserByKeyword($request);
+        // $users = User::searchUserByKeyword($request);
+
+        $users = User::search($request->input());
+        $users = $users->paginate(8);
 
         return view('admins.users.index', compact('users'));
     }
@@ -92,7 +95,8 @@ class UserController extends Controller
 
         $user->update(['status_id' => $status_id]);
 
-        return redirect()->route('admins.users.show', ['user' => $user_id])->with('success', $user->name.'さんのステータスを更新しました。');
+        // return redirect()->route('admins.users.show', ['user' => $user_id])->with('success', $user->name.'さんのステータスを更新しました。');
+        return back()->with('success', $user->name.'さんのステータスを更新しました！');
     }
 
     /**
@@ -112,12 +116,18 @@ class UserController extends Controller
      * @param  int  $user_id
      * @return \Illuminate\Http\Response
      */
-    public function sendmail(AdminUserSendMailRequestForm $request, $user_id){
+    public function sendmail(Request $request, $user_id){
+        // dd("おおおい");
         $user = User::find($user_id);
         $data = $request->input();
-        $data = json_decode(json_encode($data));
+        $data['body'] =
+            `hoge`;
+
+        // $data = json_decode(json_encode($data));
 
         Mail::to($user)->send(new InvitationEmail($data));
-        return redirect()->route('admins.users.show', ['user' => $user_id])->with('success', $user->name.'さんへメールを送信しました。');
+        // dd(new InvitationEmail($data));
+        // return redirect()->route('admins.users.show', ['user' => $user_id])->with('success', $user->name.'さんへメールを送信しました。');
+        return back()->with('success', $user->name.'さんへメールを送信しました。');
     }
 }

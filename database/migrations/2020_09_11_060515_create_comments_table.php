@@ -18,6 +18,7 @@ class CreateCommentsTable extends Migration
             $table->bigInteger('article_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->string('body',400);
+            $table->tinyInteger('status_id')->unsigned();
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
 
@@ -30,6 +31,10 @@ class CreateCommentsTable extends Migration
                 ->references('id')->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            $table->foreign('status_id')
+                ->references('id')->on('statuses')
+                ->onUpdate('cascade');
         });
     }
 

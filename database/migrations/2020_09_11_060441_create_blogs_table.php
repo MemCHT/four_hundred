@@ -20,6 +20,7 @@ class CreateBlogsTable extends Migration
             $table->tinyInteger('status_id')->unsigned()->default(2);  //非公開
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
+            $table->string('overview', 400)->default("");
 
             $table->foreign('user_id')
                 ->references('id')->on('users')

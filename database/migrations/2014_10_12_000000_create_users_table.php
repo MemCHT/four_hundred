@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Schema;
 
 class CreateUsersTable extends Migration
@@ -25,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('icon',255)->default('default.png');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
+            $table->dateTime('birthday')->default(Carbon::create());
 
             $table->foreign('status_id')
                 ->references('id')->on('statuses')

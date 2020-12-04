@@ -20,77 +20,108 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/all.css') }}" rel="stylesheet">
-    
+
+    <style>
+
+    </style>
+
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ route('users.home') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <nav class="navbar navbar-expand-md bg-white shadow-sm pb-0 pt-4 mb-5">
+            <div class="container flex-column">
+                <div class="nav-first col-md-12 d-flex">
+                    <a class="navbar-brand" href="{{ route('users.blogs.index', ['user' => 0]) }}">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('users.blogs.index', ['user' => 1]) }}">ブログ一覧</a>
-                        </li>
-                        @auth('user')
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{route('users.blogs.show', ['user' => Auth::id(), 'blog' => Auth::user()->blog->id])}}">
-                                マイブログ
-                            </a>
-                        </li>
-                        @endauth
-                    </ul>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+                        </ul>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @auth('user')
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ml-auto align-items-center">
+                            <!-- Authentication Links -->
+                            @auth('user')
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('users.logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                <li class="nav-item search-form mr-5">
+                                    @include('components.search', ['name' => 'keyword', 'placeholder' => 'キーワードや作者名で検索'])
+                                </li>
+
+                                <li class="nav-item mr-5">
+                                    <span class="notification-icon">
+                                        <i class="far fa-bell"></i>
+                                    </span>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                        {{ Auth::user()->name }}
+                                        <span class="caret ml-5">
+                                            <img src="{{ asset('images/icon/'.Auth::user()->icon) }}" alt="user_icon">
+                                        </span>
                                     </a>
 
-                                    <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                    <a class="dropdown-item" href="{{ route('users.profile.edit') }}">プロフィール</a>
-                                </div>
-                            </li>
-                        @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('users.login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('users.register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('users.register') }}">{{ __('Register') }}</a>
+                                        <a class="dropdown-item" href="{{route('users.show', ['user' => Auth::id()])}}">マイブログ</a>
+                                        <a class="dropdown-item" href="{{ route('users.profile.edit') }}">設定</a>
+                                        <a class="dropdown-item" href="{{ route('users.logout') }}"
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                            {{ __('layouts.logout') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
+                                            @csrf
+                                        </form>
+                                    </div>
                                 </li>
-                            @endif
-                        @endauth
-                    </ul>
+                            @else
+                                @if(request()->is('*register*'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('users.login') }}">{{ __('layouts.login') }}</a>
+                                    </li>
+                                @elseif (Route::has('users.register') && request()->is('*login*'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('users.register') }}">{{ __('layouts.register') }}</a>
+                                    </li>
+                                @else
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('users.login') }}">{{ __('layouts.login') }}</a>
+                                    </li>
+                                @endif
+                            @endauth
+                        </ul>
+                    </div>
                 </div>
+
+                <!-- sidemenuから派生したコンポーネントは、以下を表示しない -->
+                @if(Auth::guard('user')->check() && View::hasSection('content'))
+                    <div class="nav-second col-md-12 d-flex mt-3">
+                        <div class="collapse navbar-collapse">
+                            <ul class="navbar-nav ml-auto mr-auto">
+                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.index', ['user'=>Auth::guard('user')->user()->id]) }}">ブログ一覧</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.index', ['user'=>0,'blog'=>0]) }}">記事一覧</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.create', ['user'=>Auth::guard('user')->user()->id,'blog'=>Auth::guard('user')->user()->blog->id]) }}">記事を書く</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                @endif
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="pt-4">
+            @yield('sidemenu')
             @yield('content')
         </main>
     </div>
-    
+
     @include('layouts.success')
 </body>
 </html>
+
+

@@ -1,0 +1,57 @@
+@import 'variables';
+
+#app{
+    .auth-view{
+        .card{
+            border:0px solid $secondary;
+            border-radius: 0%;
+            border-bottom:1px solid $secondary;
+            padding-bottom:5em;
+
+            .card-body{
+                form{
+                    button{
+                        padding:0.5em 2em;
+                    }
+                }
+            }
+        }
+
+        .sns-link{
+
+            label{
+                background-color: $bg;
+                margin-top: -1.25em;
+                font-weight:bold;
+            }
+
+            i{
+                margin: 0 1em;
+            }
+
+            .btn-link{
+                width: 17em;
+                padding: 0.75em 1.5em 0.75em 0.5em;
+                margin: 0 1em;
+                font-size: 1em;
+            }
+
+            .twitter-link{
+                background-color: $twitter;
+                color: white;
+
+                .twitter-link-text{
+                }
+            }
+
+            .facebook-link{
+                background-color: $facebook;
+                color: white;
+
+                .facebook-link-text{
+                    
+                }
+            }
+        }
+    }
+}

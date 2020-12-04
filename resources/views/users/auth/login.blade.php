@@ -1,13 +1,13 @@
 @extends('layouts.user.app')
 
 @section('content')
-<div class="container">
+<div class="container auth-view">
     <div class="row justify-content-center">
         <div class="col-md-8">
 
-            <p class="lead text-center">four hundredを始めてエッセイを書こう。</p>
+            <h2 class="text-center font-weight-bold">ログイン</h2>
             <div class="card">
-                <div class="card-header">four hundredにログイン</div>
+                <!-- <div class="card-header">four hundredにログイン</div> -->
 
                 <div class="card-body">
                     @if(session('oauth_error'))
@@ -20,10 +20,10 @@
                         @csrf
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">メールアドレス</label>
+                            <label for="email" class="col-md-12 col-form-label text-md-left">メールアドレス</label>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                            <div class="col-md-12">
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="exapmle@exapmle.com">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -34,9 +34,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">パスワード</label>
+                            <label for="password" class="col-md-12 col-form-label text-md-left">パスワード</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
 
                                 @error('password')
@@ -59,39 +59,20 @@
                             </div>
                         </div> -->
 
-                        <div class="form-group row mb-3">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                        <div class="form-group row mt-5">
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-primary pl-5 pr-5">
                                     ログイン
                                 </button>
                             </div>
                         </div>
 
-                        <div class="form-group row" style="align-items: center;">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">SNSログイン</label>
-
-                            <div class="col-md-6">
-                                <!-- <ul>
-                                    <li><a href=""><img src="/images/login/icon_twitter.png" alt="Twitterでログイン"></a></li>
-                                    <li><a href=""><img src="/images/login/icon_facebook.png" alt="Facebookでログイン"></a></li>
-                                </ul> -->
-
-                                <a class="btn btn-link" href="{{ route('users.login.twitter') }}">
-                                    <img src="/images/login/icon_twitter.png" alt="Twitterでログイン">
-                                </a>
-                                <a class="btn btn-link" href="{{ route('users.login.facebook') }}">
-                                    <img src="/images/login/icon_facebook.png" alt="Facebookでログイン">
-                                </a>
-                            </div>
-                        </div>
+                        
 
                         <div class="form-group row mb-3">
-                            <div class="col-md-8 offset-md-4">
-                                <a class="btn btn-link border-right" href="{{ route('users.password.request') }}">
+                            <div class="col-md-12 text-center">
+                                <a class="btn btn-link" href="{{ route('users.password.request') }}">
                                     パスワードをお忘れですか？
-                                </a>
-                                <a class="btn btn-link" href="{{ route('users.register') }}">
-                                    アカウント作成
                                 </a>
                             </div>
                         </div>
@@ -99,6 +80,7 @@
                     </form>
                 </div>
             </div>
+            @include('components.sns_login')
         </div>
     </div>
 </div>

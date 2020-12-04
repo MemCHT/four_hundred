@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileFormRequest;
+use Carbon\Carbon;
 
 class ProfilesController extends Controller
 {
@@ -27,7 +28,7 @@ class ProfilesController extends Controller
      */
     public function index()
     {
-        $user = User::find(Auth::id());
+        $user = User::find(Auth::guard('user')->user()->id);
         return view('users.edit', compact('user'));
     }
 
@@ -55,12 +56,23 @@ class ProfilesController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $user_id)
     {
-        //
+        $user = User::find($user_id);
+        $type = $request->input('type');
+        $type = isset($type) ? $type : 'newest';
+        $methods = [
+            'newest' => function($user, $type){return $user->blog->buildArticlesNewest($type);},
+            'popularity' => function($user, $type){return $user->blog->buildArticlesPopularity($type);}
+        ];
+
+        $articles = $methods[$type]($user, $type)->paginate(8);
+
+        return view('users.show', compact('user', 'articles', 'type'));
     }
 
     /**
@@ -84,9 +96,17 @@ class ProfilesController extends Controller
     {
         // フォームから受け取った値取得
         $inputs = $request->all();
+        $profile = [
+            'name' => $inputs['name'],
+            'email' => $inputs['email'],
+            'icon' => isset($inputs['icon']) ? $inputs['icon'] : null
+        ];
+        $profile['birthday'] = Carbon::create($inputs['birth_year'], $inputs['birth_month'], $inputs['birth_day']);
+
+        //dd($inputs);
 
         // プロフィール更新
-        User::profileUpdate($inputs, Auth::id());
+        User::profileUpdate($profile, Auth::guard('user')->user()->id);
 
         return redirect()
                 ->route('users.profile.edit')

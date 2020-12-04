@@ -1,0 +1,78 @@
+@import 'variables';
+
+html, body{
+    background-color: $bg;
+}
+
+#app{
+    color:$black;
+    font-family: "游ゴシック Medium", "Yu Gothic Medium";
+    font-size:16px;
+
+    nav{
+        border-color:$secondary;
+
+        .container{
+            max-width: 90%;
+            font-size: 1.125em;
+
+            .nav-first{
+
+                .navbar-brand{
+                    font-size: 1.75em;
+                    font-weight: bolder;
+                    font-family: "Avenir Next";
+                    color: $primary;
+                }
+
+                #navbarSupportedContent{
+                    
+                    .search-form{
+                        width: 20em;
+                    }
+
+                    .notification-icon{
+                        font-size: 1.5em;
+                        color: $secondary;
+                    }
+                    
+                    #navbarDropdown{
+                        .caret{
+                            img{
+                                width: 60px;
+                                border-radius: 50%;
+                                background-color: $active;
+                            }
+                        }
+                    }
+
+                    .dropdown-menu{
+                        font-size:1.125em;
+                    }
+                }
+            }
+
+            .nav-second{
+                .navbar-collapse{
+                    .navbar-nav{
+                        .nav-item{
+                            .nav-link{
+                                color: $primary;
+                                padding: 0.5em 2em;
+
+                                transition:border 0.3s ease;
+                            }
+                            .nav-link:hover{
+                                border-bottom:3px solid $primary;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    main{
+        background-color: white;
+    }
+}

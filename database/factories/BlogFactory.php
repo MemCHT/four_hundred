@@ -10,10 +10,11 @@ use Faker\Generator as Faker;
 $factory->define(Blog::class, function (Faker $faker) {
     $user_count = User::count();
     $status_count = Status::count()-1;
-    
+
     return [
         'user_id' => $faker->numberBetween(1,$user_count),
         'title' => $faker->text(255),
-        'status_id' => $faker->numberBetween(1,$status_count)
+        'status_id' => $faker->numberBetween(1,$status_count),
+        'overview' => $faker->text(400)
     ];
 });

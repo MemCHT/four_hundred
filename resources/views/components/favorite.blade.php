@@ -4,40 +4,51 @@
 
 
 <!-- articleを渡さなければ、ただのアイコンとして使える -->
-@if(isset($article) == false)
-<div class="component-favorite">
-    <i class="far fa-star text-info"></i><span>{{ $slot }}</span>
-</div>
+@if(isset($article) == false || Auth::guard('admin')->check() || Auth::check() == false)
+    <div class="component-favorite icon">
+        <i class="far fa-heart text-danger"></i><span class="text-danger"> {{ $slot }}</span>
+    </div>
+
+@elseif(isset($article) && isset($canSubmit) && $canSubmit === false)
+    <?php $favorite = $article->getFavorite(Auth::guard('user')->user()->id) ?>
+
+    <div class="component-favorite icon">
+            <!-- favoriteのステータスによってアイコンを変える-->
+            <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $article->getFavoritesCount() }}</span>
+    </div>
 
 @else
+    <?php $favorite = $article->getFavorite(Auth::guard('user')->user()->id) ?>
 
-<a class="component-favorite btn btn-secondary" onclick="event.preventDefault();
-                                                    document.getElementById('favorite-form').submit()">
+    <div class="component-favorite icon" style="cursor: pointer;">
+        <a onclick="event.preventDefault();
+                    document.getElementById('favorite-form').submit()">
 
-    <!-- favoriteのステータスによってアイコンを変える -->
-    <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-star text-info"></i><span>{{ $slot }}</span>
-</a>
+            <!-- favoriteのステータスによってアイコンを変える -->
+            <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $article->getFavoritesCount() }}</span>
+        </a>
+    </div>
 
     <!-- コンポネント使用時に$favoriteがセットされているかどうか -->
     <!-- セットされていない → favoriteが登録されていない。 -->
 
     @auth
-    @if(isset($favorite))
-    <!-- favoriteのupdate処理 -->
-    <form id="favorite-form" action="{{ route('users.blogs.articles.favorites.update', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id, 'favorite' => $favorite->id]) }}" method="POST">
-        @method('PUT')
-        @csrf
-    </form>
+        @if(isset($favorite))
+        <!-- favoriteのupdate処理 -->
+        <form id="favorite-form" action="{{ route('users.blogs.articles.favorites.update', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id, 'favorite' => $favorite->id]) }}" method="POST" hidden>
+            @method('PUT')
+            @csrf
+        </form>
 
-    @else
-    <!-- favoriteのcreate処理 -->
-    <form id="favorite-form" action="{{ route('users.blogs.articles.favorites.store', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
-        @csrf
-    </form>
-    @endif
-
+        @else
+            <!-- favoriteのcreate処理 -->
+            <form id="favorite-form" action="{{ route('users.blogs.articles.favorites.store', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST" hidden>
+                @csrf
+            </form>
+        @endif
     @endauth
+
     @guest
-        <form id="favorite-form" action="{{ route('users.login') }}" method="GET"></form>
+        <form id="favorite-form" action="{{ route('users.login') }}" method="GET" hidden></form>
     @endguest
 @endif

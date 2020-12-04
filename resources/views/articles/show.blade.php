@@ -1,116 +1,153 @@
 @extends(Auth::guard('admin')->check() ? 'layouts.admin.app' : 'layouts.user.app')
 
+<style>
+    .search-dropdown-wrapper .dropdown-toggle::after {
+        display: none;
+    }
+</style>
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
+            <a href="{{ route('users.show', ['user' => $article->blog->user->id]) }}"
+                class="mb-4" style="display:block">< @include('components.text_substring', ['text' => $article->blog->title, 'length' => 100])</a>
 
-            <div class="article-wrapper row mt-5">
-                <div class="col-md-8">
-                    <h2><a href="{{ route('users.blogs.show',['user' => $article->blog->user_id, 'blog' => $article->blog_id]) }}">{{$article->title}}</a></h2>
+            <div class="article-show-wrapper pb-3 mb-5" style="border-bottom: 1px solid #AAAAAA;">
+                <h2 class="mb-3">{{ $article->title }}</h2>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        @include('components.user', ['user' => $article->blog->user, 'sub_info' => $article->updated_at])
+                    </div>
+                    <div class="col-md-6 d-flex flex-row-reverse">
+                        <div class="ml-2">
+                            @comment{{ count($article->comments) }}@endcomment
+                        </div>
+                        <div>
+                            @favorite(['article' => $article, 'canSubmit' => true]){{ count($article->favorites) }}@endfavorite
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="col-md-4 text-right">
+                <p class="mb-5" style="height:20em;">{{ $article->body }}</p>
 
-                    @if(Auth::guard('user')->id() === $article->blog->user->id)
-                        <a class="btn btn-secondary" href="{{route('users.blogs.articles.edit', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id])}}">
-                            編集
-                        </a>
-                    @elseif(Auth::guard('admin')->check())
-                        <form action="{{ route('users.blogs.articles.destroy', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
-                            @method('DELETE')
-                            @csrf
-                            
-                            <button type="submit" class="btn btn-danger" onclick="event.preventDefault(); confirmAlert(event)">削除</button>
-                        </form>
+                <div class="d-flex">
+
+                    @if($prev = $article->getPrev())
+                        <a href="{{ route('users.blogs.articles.show', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $prev->id]) }}"
+                            class="btn btn-outline-primary pr-0 pl-0" style="flex-grow:1;">< @include('components.text_substring', ['text' => $prev->title, 'length' => 10])</a>
+                    @else
+                        <a class="btn btn-outline-primary pr-0 pl-0 disabled" style="flex-grow:1;">< 前記事無し</a>
                     @endif
 
-                </div>
+                    <div style="flex-grow:1;"></div>
 
-                <div class="col-md-12">
-                    @favorite(['article' => $article, 'favorite' => $favorite])
-                    {{ count($article->validFavorites()) }}
-                    @endfavorite
-                </div>
-
-                <div class="article-body col-md-12 mt-2">
-                    <p>{{ $article->body }}</p>
+                    @if($next = $article->getNext())
+                        <a href="{{ route('users.blogs.articles.show', ['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $next->id]) }}"
+                            class="btn btn-outline-primary pr-0 pl-0" style="flex-grow:1;">@include('components.text_substring', ['text' => $next->title, 'length' => 10]) ></a>
+                    @else
+                        <a class="btn btn-outline-primary pr-0 pl-0 disabled" style="flex-grow:1;">次記事無し ></a>
+                    @endif
                 </div>
             </div>
 
-            <div class="comment-wrapper row mt-5">
-                <div class="comment-title col-md-12">
-                    <h3 class="">コメント</h3>
-                </div>
+            <div class="article-nav-wrapper text-center pb-5 mb-5" style="border-bottom: 1px solid #AAAAAA;">
+                <h3 class="text-primary mb-4">{{ $article->blog->user->name }}さんの人気記事</h3>
 
-                @foreach($article->comments as $comment)
-                <div class="comment row col-md-12 mt-2">
-                    <div class="comment-header-left col-md-6">
-                        <img class="user-icon" src="{{ asset('/images/icon').'/'.$comment->user->icon }}" alt="ユーザー画像">
-                        <!-- もしuser : blog が 1 : 多 になったら対応できない -->
-                        <a href="{{ route('users.blogs.show', ['user' => $comment->user_id, 'blog' => $comment->user->blog->id]) }}">{{ $comment->user->name }}</a>
+                <!-- 後ほど人気記事をソートして代入する必要あり -->
+                @if($article->blog->getArticles(1)->isEmpty() === false)
+                    <div class="row mr-0 ml-0">
+                        @foreach($article->blog->buildArticlesPopularity()->limit(3)->get() as $nav_article)
+                            <div class="col-md-4 pr-2 pl-2">
+                                <a href="{{ route('users.blogs.articles.show', ['user' => $nav_article->blog->user->id, 'blog' => $nav_article->blog_id, 'article' => $nav_article->id]) }}"
+                                    class="card card-body text-dark text-left p-5">
+
+                                    <h4 class="mb-3">{{ strlen($nav_article->title) > 15 ? substr($nav_article->title,0 , 15).'...' : $nav_article->title }}</h4>
+                                    <p>{{ strlen($nav_article->body) > 75 ? substr($nav_article->body,0 , 75).'...' : $nav_article->body }}</p>
+                                    <div class="row">
+                                        <div class="col-md-6 d-flex">
+                                            <div>
+                                                @favorite(['article' => $nav_article, 'canSubmit' => false]){{ count($nav_article->favorites) }}@endfavorite
+                                            </div>
+                                            <div class="ml-2">
+                                                @comment{{ count($nav_article->comments) }}@endcomment
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 text-right text-secondary">{{ $nav_article->updated_at->format('Y/m/d') }}</div>
+                                    </div>
+                                </a>
+                            </div>
+
+                        @endforeach
                     </div>
-
-                    <div class="comment-header-right col-md-6 text-right">
-                        <p>{{ $comment->created_at }}</p>
-                        
-                        @if(Auth::guard('user')->id() === $article->blog->user->id || Auth::guard('admin')->check())
-                            <button id="btn-delete_{{ $comment->id }}" class="btn btn-secondary btn-delete ml-2"> 削除 </button>
-                        @endif
-                    </div>
-
-                    <div class="comment-body col-md-12">
-                        <p>{{ $comment->body }}</p>
-                    </div>
-                </div>
-                @endforeach
-
+                @else
+                    <h4 class="text-secondary pr-2 pl-2">公開中の記事がありません</h4>
+                @endif
             </div>
 
-            <div class="comment-form-wrapper row mt-3">
-                <p class="col-md-12"><strong>コメントを書く</strong></p>
-
-                @auth
-                <form class="col-md-12" action="{{ route('users.blogs.articles.comments.store',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
-                    @csrf
-                    
-                    <div class="form-group">
-                        <label for="">名前：{{ Auth::guard('user')->user()->name }}</label>
-                        <textarea class="form-control" name="body" rows="3" placeholder="コメントを記入">{{ old('body') }}</textarea>
+            <div class="article-comments-wrapper">
+                <div class="col-md-11 row justify-content-center mx-auto">
+                    <div class="text-center text-primary mb-3" style="font-size: 1.25em;">
+                        @comment コメント{{ count($article->comments) }}件@endcomment
                     </div>
+                    @foreach($article->comments as $comment)
+                        <div class="pb-5 mb-4 col-md-12 pr-0 pl-0" style="border-bottom: 1px solid #AAAAAA">
+                            <div class="mb-3">
+                                @include('components.user', ['user' => $comment->user, 'sub_info' => $comment->updated_at])
+                            </div>
+                            <p>{{ $comment->body }}</p>
+                        </div>
+                    @endforeach
+                    <div class="col-md-12 pr-0 pl-0 text-center">
+                        <form id="commentForm" action="{{ route('users.blogs.articles.comments.store', ['user'=>$article->blog->user_id, 'blog'=>$article->blog_id, 'article'=>$article->id]) }}"
+                            class="form-group" method="POST"{{ old('body') ?:'hidden' }}>
+                            @csrf
 
-                    @component('components.error',['name' => 'body']) @endcomponent
-                    
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">送信</button>
+                            <textarea id="commentBody" type="text" class="form-control mb-4" name="body" rows="5" placeholder="コメントを入力" required>{{ old('body') }}</textarea>
+                        </form>
+                        @include('components.error', ['name' => 'body'])
+
+                        <button id="commentFormBtn" type="submit" class="btn btn-primary mb-5" form="commentForm" {{ Auth::guard('admin')->check() ? 'disabled' : '' }}>コメントを投稿する</button>
                     </div>
-                </form>
-                @endauth
-
-                @guest
-                <div class="col-md-12">
-                    <h2>ログインしてコメントを投稿しよう！</h2>
                 </div>
-                @endguest
-                
             </div>
         </div>
     </div>
 </div>
 @endsection
 
-@include('components.popup_delete',[
-    'route' => route('users.blogs.articles.comments.destroy',['user' => $article->blog->user_id, 'blog' => $article->blog_id, 'article' => $article->id, 'comment' => 0])
-])
-
 <script>
-    function confirmAlert(e){
-        if(!window.confirm('本当に操作を行いますか？')){
-            window.alert('キャンセルされました');
-            return false;
-        }
+    window.addEventListener('DOMContentLoaded', (event) => {
+        const commentForm = document.getElementById('commentForm');
+        const commentFormBtn = document.getElementById('commentFormBtn');
+        const CommentBody = document.getElementById('commentBody');
 
-        let target = e.target.parentNode;
-        target.submit();
-    }
+        if(commentForm.hidden){
+            commentFormBtn.addEventListener('click', (event)=>{
+                event.preventDefault();
+
+                commentForm.hidden = false;
+
+                commentFormBtn.addEventListener('click', (event)=>{
+                    commentForm.submit();
+                });
+            });
+        }else{
+            commentBody.focus();
+        }
+    });
+
+    /*const handleClick = () => {
+        const commentForm = document.getElementById('commentForm');
+        const commentFormBtn = document.getElementById('commentFormBtn');
+
+        return (event: MouseEvent) => {
+            event.preventDefault();
+
+            commentForm.hidden = false;
+
+            commentFormBtn.addEventListener('click', (event)=>{
+                commentForm.submit();
+            });
+        }
+    }*/
 </script>

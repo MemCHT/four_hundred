@@ -12,6 +12,12 @@ use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
 use App\Models\Blog;
+use App\Models\Comment;
+use App\Models\Favorite;
+use App\Models\Follow;
+use Exception;
+
+use function PHPSTORM_META\map;
 
 class User extends Authenticatable implements AssurableRouteParameters
 {
@@ -24,7 +30,7 @@ class User extends Authenticatable implements AssurableRouteParameters
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','token', 'status_id'
+        'name', 'email', 'password','token', 'status_id', 'birthday'
     ];
 
     /**
@@ -43,6 +49,10 @@ class User extends Authenticatable implements AssurableRouteParameters
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+    ];
+
+    protected $dates = [
+        'birthday'
     ];
 
     public function status(){
@@ -67,9 +77,17 @@ class User extends Authenticatable implements AssurableRouteParameters
         return $this->hasMany(IdentityProvider::class, 'user_id', 'id');
     }
 
+    public function follows(){
+        return $this->hasMany(Follow::class, 'from_user_id', 'id');
+    }
+
+    public function followers(){
+        return $this->hasMany(Follow::class, 'to_user_id', 'id');
+    }
+
     /**
      * Userをidで取得
-     * 
+     *
      * @param int $id
      * @return App\Models\User
      */
@@ -99,20 +117,22 @@ class User extends Authenticatable implements AssurableRouteParameters
     {
         // iconが空(null)だったらnameのみupdate
         if(empty($inputs['icon'])) { // 空(null)の場合真
-            self::where('id', $user_id)->update(['name' => $inputs['name']]);
+            unset($inputs['icon']);
+            self::where('id', $user_id)->update($inputs);
         } else {
             $filename = 'icon_'. $user_id. '.'. $inputs['icon']->getClientOriginalExtension();
             InterventionImage::make($inputs['icon'])
                 ->fit(200, 200)
                 ->save(public_path('/images/icon/' . $filename));
+            $inputs['icon'] = $filename;
 
-            self::where('id', $user_id)->update(['name' => $inputs['name'], 'icon' => $filename]);
+            self::where('id', $user_id)->update($inputs);
         }
     }
 
     /**
      * ルートパラメータに応じて、Userの存在チェック
-     * 
+     *
      * @param  array  $params
      * @return bool
      */
@@ -176,7 +196,7 @@ class User extends Authenticatable implements AssurableRouteParameters
      * @return Illuminate\Pagination\LengthAwarePaginator
      */
     public static function getIndexObject(){
-        
+
         $users = self::paginate(9);
 
         foreach($users as $user){
@@ -191,7 +211,7 @@ class User extends Authenticatable implements AssurableRouteParameters
      * @param  Illuminate\Http\Request
      * @return  Illuminate\Pagination\LengthAwarePaginator (article)
      */
-    public static function searchUserByKeyword($request){
+    /*public static function searchUserByKeyword($request){
         $users = User::select('*');
 
         $keyword = $request->input('keyword');
@@ -205,18 +225,82 @@ class User extends Authenticatable implements AssurableRouteParameters
         // 2. 検索後にページボタン押下時、セッションからkeywordを取得
         if( $session_has_keyword && $request_has_page)
             $keyword = $request->session()->get('keyword');
-        
+
         // 3. キーワード（name, email）によって検索処理
         if(isset($keyword)){
             $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');
             $request->session()->put('keyword', $keyword);
         }
-        $users = $users->orderBy('updated_at', 'DESC')->paginate(9);
+        $users = $users->/*orderBy('updated_at', 'DESC')->*//*paginate(8);
 
         foreach($users as $user){
             $user->formatForUserCard();
         }
 
         return $users;
+    }*/
+
+    /**
+     * name検索
+     * @param  Illuminate\Database\Eloquent\Builder
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchName($builder, $name){
+        $builder->where('name', 'like',  "%$name%");
+
+        return $builder;
+    }
+
+    /**
+     * email検索
+     * @param  Illuminate\Database\Eloquent\Builder
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchEmail($builder, $email){
+        $builder->where('email', 'like',  "%$email%");
+
+        return $builder;
+    }
+
+    /**
+     * 連想配列（キーと値）で検索する
+     * @param  array  ['name' => 'hoge', 'email' => 'hoge']
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static $search_keys = ['name','email'];
+    public static function search( $inputs ){
+        $users = self::select('*');
+
+        foreach($inputs as $key => $value){
+            $method = 'search'.ucfirst($key);
+
+            if(in_array($key, self::$search_keys))
+                $users = self::$method($users, $value);
+        }
+
+        return $users;
+    }
+
+    /**
+     * 対象ユーザをfollowできるかどうか判定
+     *
+     * @param int $other_user_id
+     * @return bool
+     */
+    public function canFollow($other_user_id){
+
+        return $this->id !== $other_user_id
+                    && !Follow::where('from_user_id', $this->id)->where('to_user_id', $other_user_id)->exists();
+    }
+
+    /**
+     * 対象ユーザをfollowしているか判定
+     *
+     * @param int $other_user_id
+     * @return bool
+     */
+    public function isFollow($other_user_id){
+
+        return Follow::where('from_user_id', $this->id)->where('to_user_id', $other_user_id)->exists();
     }
 }

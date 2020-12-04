@@ -1,3 +1,4 @@
-<div class="component-status">
-    <i class="fas fa-circle {{ 'text-'.$color ?? 'text-primary' }}"></i><span>{{ $slot }}</span>
+<div class="component-status badge icon" style="padding: 0;">
+    <span class="badge badge-outlined {{ 'badge-'.$color ?? 'badge-primary' }}">{{ $slot }}</span>
 </div>
+

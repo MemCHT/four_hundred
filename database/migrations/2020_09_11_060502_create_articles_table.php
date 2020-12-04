@@ -21,6 +21,7 @@ class CreateArticlesTable extends Migration
             $table->tinyInteger('status_id')->unsigned()->default(2);  //非公開
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
+            $table->dateTime('published_at');
 
             $table->foreign('blog_id')
                 ->references('id')->on('blogs')

@@ -33,6 +33,9 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
     Route::get('edit', 'ProfilesController@index')->name('profile.edit');
     Route::post('edit/update', 'ProfilesController@update')->name('profile.update');
 
+    // プロフィール詳細
+    Route::get('/{user}' , 'ProfilesController@show')->name('show');
+
     // twitterログイン
     Route::get('login/twitter', 'Auth\LoginController@redirectToTwitterProvider')->name('login.twitter');
 
@@ -46,16 +49,20 @@ Route::namespace('User')->prefix('users')->name('users.')->group(function () {
 
 // 管理者機能
 Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
-    
+
     // ログイン認証関連;
     Auth::routes([
-        'register' => false
+        'register' => false,
+        'reset' => false
     ]);
 
+    // アカウント作成確認画面 TODO_試しにアカウントを作ってみる
+    Route::get('register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
+
     Route::group(['middleware' => ['auth:admin']], function(){
-        
+
         Route::get('/home', 'HomeController@index')->name('home');
-        
+
         Route::prefix('users')->name('users.')->group(function(){
 
             Route::get('', 'UserController@index')->name('index');
@@ -67,6 +74,12 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
         Route::prefix('articles')->name('articles.')->group(function(){
 
             Route::get('', 'ArticleController@index')->name('index');
+            Route::delete('{article}', 'ArticleController@destroy')->name('destroy');
+        });
+
+        Route::prefix('comments')->name('comments.')->group(function(){
+
+            Route::get('', 'CommentController@index')->name('index');
         });
     });
 });
@@ -78,14 +91,18 @@ Route::prefix('users')->name('users.')->group(function(){
     Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');
     Route::resource('{user}/blogs', 'BlogController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:blog');
 
+    //フォロー管理
+    Route::resource('{user}/follows', 'FollowController', ['only' => ['store', 'destroy']]);
+
     Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
         //記事管理
+        Route::resource('{blog}/articles', 'ArticleController',['only' => ['index']]);  // indexはルートパラメータが必要ない。
         Route::resource('{blog}/articles', 'ArticleController',['only' => ['create','store']])->middleware('filterBy.routeParameters:blog');
         Route::resource('{blog}/articles', 'ArticleController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:article');
 
         Route::prefix('{blog}/articles')->name('articles.')->group(function(){
             //コメント管理
-            Route::resource('{article}/comments', 'CommentController',['only' => ['store']])->middleware('filterBy.routeParameters:article');
+            Route::resource('{article}/comments', 'CommentController',['only' => ['store', 'index']])->middleware('filterBy.routeParameters:article');
             Route::resource('{article}/comments', 'CommentController',['only' => ['destroy']])->middleware('filterBy.routeParameters:comment');
 
             //お気に入り管理

@@ -3,66 +3,65 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
 
-            <div class="title-wrapper mt-5">
+            <!--<div class="title-wrapper mt-5">
                 <div class="row">
                     <div class="col-md-12">
                         <h2> ブログ一覧 </h2>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
-            <div class="card-wrapper mt-5">
-
+            <div class="blog-index-wrapper mt-5">
                 @foreach($blogs as $blog)
-                <!-- 公開記事のみ閲覧可能 -->
-                @if( $blog->status->name === '公開')
-                <div class="card card-default mb-3">
-                    <div class="card-header">
-                        <div class="row">
-                            <h3 class="col-md-10">{{ strlen($blog->title) > 40 ? substr($blog->title,0 , 40).'...' : $blog->title }}</h3>
-                            <div class="col-md-2 text-right">
-                                @favorite
-                                {{ $blog->favorites_count }}
-                                @endfavorite
+                    <div class="pb-3 mb-5">
 
-                                @article
-                                {{ $blog->articles_count }}
-                                @endarticle
+                        <a class="row col-md-12 text-dark m-0 pr-2 pl-2 mb-2" href="{{ route('users.show', ['user' => $blog->user_id]) }}">
+                            <h2 class="col-md-10 p-0">
+                                {{ strlen($blog->title) > 60 ? substr($blog->title,0 , 60).'...' : $blog->title }}
+                            </h2>
+                            <div class="col-md-2 d-flex flex-row-reverse align-items-center p-0">
+                                <img src="{{ asset('/images/icon/'.$blog->user->icon) }}" alt="user_icon" style="height:1.8rem">
+                                <p class="mb-0 mr-3">{{ $blog->user->name }}</p>
                             </div>
-                        </div>
+                        </a>
+
+                        @if($blog->getArticles(1)->isEmpty() === false)
+                            <div class="row mr-0 ml-0">
+                                @foreach($blog->getArticles(3) as $article)
+                                    <div class="col-md-4 pr-2 pl-2">
+                                        <a href="{{ route('users.blogs.articles.show', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}"
+                                            class="card card-body text-dark p-5">
+
+                                            <h4 class="mb-3">{{ strlen($article->title) > 15 ? substr($article->title,0 , 15).'...' : $article->title }}</h4>
+                                            <p>{{ strlen($article->body) > 75 ? substr($article->body,0 , 75).'...' : $article->body }}</p>
+                                            <div class="row">
+                                                <div class="col-md-6 d-flex">
+                                                    <div>
+                                                        @favorite(['article' => $article, 'canSubmit' => false]){{ count($article->favorites) }}@endfavorite
+                                                    </div>
+                                                    <div class="ml-2">
+                                                        @comment{{ count($article->comments) }}@endcomment
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 text-right text-secondary">{{ $article->updated_at->format('Y/m/d') }}</div>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                @endforeach
+                            </div>
+                        @else
+                            <h4 class="text-secondary pr-2 pl-2">公開中の記事がありません</h4>
+                        @endif
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- 記事のupdated_atに対応させる必要あり -->
-                            @if($blog->latest_article)
-                            <h4 class="col-md-8">{{ strlen($blog->latest_article['title']) > 40 ? substr($blog->latest_article['title'],0 , 200).'...' : $blog->latest_article['title'] }}</h4>
-                            <div class="col-md-4 text-right">
-                                @status(['color' => $blog->status->color])
-                                {{ $blog->status->name }}
-                                @endstatus
-                            </div>
-                            <div class="col-md-12">{{$blog->latest_article['updated_at']}}</div>
-                            <div class="col-md-12">
-                                <p>{{ strlen($blog->latest_article['body']) > 200 ? substr($blog->latest_article['body'],0 , 200).'...' : $blog->latest_article['body'] }}</p>
-                            </div>
-                            @else
-                            <h4 class="col-md-8">未投稿</h4>
-                            <div class="col-md-4 text-right">
-                                @status(['color' => $blog->status->color])
-                                {{ $blog->status->name }}
-                                @endstatus
-                            </div>
-                            @endif
-                        </div>
-                        <a class="btn btn-primary" href="{{ route('users.blogs.show', ['user' => $blog->user_id, 'blog' => $blog->id]) }}">ブログ詳細</a>
-                    </div>
-                </div>
-                @endif
                 @endforeach
             </div>
 
+            <div class="text-center mb-4">
+                <button class="btn btn-primary col-md-4">もっと見る</button>
+            </div>
             {{$blogs->links('vendor.pagination.modified')}}
         </div>
     </div>

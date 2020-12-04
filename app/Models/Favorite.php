@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Interfaces\AssurableRouteParameters;
 use App\Models\Traits\AssurableRouteParametersTrait;
 
-class Favorite extends Model implements AssurableRouteParameters
+class Favorite extends Model
 {
     use AssurableRouteParametersTrait;
 
@@ -39,7 +39,7 @@ class Favorite extends Model implements AssurableRouteParameters
 
     /**
      * 該当エッセイに対して、ユーザがお気に入り登録をしているかどうか確認
-     * 
+     *
      * @param article_id $article_id
      * @return mixed
      * ※登録済みの場合はFavoriteインスタンスを、していない場合はnullを返す。
@@ -48,13 +48,13 @@ class Favorite extends Model implements AssurableRouteParameters
         $favorite = Favorite::where('user_id', $user_id)
                             ->where('article_id', $article_id)
                             ->first();
-        
+
         return $favorite;
     }
 
     /**
      * 該当エッセイの、ステータスがtrueなお気に入りを取得
-     * 
+     *
      * @param article_id $article_id
      * @return Illuminate\Database\Eloquent\Collection
      */
@@ -62,7 +62,7 @@ class Favorite extends Model implements AssurableRouteParameters
         $valid_favorites = Favorite::where('article_id', $article_id)
                             ->where('status', true)
                             ->get();
-                            
+
         return $valid_favorites;
     }
 }

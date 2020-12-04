@@ -6,6 +6,7 @@ use App\Http\Requests\ArticleFormRequest;
 use App\Http\Requests\BlogFormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 use App\Models\User;
 use App\Models\Blog;
@@ -24,10 +25,43 @@ class ArticleController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  Illuminate\Http\Request;
+     * @param  int  $user_id
+     * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, $user_id, $blog_id)
     {
+
+        $page = $request->input('page');
+        $type = $request->input('type');
+        $session_type = session()->get('type');
+
+
+        // リンクからページに移動した場合
+        if( !$type && !$page)
+            session()->forget('type');
+
+        if($type){
+            session()->put('type', $type);
+
+        }else if($session_type && $page){
+            $type = $session_type;
+
+        }else{
+            $type = 'newest';
+        }
+
+        $methods = [
+            'newest' => function(){ return Article::sortNewest(); },
+            'popularity' => function(){ return Article::sortPopularity(); }
+        ];
+
+        $articles = $methods[$type]();
+        $articles = Article::buildToPublic($articles);
+        $articles = $articles->paginate(8);
+
+        return view('users.articles.index', compact('articles', 'type'));
     }
 
     /**
@@ -41,9 +75,9 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
-        $statuses = Status::all();
+        $status = new Status();
 
-        return view('articles.create',compact('statuses', 'user', 'blog'));
+        return view('users.articles.create',compact('status', 'user', 'blog'));
     }
 
     /**
@@ -61,10 +95,11 @@ class ArticleController extends Controller
 
         $inputs = $request->all();
         $inputs['blog_id'] = $blog->id;
-        
+        $inputs['published_at'] = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_day']);
+
         $article = Article::create($inputs);
 
-        return redirect()->route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article->id])
+        return redirect()->route('users.blogs.articles.edit', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article->id])
                          ->with('success','エッセイの投稿を完了しました');
     }
 
@@ -97,7 +132,10 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $article = Article::find($article_id);
-        $statuses = Status::all();
+        $status = new Status();
+
+        if(Auth::guard('user')->user()->id === $user->id)
+            return view('users.articles.edit', compact('user', 'article', 'status'));
 
         return view('articles.edit',compact('user','article','statuses'));
     }
@@ -119,9 +157,11 @@ class ArticleController extends Controller
         $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
 
+        $inputs['published_at'] = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_day']);
+
         $article->update($inputs);
 
-        return redirect()->route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id])
+        return redirect()->route('users.blogs.articles.edit', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id])
                          ->with('success','エッセイの編集を完了しました');
     }
 
@@ -137,7 +177,7 @@ class ArticleController extends Controller
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
-        $article = Article::find($article_id); 
+        $article = Article::find($article_id);
 
         Article::destroy($article_id);
 

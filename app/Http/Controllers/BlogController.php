@@ -30,8 +30,9 @@ class BlogController extends Controller
     {
         $user = User::find($user_id);
 
-        $blogs = Blog::getIndexObject();
-        
+        // $blogs = Blog::getIndexObject();
+        $blogs = Blog::buildPublic()->paginate(4);
+
         return view('blogs.index', compact('blogs'));
     }
 
@@ -42,7 +43,7 @@ class BlogController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -53,7 +54,7 @@ class BlogController extends Controller
      */
     public function store(ArticleFormRequest $request)
     {
-        
+
     }
 
     /**
@@ -70,11 +71,15 @@ class BlogController extends Controller
 
         $articles = $blog->articles()->orderBy('updated_at', 'DESC')->paginate(10);
 
+        // 所有者がリンクに飛んだ場合、管理者ビューを表示
+        if(Auth::guard('user')->id() === $blog->user_id)
+            return view('users.blogs.show', compact('user', 'blog', 'articles'));
+
         // ブログが非公開 && ブログ所有ユーザでない なら別のビューを表示
         if($blog->isPrivate())
             return view('blogs.private');
 
-        if(Auth::id() !== $blog->user_id)
+        if(Auth::guard('user')->id() !== $blog->user_id)
             $articles = $blog->articles()->where('status_id', Status::getByName('公開')->id)->paginate(10);
 
         return view('blogs.show',compact('user','blog','articles'));
@@ -98,7 +103,7 @@ class BlogController extends Controller
 
         $articles = $blog->articles()->paginate(10);
 
-        return view('blogs.edit',compact('user','blog','articles', 'statuses'));
+        return view('users.blogs.edit',compact('user','blog','articles', 'statuses'));
     }
 
     /**
@@ -113,15 +118,16 @@ class BlogController extends Controller
     {
         $input = $request->input();
         $blog = Blog::find($blog_id);
-        
+
         //ブログ所有ユーザ以外ならリダイレクト
         /*if(Auth::id() !== intval($user_id)){
             return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
         }*/
-        
+        // dd($input);
+
         $blog->update($input);
 
-        return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id])
+        return redirect()->route('users.blogs.edit', ['user' => $user_id, 'blog' => $blog_id])
                          ->with('success','ブログタイトルの編集を完了しました');
     }
 

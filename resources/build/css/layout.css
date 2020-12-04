@@ -1,0 +1,62 @@
+@charset "UTF-8";
+
+html,
+body {
+  background-color: white;
+}
+
+#app {
+  color: #333333;
+  font-family: "\6E38\30B4\30B7\30C3\30AF   Medium", "Yu Gothic Medium";
+  font-size: 16px;
+}
+
+#app nav {
+  border-color: #AAAAAA;
+}
+
+#app nav .container {
+  max-width: 90%;
+  font-size: 1.125em;
+}
+
+#app nav .container .nav-first .navbar-brand {
+  font-size: 1.75em;
+  font-weight: bolder;
+  font-family: "Avenir Next";
+  color: #3c7d9b;
+}
+
+#app nav .container .nav-first #navbarSupportedContent .search-form {
+  width: 20em;
+}
+
+#app nav .container .nav-first #navbarSupportedContent .notification-icon {
+  font-size: 1.5em;
+  color: #AAAAAA;
+}
+
+#app nav .container .nav-first #navbarSupportedContent #navbarDropdown .caret img {
+  width: 60px;
+  border-radius: 50%;
+  background-color: #f4f8fa;
+}
+
+#app nav .container .nav-first #navbarSupportedContent .dropdown-menu {
+  font-size: 1.125em;
+}
+
+#app nav .container .nav-second .navbar-collapse .navbar-nav .nav-item .nav-link {
+  color: #3c7d9b;
+  padding: 0.5em 2em;
+  transition: border 0.3s ease;
+}
+
+#app nav .container .nav-second .navbar-collapse .navbar-nav .nav-item .nav-link:hover {
+  border-bottom: 3px solid #3c7d9b;
+}
+
+#app main {
+  background-color: white;
+}
+

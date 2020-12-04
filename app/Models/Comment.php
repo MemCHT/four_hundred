@@ -34,21 +34,6 @@ class Comment extends Model
     }
 
     /**
-     * パラメータに応じて、Commentインスタンス存在チェック
-     * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx, 'comment' => xx]
-     * @return bool
-     */
-    /* public static function isExist($params){
-        if(isset($params['comment']) && isset($params['article'])){
-            $comment = self::find($params['comment']);
-
-            if($comment && $comment->article_id == $params['article'])
-                return Article::isExist($params);
-        }
-        return false;
-    }*/
-
-    /**
      * title検索
      * @param  Illuminate\Database\Eloquent\Builder
      * @return  Illuminate\Database\Eloquent\Builder

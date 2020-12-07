@@ -26,14 +26,19 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user_id)
+    public function index(Request $request, $user_id)
     {
         $user = User::find($user_id);
 
-        // $blogs = Blog::getIndexObject();
-        $blogs = Blog::buildPublic()->paginate(4);
+        $input = $request->input() ? $request->input() : session('input');
 
-        return view('blogs.index', compact('blogs'));
+        $blogs = Blog::search( $input ?? [] );
+
+        $blogs = Blog::buildToPublic( $blogs );
+        $blogs = $blogs->orderBy('updated_at', 'DESC');
+        $blogs = $blogs->paginate(4);
+
+        return view('blogs.index', compact('blogs', 'input'));
     }
 
     /**

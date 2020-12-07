@@ -62,7 +62,7 @@
             <div class="text-center mb-4">
                 <button class="btn btn-primary col-md-4">もっと見る</button>
             </div>
-            {{$blogs->links('vendor.pagination.modified')}}
+            {{$blogs->appends($input)->links('vendor.pagination.modified')}}
         </div>
     </div>
 </div>

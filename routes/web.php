@@ -18,6 +18,36 @@ Route::get('/', function () {
 Route::get('/test/model/{index}','TestController@index');
 
 
+// 一般機能
+Route::prefix('users')->name('users.')->group(function(){
+    //ヘッダーの検索機能 ※リダイレクトのみ
+    Route::get('search', 'HeaderController@search')->name('header.search');
+
+    //ブログ管理
+    Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');
+    Route::resource('{user}/blogs', 'BlogController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:blog');
+
+    //フォロー管理
+    Route::resource('{user}/follows', 'FollowController', ['only' => ['store', 'destroy']]);
+
+    Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
+        //記事管理
+        Route::resource('{blog}/articles', 'ArticleController',['only' => ['index']]);  // indexはルートパラメータが必要ない。
+        Route::resource('{blog}/articles', 'ArticleController',['only' => ['create','store']])->middleware('filterBy.routeParameters:blog');
+        Route::resource('{blog}/articles', 'ArticleController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:article');
+
+        Route::prefix('{blog}/articles')->name('articles.')->group(function(){
+            //コメント管理
+            Route::resource('{article}/comments', 'CommentController',['only' => ['store', 'index']])->middleware('filterBy.routeParameters:article');
+            Route::resource('{article}/comments', 'CommentController',['only' => ['destroy']])->middleware('filterBy.routeParameters:comment');
+
+            //お気に入り管理
+            Route::resource('{article}/favorites', 'FavoriteController',['only' => ['store']])->middleware('filterBy.routeParameters:article');
+            Route::resource('{article}/favorites', 'FavoriteController',['only' => ['update']])->middleware('filterBy.routeParameters:favorite');
+        });
+    });
+});
+
 
 Route::namespace('User')->prefix('users')->name('users.')->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
@@ -56,7 +86,7 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
         'reset' => false
     ]);
 
-    // アカウント作成確認画面 TODO_試しにアカウントを作ってみる
+    // アカウント作成確認画面
     Route::get('register/confirm','Auth\RegisterController@confirm')->name('register.confirm');
 
     Route::group(['middleware' => ['auth:admin']], function(){
@@ -80,34 +110,6 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
         Route::prefix('comments')->name('comments.')->group(function(){
 
             Route::get('', 'CommentController@index')->name('index');
-        });
-    });
-});
-
-
-// 一般機能
-Route::prefix('users')->name('users.')->group(function(){
-    //ブログ管理
-    Route::resource('{user}/blogs', 'BlogController',['only' => ['index']])->middleware('filterBy.routeParameters');
-    Route::resource('{user}/blogs', 'BlogController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:blog');
-
-    //フォロー管理
-    Route::resource('{user}/follows', 'FollowController', ['only' => ['store', 'destroy']]);
-
-    Route::prefix('{user}/blogs')->name('blogs.')->group(function(){
-        //記事管理
-        Route::resource('{blog}/articles', 'ArticleController',['only' => ['index']]);  // indexはルートパラメータが必要ない。
-        Route::resource('{blog}/articles', 'ArticleController',['only' => ['create','store']])->middleware('filterBy.routeParameters:blog');
-        Route::resource('{blog}/articles', 'ArticleController',['only' => ['show','edit','update','destroy']])->middleware('filterBy.routeParameters:article');
-
-        Route::prefix('{blog}/articles')->name('articles.')->group(function(){
-            //コメント管理
-            Route::resource('{article}/comments', 'CommentController',['only' => ['store', 'index']])->middleware('filterBy.routeParameters:article');
-            Route::resource('{article}/comments', 'CommentController',['only' => ['destroy']])->middleware('filterBy.routeParameters:comment');
-
-            //お気に入り管理
-            Route::resource('{article}/favorites', 'FavoriteController',['only' => ['store']])->middleware('filterBy.routeParameters:article');
-            Route::resource('{article}/favorites', 'FavoriteController',['only' => ['update']])->middleware('filterBy.routeParameters:favorite');
         });
     });
 });

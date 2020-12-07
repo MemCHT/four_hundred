@@ -138,13 +138,21 @@ class Blog extends Model
 
         return $blogs;
     }*/
-    public static function buildPublic(){
+
+    /**
+     * Blogのビルダーを公開のもののみにビルドする。
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function buildToPublic( $builder = null ){
+        if($builder === null)
+            $builder = Blog::select('*');
+
         $status_id_public = Status::getByName('公開')->id;
 
-        $blogs = self::where('status_id', $status_id_public)
-                     ->orderBy('updated_at', 'DESC');
+        $builder = $builder->where('status_id', $status_id_public);
 
-        return $blogs;
+        return $builder;
     }
 
     /**
@@ -176,7 +184,7 @@ class Blog extends Model
     }
 
     /**
-     * 閲覧用Articleを新着順にbuildする
+     * 閲覧用Articleを人気順にbuildする
      *
      * @param Illuminate\Database\Eloquent\Collection ($articles)
      */
@@ -192,6 +200,54 @@ class Blog extends Model
                             )
                             ->orderBy('popularity.sum_favorites', 'DESC');
         // dd($articles);
+        return $articles;
+    }
+
+    /**
+     * title検索
+     *
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchTitle($builder, $title){
+        $blogs = Blog::where('title', 'like', "%$title%");
+
+        return $blogs;
+    }
+
+    /**
+     * userName検索
+     * // UserのsearchNameからとってきたロジックの方が良いかも。
+     *
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchUserName($builder, $user_name){
+        $user_ids = User::where('name', 'like', "%$user_name%")->get('id');
+
+        $blogs = $builder->whereIn('user_id', $user_ids);
+
+        return $blogs;
+    }
+
+    /** TODO_20201204 ユーザ側閲覧機能の検索、ブログ一覧から */
+
+    /**
+     * 連想配列（キーと値）で検索する
+     * @param  array  ['title' => 'hoge', 'body' => 'hoge', 'blogTitle' => 'hoge]
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static $search_keys = ['userName','title'];
+    public static function search( $inputs ){
+        $articles = self::select('*');
+
+        foreach($inputs as $key => $value){
+            $method = 'search'.ucfirst($key);
+
+            if(in_array($key, self::$search_keys))
+                $articles = self::$method($articles, $value);
+        }
+
         return $articles;
     }
 }

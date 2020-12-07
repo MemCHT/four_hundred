@@ -33,35 +33,20 @@ class ArticleController extends Controller
     public function index(Request $request, $user_id, $blog_id)
     {
 
-        $page = $request->input('page');
-        $type = $request->input('type');
-        $session_type = session()->get('type');
+        $input = $request->input() ? $request->input() : session('input');
+        $type = $request->input('type') ? $request->input('type') : session('input')['type'];
+        // dd($type);
+        $method = 'sort'.ucfirst($type);
 
+        // dd(session('input'));
 
-        // リンクからページに移動した場合
-        if( !$type && !$page)
-            session()->forget('type');
-
-        if($type){
-            session()->put('type', $type);
-
-        }else if($session_type && $page){
-            $type = $session_type;
-
-        }else{
-            $type = 'newest';
-        }
-
-        $methods = [
-            'newest' => function(){ return Article::sortNewest(); },
-            'popularity' => function(){ return Article::sortPopularity(); }
-        ];
-
-        $articles = $methods[$type]();
+        $articles = Article::search( $input ?? [] );
+        // dd($articles->paginate(8));
+        $articles = $type ? Article::$method($articles) : Article::sortNewest($articles);
         $articles = Article::buildToPublic($articles);
         $articles = $articles->paginate(8);
 
-        return view('users.articles.index', compact('articles', 'type'));
+        return view('users.articles.index', compact('articles', 'type', 'input'));
     }
 
     /**

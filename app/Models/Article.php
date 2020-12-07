@@ -215,11 +215,27 @@ class Article extends Model
     }
 
     /**
+     * userName検索
+     * // UserのsearchNameからとってきたロジックの方が良いかも。
+     *
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchUserName($builder, $user_name){
+        $user_ids = User::where('name', 'like', "%$user_name%")->get('id');
+
+        $blog_ids = Blog::whereIn('user_id', $user_ids)->get('id');
+        $articles = $builder->whereIn('blog_id', $blog_ids);
+
+        return $articles;
+    }
+
+    /**
      * 連想配列（キーと値）で検索する
      * @param  array  ['title' => 'hoge', 'body' => 'hoge', 'blogTitle' => 'hoge]
      * @return  Illuminate\Database\Eloquent\Builder
      */
-    private static $search_keys = ['title','body','blogTitle'];
+    private static $search_keys = ['title','body','blogTitle', 'userName'];
     public static function search( $inputs ){
         $articles = self::select('*');
 

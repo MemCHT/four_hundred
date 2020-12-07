@@ -15,13 +15,13 @@
                 <div class="row">
                     <div class="col-md-12 dropdown">
                         <a id="articleIndexMenuLink" class="dropdown-toggle text-dark" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display:block;">
-                            <h2>{{$type=='newest' ? '新着記事' : '人気記事'}}　<i class="fas fa-chevron-down text-secondary"></i></h2>
+                            <h2>{{ $type=='newest' || $type==null ? '新着記事' : '人気記事'}}　<i class="fas fa-chevron-down text-secondary"></i></h2>
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="articleIndexMenuLink">
 
-                            <a class="dropdown-item" href="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0])."?type=newest" }}">新着記事</a>
-                            <a class="dropdown-item" href="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0])."?type=popularity" }}">人気記事</a>
+                            <a class="dropdown-item" href="{{ route('users.header.search')."?type=newest" }}">新着記事</a>
+                            <a class="dropdown-item" href="{{ route('users.header.search')."?type=popularity" }}">人気記事</a>
 
                             <!--<form id="logout-form" action="{{ route('users.blogs.articles.index', ['user' => 0, 'blog' => 0]) }}" method="GET" style="display: none;">
                                 @csrf
@@ -80,7 +80,7 @@
             <div class="text-center mb-4">
                 <button class="btn btn-primary col-md-4">もっと見る</button>
             </div>
-            {{$articles->links('vendor.pagination.modified')}}
+            {{$articles->appends($input)->links('vendor.pagination.modified')}}
         </div>
     </div>
 </div>

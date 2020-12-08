@@ -110,6 +110,8 @@ Route::namespace('Admin')->prefix('admins')->name('admins.')->group(function(){
         Route::prefix('comments')->name('comments.')->group(function(){
 
             Route::get('', 'CommentController@index')->name('index');
+            Route::put('{comment}', 'CommentController@update')->name('update');
+            Route::delete('', 'CommentController@delete')->name('delete');
         });
     });
 });

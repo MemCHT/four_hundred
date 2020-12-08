@@ -59,22 +59,17 @@
             </form>
         </div>
 
-        <div>
-            @if(session()->has('keyword'))
-                <h3 class="col-md-12 text-center">検索ワード:「{{ session()->get('keyword') }}」</h3>
-            @endif
-        </div>
-
         <div class="col-md-12 mt-5">
             @if(isset($comments[0]))
-            <form class="comment-index-form">
+            <form class="comment-index-form" id="commentManageForm" name="commentManageForm" method="POST" action="{{ route("admins.comments.update", ["comment" => 0]) }}">
                 @csrf
-                @method('DELETE')
+                {{ method_field("PUT") }}
 
                 <div class="form-group row">
-                <div class="col-md-12">
+                    <div class="col-md-12">
 
-                    <!-- 全選択機能 -->
+
+                        <!-- 全選択機能 -->
                         <div class="form-check pl-0 pb-3 mb-3">
                             <input id="commentCheckBoxAll" type="checkbox" style="display:none;">
 
@@ -86,14 +81,19 @@
 
                                 <div class="d-flex" style="flex:3;">
                                     <div class="mr-2" style="flex:1;">
-                                        <button class="btn btn-outline-primary btn-block">公開する</button>
+                                        <button type="submit" class="btn btn-outline-primary btn-block" id="btnToPublic"
+                                            onclick="commentManageForm.submitType.value='toPublic'">公開する</button>
                                     </div>
                                     <div class="mr-2 ml-2" style="flex:1;">
-                                        <button class="btn btn-outline-secondary btn-block">非公開にする</button>
+                                        <button type="submit" class="btn btn-outline-secondary btn-block" id="btnToPrivate"
+                                            onclick="commentManageForm.submitType.value='toPrivate'">非公開にする</button>
                                     </div>
                                     <div class="ml-2" style="flex:1;">
-                                        <button class="btn btn-outline-danger btn-block">削除する</button>
+                                        <button type="submit" class="btn btn-outline-danger btn-block" id="btnDelete"
+                                            onclick="commentManageForm.submitType.value='delete'">削除する</button>
                                     </div>
+                                    <input name="submitType" value="" hidden >
+
                                 </div>
 
                                 <div class="comment-count text-pimary d-flex align-items-center justify-content-end" style="flex:1;">
@@ -146,8 +146,61 @@
 @endsection
 
 <script>
+    const submitTypes = {toPublic: 'toPublic', toPrivate: 'toPrivate', delete: 'delete'};
 
     window.addEventListener('DOMContentLoaded',()=>{
+        createCheckBoxes();
+
+        const btnToPublic = document.getElementById('btnToPublic');
+        const btnToPrivate = document.getElementById('btnToPrivate');
+        const btnDelete = document.getElementById('btnDelete');
+        const btns = {toPublic: btnToPublic, toPrivate: btnToPrivate, delete: btnDelete};
+
+        for(let [key, btn] of Object.entries(btns)){
+            btn.addEventListener('click', () => { commentManageForm.submitType.value = submitTypes[key] });
+        }
+
+        document.commentManageForm.addEventListener('submit', handleSubmit);
+    });
+
+    // event.currentTarget === document.commentManageForm: HTMLFormElement
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        let form = document.commentManageForm;
+
+        // なぜかjsのform.submit()だと送信されない。
+        // 無理やり新しいフォーム要素作って送ったら送信された。
+        // えぇ... もしやと思ってinputのtypeを"checkbox"から"text"に変えたら送信された💢。
+        Array.from(form.elements).forEach((element) => {
+            if(element.checked)
+                element.type = "text";
+        })
+        form = form.submitType.value === submitTypes['delete']
+                 ? submitDelete(form)
+                 : submitUpdate(form);
+
+        form.submit();
+    }
+
+    const submitUpdate = (form) => {
+        // alert('来てるよん');
+        form.innerHTML += '{{ method_field("PUT") }}';
+        form.action = '{{ route("admins.comments.update", ["comment" => 0]) }}';
+
+        return form;
+    }
+    const submitDelete = (form) => {
+        form.innerHTML += '{{ method_field("DELETE") }}';
+        form.action = '{{ route("admins.comments.delete") }}';
+
+        return form;
+    }
+
+    /**
+     * 全選択機能を実装するメソッド
+     */
+    const createCheckBoxes = () => {
         const allSelectBtn = document.getElementById('commentCheckBoxAll');
 
         if(!allSelectBtn)
@@ -156,11 +209,13 @@
         const checkboxes = document.getElementsByClassName('commentCheckbox');
 
         allSelectBtn.addEventListener('click', (event) => {
-            event.target.checked
-                ? checkAll(checkboxes)
-                : unCheckAll(checkboxes);
+
+            if(event.target.checked)
+                checkAll(checkboxes);
+            else
+                unCheckAll(checkboxes);
         });
-    });
+    }
 
     const checkAll = (checkboxes) => {
         Array.prototype.forEach.call(checkboxes, (checkbox)=>{

@@ -137,6 +137,7 @@ class CommentController extends Controller
         $article = Article::find($article_id);
         $comment = Comment::find($comment_id);
         $inputs = $request->all();
+        dd($inputs);
 
         $selected_comments = array_filter(array_map(function($key, $value){
             if(preg_match('/comment_/', $key))

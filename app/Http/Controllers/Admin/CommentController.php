@@ -75,7 +75,7 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request->input());
     }
 
     /**
@@ -87,5 +87,15 @@ class CommentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Remove some resources from storage
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Request $request){
+        dd($request->input());
     }
 }

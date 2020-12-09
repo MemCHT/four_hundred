@@ -33,16 +33,17 @@ class ArticleController extends Controller
     public function index(Request $request, $user_id, $blog_id)
     {
 
+        // searchからリダイレクト時に、inputをsessionに格納している。
+        // paginate時は$requestに格納されている。
         $input = $request->input() ? $request->input() : session('input');
         $type = $request->input('type') ? $request->input('type') : session('input')['type'];
-        // dd($type);
+
         $method = 'sort'.ucfirst($type);
 
-        // dd(session('input'));
 
         $articles = Article::search( $input ?? [] );
-        // dd($articles->paginate(8));
-        $articles = $type ? Article::$method($articles) : Article::sortNewest($articles);
+        // typeが渡されていない場合は、デフォルトで新着順
+        $articles = $type ? Article::$method($articles) : Article::sortNewest($articles); // 予期されない呼び方に気を付ける。
         $articles = Article::buildToPublic($articles);
         $articles = $articles->paginate(8);
 

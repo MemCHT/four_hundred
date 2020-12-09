@@ -61,9 +61,9 @@
 
         <div class="col-md-12 mt-5">
             @if(isset($comments[0]))
-            <form class="comment-index-form" id="commentManageForm" name="commentManageForm" method="POST" action="{{ route("admins.comments.update", ["comment" => 0]) }}">
+        <form class="comment-index-form" id="commentManageForm" name="commentManageForm" method="POST" action="{{/* route("admins.comments.update", ["comment" => 0]) */''}}">
                 @csrf
-                {{ method_field("PUT") }}
+                {{ /*method_field("PUT")*/'' }}
 
                 <div class="form-group row">
                     <div class="col-md-12">
@@ -81,19 +81,16 @@
 
                                 <div class="d-flex" style="flex:3;">
                                     <div class="mr-2" style="flex:1;">
-                                        <button type="submit" class="btn btn-outline-primary btn-block" id="btnToPublic"
-                                            onclick="commentManageForm.submitType.value='toPublic'">公開する</button>
+                                        <button type="submit" class="btn btn-outline-primary btn-block" id="btnToPublic" name="sumbmitBtn" value="toPublic">公開する</button>
                                     </div>
                                     <div class="mr-2 ml-2" style="flex:1;">
-                                        <button type="submit" class="btn btn-outline-secondary btn-block" id="btnToPrivate"
-                                            onclick="commentManageForm.submitType.value='toPrivate'">非公開にする</button>
+                                        <button type="submit" class="btn btn-outline-secondary btn-block" id="btnToPrivate" name="sumbmitBtn" value="toPrivate">非公開にする</button>
                                     </div>
                                     <div class="ml-2" style="flex:1;">
-                                        <button type="submit" class="btn btn-outline-danger btn-block" id="btnDelete"
-                                            onclick="commentManageForm.submitType.value='delete'">削除する</button>
+                                        <button type="submit" class="btn btn-outline-danger btn-block" id="btnDelete" name="sumbmitBtn" value="delete">削除する</button>
                                     </div>
-                                    <input name="submitType" value="" hidden >
 
+                                    <input type="text" name="submitType" value="" hidden>
                                 </div>
 
                                 <div class="comment-count text-pimary d-flex align-items-center justify-content-end" style="flex:1;">
@@ -146,6 +143,7 @@
 @endsection
 
 <script>
+    // submitできるリクエストの種類
     const submitTypes = {toPublic: 'toPublic', toPrivate: 'toPrivate', delete: 'delete'};
 
     window.addEventListener('DOMContentLoaded',()=>{
@@ -157,7 +155,10 @@
         const btns = {toPublic: btnToPublic, toPrivate: btnToPrivate, delete: btnDelete};
 
         for(let [key, btn] of Object.entries(btns)){
-            btn.addEventListener('click', () => { commentManageForm.submitType.value = submitTypes[key] });
+            btn.addEventListener('click', () => {
+
+                commentManageForm.submitType.value = submitTypes[key];
+            });
         }
 
         document.commentManageForm.addEventListener('submit', handleSubmit);
@@ -171,14 +172,24 @@
 
         // なぜかjsのform.submit()だと送信されない。
         // 無理やり新しいフォーム要素作って送ったら送信された。
-        // えぇ... もしやと思ってinputのtypeを"checkbox"から"text"に変えたら送信された💢。
+        // ...もしやと思ってinputのtypeを"checkbox"から"text"に変えたら送信された。
         Array.from(form.elements).forEach((element) => {
             if(element.checked)
                 element.type = "text";
-        })
+        });
+        // alert(form.submitType.value);
+        const type = form.submitType.value;
+        // alert(form.innerHTML); // どちらのsubmitType.valueにも値がはいっていない...！
+        // alert(form.elements[4]);
+
         form = form.submitType.value === submitTypes['delete']
                  ? submitDelete(form)
                  : submitUpdate(form);
+        // alert(form.innerHTML);
+
+        // alert(type);
+        form.submitType.remove();
+        form.innerHTML += `<input type='text' name='submitType' value='${type}' >`;
 
         form.submit();
     }

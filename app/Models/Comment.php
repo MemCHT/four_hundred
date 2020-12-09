@@ -38,11 +38,12 @@ class Comment extends Model
      * @param  Illuminate\Database\Eloquent\Builder
      * @return  Illuminate\Database\Eloquent\Builder
      */
-    private static function searchTitle($builder, $title){
+    /*private static function searchTitle($builder, $title){
         $builder->where('title', 'like',  "%$title%");
 
         return $builder;
-    }
+    }*/
+
     /**
      * userName検索
      * @param  Illuminate\Database\Eloquent\Builder

@@ -25,7 +25,7 @@ class HeaderController extends Controller
 
         $redirect_path = count($layers) !== 0
                             ? implode("/", $layers)
-                            //該当routeがない場合、ブログ一覧の検索へリダイレクト
+                            // 該当routeがない場合、ブログ一覧の検索へリダイレクト
                             : route('users.blogs.index', ['user' => Auth::guard()->user()->id]);
 
         $input = $request->input('keyword') ? self::createInputByKeyword( $request->input('keyword') ) : [];

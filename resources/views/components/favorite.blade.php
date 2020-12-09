@@ -9,6 +9,7 @@
         <i class="far fa-heart text-danger"></i><span class="text-danger"> {{ $slot }}</span>
     </div>
 
+<!-- favoriteのステータスによってアイコンを変える-->
 @elseif(isset($article) && isset($canSubmit) && $canSubmit === false)
     <?php $favorite = $article->getFavorite(Auth::guard('user')->user()->id) ?>
 
@@ -17,6 +18,7 @@
             <i class="{{ isset($favorite) && $favorite->status ? 'fas' : 'far' }} fa-heart text-danger"></i><span> {{ $article->getFavoritesCount() }}</span>
     </div>
 
+<!-- articleが渡された場合、submitできるアイコンを表示 -->
 @else
     <?php $favorite = $article->getFavorite(Auth::guard('user')->user()->id) ?>
 

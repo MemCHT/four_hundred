@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Comment;
+use App\Models\Status;
 
 class CommentController extends Controller
 {
@@ -18,6 +19,7 @@ class CommentController extends Controller
     {
         $comments_builder = Comment::search($request->input());
         $comments = $comments_builder->paginate(5);
+
         $comments_count = $comments_builder->count();
 
         return view('admins.comments.index', compact('comments', 'comments_count'));
@@ -75,7 +77,18 @@ class CommentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request->input());
+        // dd($request->input());
+        $update_status_id = ['toPublic' => Status::getByName('公開')->id, 'toPrivate' => Status::getByName('非公開')->id];
+
+        $input = $request->input();
+        $submit_type = $request->input('submitType');
+        $comment_ids = $this->extractCommentIdsFromInput($input);
+        Comment::whereIn('id', $comment_ids)->update(['status_id' => $update_status_id[$submit_type]]);
+
+        if($comment_ids)
+            return back()->with('success', 'コメントを更新しました！');
+        else
+            return back()->with('success', 'コメントの更新はありませんでした。');
     }
 
     /**
@@ -96,6 +109,35 @@ class CommentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function delete(Request $request){
-        dd($request->input());
+
+        // dd($request->input());
+        $input = $request->input();
+
+        // $submit_type = $request->input('submitType'); -> 一応 "delete" が入る。
+        $comment_ids = $this->extractCommentIdsFromInput($input);
+        Comment::whereIn('id', $comment_ids)->delete();
+
+        if($comment_ids)
+            return back()->with('success', 'コメントを削除しました！');
+        else
+            return back()->with('success', 'コメントの削除はありませんでした。');
+    }
+
+    /**
+     * input[]からキーに"comment_"がつくもののみ抜き出して、その値（comment_id: int）を配列の形で返す。
+     * @param array $input
+     * @return int[]
+     */
+    private function extractCommentIdsFromInput($input){
+
+        $comment_ids = [];
+
+        foreach($input as $key => $value){
+            if(preg_match('/^comment_/', $key)){
+                $comment_ids[] = intval($value);
+            }
+        }
+
+        return $comment_ids;
     }
 }

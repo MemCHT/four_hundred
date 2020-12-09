@@ -126,4 +126,11 @@
 </body>
 </html>
 
+@include('components.submit_popup_contain_js',[
+    'form_id' => 'logout_form',
+    'message' => 'ログアウトしますか？',
+    'accept' => 'はい',
+    'reject' => 'いいえ'
+])
+
 

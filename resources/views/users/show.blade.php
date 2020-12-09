@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="title col-md-12 row align-items-end mb-4">
                         <div class="col-md-10">
-                            <h2>{{ strlen($user->blog->title) > 60 ? substr($user->blog->title,0 , 60).'...' : $user->blog->title }}</h2>
+                            <h2>{{ $user->blog->title }}</h2>
                         </div>
                         <div class="col-md-2 text-right">
                             @if(Auth::guard('user')->user()->canFollow($user->id))

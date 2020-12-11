@@ -72,9 +72,10 @@
 
                                         <a class="dropdown-item" href="{{route('users.show', ['user' => Auth::id()])}}">マイブログ</a>
                                         <a class="dropdown-item" href="{{ route('users.profile.edit') }}">設定</a>
-                                        <a class="dropdown-item" href="{{ route('users.logout') }}"
-                                           onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
+                                        <a id="logout_button" class="dropdown-item" href="{{ route('users.logout') }}" onclick="
+                                            event.preventDefault();
+                                            document.getElementById('logout-form').submit();
+                                        ">
                                             {{ __('layouts.logout') }}
                                         </a>
                                         <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
@@ -126,11 +127,13 @@
 </body>
 </html>
 
-@include('components.submit_popup_contain_js',[
-    'form_id' => 'logout_form',
-    'message' => 'ログアウトしますか？',
-    'accept' => 'はい',
-    'reject' => 'いいえ'
-])
-
+@auth('user')
+    @include('components.submit_popup_contain_js',[
+        'form_id' => 'logout_form',
+        'target_ids' => ['logout_button'],
+        'message' => 'ログアウトしますか？',
+        'accept' => 'はい',
+        'reject' => 'いいえ'
+    ])
+@endauth
 

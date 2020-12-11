@@ -64,11 +64,15 @@
                                 <a href="{{ route('users.blogs.articles.comments.index', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}"
                                     class="btn btn-outline-primary">コメント管理</a>
                                 <!--<a href="#" class="btn btn-outline-danger">削除する</a>-->
-                                <form action="{{ route('users.blogs.articles.destroy', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
+
+                                <?php $target_ids[] = 'deleteArticleBtn_'.$article->id ?>
+
+                                <form id={{ 'deleteArticleForm_'.$article->id }} action="{{ route('users.blogs.articles.destroy', ['user' => $article->blog->user->id, 'blog' => $article->blog_id, 'article' => $article->id]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <div class="form-group mb-0">
-                                        <button type="submit" name="article_id" value={{ $article->id }} class="btn btn-outline-danger input-group text-center d-block">削除する</button>
+                                        <button id={{ $target_ids[count($target_ids) - 1] }} type="submit" name="article_id" value={{ $article->id }} class="btn btn-outline-danger input-group text-center d-block"
+                                            onclick="{{ 'deleteArticleForm_'.$article->id }}.submit()">削除する</button>
                                     </div>
                                 </form>
                             </div>
@@ -89,3 +93,11 @@
 
     </div>
 @endsection
+
+@include('components.submit_popup_contain_js',[
+        'form_id' => 'deleteArticleForm',
+        'target_ids' => $target_ids,
+        'message' => '本当に操作を行いますか？',
+        'accept' => 'はい',
+        'reject' => 'いいえ'
+])

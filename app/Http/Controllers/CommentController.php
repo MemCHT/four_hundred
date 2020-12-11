@@ -137,7 +137,7 @@ class CommentController extends Controller
         $article = Article::find($article_id);
         $comment = Comment::find($comment_id);
         $inputs = $request->all();
-        dd($inputs);
+        // dd($inputs);
 
         $selected_comments = array_filter(array_map(function($key, $value){
             if(preg_match('/comment_/', $key))
@@ -157,8 +157,12 @@ class CommentController extends Controller
         // $comment_user = $comment->user;
         // Comment::destroy($comment_id);
 
-        Comment::whereIn('id', $selected_comments)->delete();
+        $comments = Comment::whereIn('id', $selected_comments)->delete();
+
+        if(!$comments)
+            return redirect(route('users.blogs.articles.comments.index', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','コメントの削除は行われませんでした');
 
         return redirect(route('users.blogs.articles.comments.index', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','コメントを削除しました');
+
     }
 }

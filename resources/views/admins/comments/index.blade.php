@@ -81,13 +81,19 @@
 
                                 <div class="d-flex" style="flex:3;">
                                     <div class="mr-2" style="flex:1;">
-                                        <button type="submit" class="btn btn-outline-primary btn-block" id="btnToPublic" name="sumbmitBtn" value="toPublic">公開する</button>
+                                        <button type="submit" class="btn btn-outline-primary btn-block" id="btnToPublic" name="sumbmitBtn" value="toPublic"
+                                            onclick="commentManageForm.submitType.value = 'toPublic';handleSubmit(event);">
+                                            公開する</button>
                                     </div>
                                     <div class="mr-2 ml-2" style="flex:1;">
-                                        <button type="submit" class="btn btn-outline-secondary btn-block" id="btnToPrivate" name="sumbmitBtn" value="toPrivate">非公開にする</button>
+                                        <button type="submit" class="btn btn-outline-secondary btn-block" id="btnToPrivate" name="sumbmitBtn" value="toPrivate"
+                                            onclick="commentManageForm.submitType.value = 'toPrivate';handleSubmit(event);">
+                                            非公開にする</button>
                                     </div>
                                     <div class="ml-2" style="flex:1;">
-                                        <button type="submit" class="btn btn-outline-danger btn-block" id="btnDelete" name="sumbmitBtn" value="delete">削除する</button>
+                                        <button type="submit" class="btn btn-outline-danger btn-block" id="btnDelete" name="sumbmitBtn" value="delete"
+                                            onclick="commentManageForm.submitType.value = 'delete';handleSubmit(event);">
+                                            削除する</button>
                                     </div>
 
                                     <input type="text" name="submitType" value="" hidden>
@@ -149,7 +155,7 @@
     window.addEventListener('DOMContentLoaded',()=>{
         createCheckBoxes();
 
-        const btnToPublic = document.getElementById('btnToPublic');
+        /*const btnToPublic = document.getElementById('btnToPublic');
         const btnToPrivate = document.getElementById('btnToPrivate');
         const btnDelete = document.getElementById('btnDelete');
         const btns = {toPublic: btnToPublic, toPrivate: btnToPrivate, delete: btnDelete};
@@ -159,7 +165,7 @@
 
                 commentManageForm.submitType.value = submitTypes[key];
             });
-        }
+        }*/
 
         document.commentManageForm.addEventListener('submit', handleSubmit);
     });
@@ -241,3 +247,11 @@
     }
 
 </script>
+
+@include('components.submit_popup_contain_js',[
+        'form_id' => 'commentManageForm',
+        'target_ids' => ['btnToPublic', 'btnToPrivate', 'btnDelete'],
+        'message' => '本当に操作を行いますか？',
+        'accept' => 'はい',
+        'reject' => 'いいえ'
+])

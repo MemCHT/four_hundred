@@ -88,7 +88,7 @@ class CommentController extends Controller
         if($comment_ids)
             return back()->with('success', 'コメントを更新しました！');
         else
-            return back()->with('success', 'コメントの更新はありませんでした。');
+            return back()->with('success', 'コメントの更新は行われませんでした');
     }
 
     /**
@@ -120,7 +120,7 @@ class CommentController extends Controller
         if($comment_ids)
             return back()->with('success', 'コメントを削除しました！');
         else
-            return back()->with('success', 'コメントの削除はありませんでした。');
+            return back()->with('success', 'コメントの削除は行われませんでした');
     }
 
     /**

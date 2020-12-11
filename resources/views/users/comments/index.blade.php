@@ -50,7 +50,7 @@
     </h3>
 
     @if(isset($comments[0]))
-    <form action="{{ route('users.blogs.articles.comments.destroy', ['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id, 'comment' => $comments[0]->id]) }}" method="POST" class="comment-index-form">
+    <form id="commentManageForm" action="{{ route('users.blogs.articles.comments.destroy', ['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id, 'comment' => $comments[0]->id]) }}" method="POST" class="comment-index-form">
         @csrf
         @method('DELETE')
 
@@ -93,7 +93,8 @@
         </div>
 
         <div class="form-group row mt-5 mb-5">
-            <button type="submit" class="form-control btn btn-outline-danger col-md-2 offset-md-5">削除する</button>
+
+            <button id="commentDeleteBtn" type="submit" onclick="commentManageForm.submit();" class="form-control btn btn-outline-danger col-md-2 offset-md-5">削除する</button>
         </div>
     </form>
     @else
@@ -134,3 +135,11 @@
     }
 
 </script>
+
+@include('components.submit_popup_contain_js',[
+        'form_id' => 'commentManageForm',
+        'target_ids' => ["commentDeleteBtn"],
+        'message' => '本当に操作を行いますか？',
+        'accept' => 'はい',
+        'reject' => 'いいえ'
+])

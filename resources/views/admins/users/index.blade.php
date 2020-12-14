@@ -27,8 +27,14 @@
 
         <div class="col-md-12 row pr-0 pl-0 mt-5">
             @foreach($users as $user)
+
+                <?php
+                    $user_freeze_btn_id = 'userFreezeBtn_'.$user->id;
+                    $user_freeze_btn_ids[] = $user_freeze_btn_id;
+                ?>
+
                 <div class="col-md-6 mb-4">
-                    @include('admins.users.user_card', ['user' => $user])
+                    @include('admins.users.user_card', ['user' => $user, 'target_id' => $user_freeze_btn_id])
                 </div>
             @endforeach
         </div>
@@ -40,3 +46,11 @@
     </div>
 </div>
 @endsection
+
+@include('components.submit_popup_contain_js',[
+        'form_id' => 'userFreezeForm',
+        'target_ids' => $user_freeze_btn_ids,
+        'message' => 'アカウントを停止しますか？',
+        'accept' => '停止する',
+        'reject' => 'キャンセル'
+    ])

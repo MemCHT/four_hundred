@@ -148,6 +148,8 @@
 </div>
 @endsection
 
+<!-- popupのmessage, sub_message表示用変数 -->
+
 <script>
     // submitできるリクエストの種類
     const submitTypes = {toPublic: 'toPublic', toPrivate: 'toPrivate', delete: 'delete'};
@@ -248,10 +250,21 @@
 
 </script>
 
+<?php
+    $comment_manage_form_message = '件を更新または削除しますか？';
+    $comment_manage_form_sub_message = '件のコメントを更新または削除しますか？<br>※コメントを削除すると、元に戻すことはできません。';
+?>
+
 @include('components.submit_popup_contain_js',[
         'form_id' => 'commentManageForm',
         'target_ids' => ['btnToPublic', 'btnToPrivate', 'btnDelete'],
-        'message' => '本当に操作を行いますか？',
+        'message' => '〇件を更新または削除しますか？',
+        'sub_message' => '〇件のコメントを更新または削除しますか？<br>※コメントを削除すると、元に戻すことはできません。',
         'accept' => 'はい',
-        'reject' => 'いいえ'
+        'reject' => 'いいえ',
+        'popupWillAppear' => "
+            const checkedCommentCount = Array.prototype.filter.call(commentManageForm.elements, (value) => value.checked).length;
+            document.getElementById('commentManageForm_message').innerText = checkedCommentCount + '{$comment_manage_form_message}';
+            document.getElementById('commentManageForm_subMessage').innerHTML = checkedCommentCount + '{$comment_manage_form_sub_message}';
+        "
 ])

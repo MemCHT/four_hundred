@@ -63,7 +63,7 @@
                                     </a>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="{{ route('admins.logout') }}"
+                                        <a id="logout_button" class="dropdown-item" href="{{ route('admins.logout') }}"
                                            onclick="event.preventDefault();
                                                          document.getElementById('logout-form').submit();">
                                             {{ __('layouts.logout') }}
@@ -103,5 +103,15 @@
     @include('layouts.success')
 </body>
 </html>
+
+@auth('admin')
+    @include('components.submit_popup_contain_js',[
+        'form_id' => 'logout_form',
+        'target_ids' => ['logout_button'],
+        'message' => 'ログアウトしますか？',
+        'accept' => 'はい',
+        'reject' => 'いいえ'
+    ])
+@endauth
 
 

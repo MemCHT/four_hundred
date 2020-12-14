@@ -1,3 +1,6 @@
+<!-- ユーザー一つの概要を表すカード用コンポーネント -->
+<!-- ['user' => ユーザーのモデルデータ, 'target_id' => ユーザー停止ボタンをsubmitするボタンのid] -->
+
 <div class="card user-card p-4">
     <div class="card-body">
         <div class="d-flex">
@@ -22,17 +25,25 @@
                 </form>
             </div>
 
+            <?php $user_freeze_form_id = 'userFreezeForm_'.$user->id ?>
+
             <div class="text-danger text-right" style="flex:1;">
-                <form action="{{ route('admins.users.update', ['user' => $user->id]) }}" method="POST">
+                <form id="{{ $user_freeze_form_id }}" action="{{ route('admins.users.update', ['user' => $user->id]) }}" method="POST">
                     @csrf
                     @method('PUT')
 
                     @if($user->status->name == '公開')
-                        <button name="status_id" value="{{ $user->status->getByName('非公開')->id }}" class="btn btn-outline-danger col-md-11">
+                        <input name="status_id" value="{{ $user->status->getByName('非公開')->id }}" hidden>
+                        <button id="{{ $target_id }}" class="btn btn-outline-danger col-md-11"
+                            onclick="{{ $user_freeze_form_id }}.submit();"
+                        >
                             アカウントを停止する
                         </button>
                     @else
-                        <button name="status_id" value="{{ $user->status->getByName('公開')->id }}" class="btn btn-danger col-md-11">
+                        <input name="status_id" value="{{ $user->status->getByName('公開')->id }}" hidden>
+                        <button id="{{ $target_id }}" class="btn btn-danger col-md-11"
+                            onclick="{{ $user_freeze_form_id }}.submit();"
+                        >
                             アカウントを再開する
                         </button>
                     @endif

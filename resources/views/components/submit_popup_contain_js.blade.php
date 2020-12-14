@@ -41,7 +41,7 @@
         font-weight: bold;
     }
     #{{ $form_id.'_submitPopup' }} .card .card-body .d-flex{
-        width: 20em;
+        width: 26em;
     }
     #{{ $form_id.'_submitPopup' }} .card .card-body .d-flex button{
         flex: 1;
@@ -55,13 +55,15 @@
     <div class="d-flex justify-content-center align-items-center">
         <div class="card">
             <div class="card-body">
-                <h5 class="mb-4">{{ $message }}</h5>
-                <p class="mb-4">{{ $sub_message ?? '' }}</p>
+                <div class="mr-4 ml-4 mb-4 text-left">
+                    <h5 id="{{ $form_id.'_message' }}" class="mb-4">{{ $message }}</h5>
+                    <p id="{{ $form_id.'_subMessage' }}">{!! $sub_message ?? '' !!}</p>
+                </div>
                 <div class="d-flex">
-                    <button id="{{ $form_id.'_submitReject' }}" class="btn btn-outline-primary">
+                    <button id="{{ $form_id.'_submitReject' }}" class="btn btn-outline-primary mr-3">
                         {{ $reject ?? 'いいえ' }}
                     </button>
-                    <button id="{{ $form_id.'_submitAccept' }}" class="btn btn-outline-danger">
+                    <button id="{{ $form_id.'_submitAccept' }}" class="btn btn-outline-danger ml-3">
                         {{ $accept ?? 'はい' }}
                     </button>
                 </div>
@@ -110,6 +112,7 @@
 
         const handleClick = (event) => {
             event.preventDefault();
+            {{ $form_id.'_' }}popupWillAppear();
 
             const submitPopup = document.getElementById('{{ $form_id."_submitPopup" }}');
 
@@ -119,7 +122,7 @@
         };
 
         return handleClick;
-    }
+    };
 
     const {{ $form_id.'_' }}submitAcceptClosure = (defaultEvent) => {
         // targetのデフォルトイベントにあるeventを渡すためのクロージャ
@@ -128,10 +131,15 @@
         };
 
         return submitAccept;
-    }
+    };
 
     const {{ $form_id.'_' }}submitReject = (event) => {
         const popup = document.getElementById('{{ $form_id."_submitPopup" }}');
         popup.style.display = 'none';
+    };
+
+    // popupが表示される直前に行う処理を記述する。
+    const {{ $form_id.'_' }}popupWillAppear = () => {
+        {!! $popupWillAppear ?? '' !!}
     };
 </script>

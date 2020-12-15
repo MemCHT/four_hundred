@@ -41,7 +41,7 @@
         font-weight: bold;
     }
     #{{ $form_id.'_submitPopup' }} .card .card-body .d-flex{
-        width: 26em;
+        width: 30em;
     }
     #{{ $form_id.'_submitPopup' }} .card .card-body .d-flex button{
         flex: 1;
@@ -138,7 +138,7 @@
         popup.style.display = 'none';
     };
 
-    // popupが表示される直前に行う処理を記述する。
+    // popupが表示される直前に行う処理を受け取る。
     const {{ $form_id.'_' }}popupWillAppear = () => {
         {!! $popupWillAppear ?? '' !!}
     };

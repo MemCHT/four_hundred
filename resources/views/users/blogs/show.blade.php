@@ -97,7 +97,8 @@
 @include('components.submit_popup_contain_js',[
         'form_id' => 'deleteArticleForm',
         'target_ids' => $target_ids,
-        'message' => '本当に操作を行いますか？',
-        'accept' => 'はい',
-        'reject' => 'いいえ'
+        'message' => '記事を削除しますか？',
+        'sub_message' => '記事を削除してもよろしいですか？<br>記事を削除すると、元に戻すことはできません',
+        'accept' => '削除する',
+        'reject' => 'キャンセル'
 ])

@@ -53,7 +53,6 @@
             <div class="article-nav-wrapper text-center pb-5 mb-5" style="border-bottom: 1px solid #AAAAAA;">
                 <h3 class="text-primary mb-4">{{ $article->blog->user->name }}さんの人気記事</h3>
 
-                <!-- 後ほど人気記事をソートして代入する必要あり -->
                 @if($article->blog->getArticles(1)->isEmpty() === false)
                     <div class="row mr-0 ml-0">
                         @foreach($article->blog->buildArticlesPopularity()->limit(3)->get() as $nav_article)
@@ -99,10 +98,22 @@
                     @endforeach
                     <div class="col-md-12 pr-0 pl-0 text-center">
                         <form id="commentForm" action="{{ route('users.blogs.articles.comments.store', ['user'=>$article->blog->user_id, 'blog'=>$article->blog_id, 'article'=>$article->id]) }}"
-                            class="form-group" method="POST"{{ old('body') ?:'hidden' }}>
+                            class="form-group mb-4" method="POST"{{ old('body') ?:'hidden' }}>
                             @csrf
 
-                            <textarea id="commentBody" type="text" class="form-control mb-4" name="body" rows="5" placeholder="コメントを入力" required>{{ old('body') }}</textarea>
+                            @include('components.textarea_with_count', [
+                                    'textarea_attributes' => [
+                                        'id' => 'commentBody',
+                                        'type' => 'text',
+                                        'class' => 'form-control',
+                                        'name' => 'body',
+                                        'rows' => '5',
+                                        'required' => 'true',
+                                        'value' => old('body'),
+                                        'placeholder' => 'コメントを入力'
+                                    ],
+                                    'max_count' => 400
+                                ])
                         </form>
                         @include('components.error', ['name' => 'body'])
 
@@ -136,18 +147,4 @@
         }
     });
 
-    /*const handleClick = () => {
-        const commentForm = document.getElementById('commentForm');
-        const commentFormBtn = document.getElementById('commentFormBtn');
-
-        return (event: MouseEvent) => {
-            event.preventDefault();
-
-            commentForm.hidden = false;
-
-            commentFormBtn.addEventListener('click', (event)=>{
-                commentForm.submit();
-            });
-        }
-    }*/
 </script>

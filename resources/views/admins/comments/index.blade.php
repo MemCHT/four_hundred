@@ -260,10 +260,10 @@
         'target_ids' => ['btnToPublic', 'btnToPrivate', 'btnDelete'],
         'message' => '〇件を更新または削除しますか？',
         'sub_message' => '〇件のコメントを更新または削除しますか？<br>※コメントを削除すると、元に戻すことはできません。',
-        'accept' => 'はい',
-        'reject' => 'いいえ',
+        'accept' => '更新/削除する',
+        'reject' => 'キャンセル',
         'popupWillAppear' => "
-            const checkedCommentCount = Array.prototype.filter.call(commentManageForm.elements, (value) => value.checked).length;
+            const checkedCommentCount = Array.prototype.filter.call(commentManageForm.elements, (value) => value.checked && (value.id != 'commentCheckBoxAll') ).length;
             document.getElementById('commentManageForm_message').innerText = checkedCommentCount + '{$comment_manage_form_message}';
             document.getElementById('commentManageForm_subMessage').innerHTML = checkedCommentCount + '{$comment_manage_form_sub_message}';
         "

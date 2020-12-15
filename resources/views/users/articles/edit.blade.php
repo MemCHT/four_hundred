@@ -50,14 +50,23 @@
             @include('components.error', ['name' => 'published_day'])
         </div>
 
-        <!-- 要処理追加 -->
         <div class="form-group mb-4">
             <label for="body" class="control-label">本文</label>
 
-            <div>
-                <textarea id="body" type="body" class="form-control" name="body" rows="10" required >{{ $article->body }}</textarea>
-            </div>
-            <p class="text-right">xxx/xxx文字</p>
+            @include('components.textarea_with_count', [
+                    'textarea_attributes' => [
+                        'id' => 'body',
+                        'type' => 'text',
+                        'class' => 'form-control',
+                        'name' => 'body',
+                        'rows' => '10',
+                        'required' => 'true',
+                        'value' => old('body') ?? $article->body,
+                        'placeholder' => '本文'
+                    ],
+                    'max_count' => 400
+                ])
+
             @include('components.error', ['name' => 'body'])
         </div>
 

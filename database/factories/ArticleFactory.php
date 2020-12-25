@@ -18,7 +18,7 @@ $factory->define(Article::class, function (Faker $faker) {
         'body' => $faker->text(400),
         'status_id' => $faker->numberBetween(1,$status_count),
         'published_at' => $faker->dateTimeThisMonth(),
-        'created_at' => $faker->dateTimeThisYear,
-        'updated_at' => $faker->dateTimeThisYear
+        'created_at' => $faker->dateTimeThisYear(),
+        'updated_at' => $faker->dateTimeThisYear()
     ];
 });

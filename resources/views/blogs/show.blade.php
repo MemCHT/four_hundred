@@ -46,7 +46,7 @@
                                     <div class="col-md-10">
                                         <h4>{{ $article->title }}</h4>
                                     </div>
-                                    
+
                                     <div class="col-md-2 text-right row no-gutters">
 
                                         <div class="col-md-12">

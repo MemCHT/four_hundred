@@ -14,6 +14,8 @@ use App\Models\Status;
 use App\Models\Article;
 use App\Models\Favorite;
 
+use App\Jobs\ProcessPublishArticle;
+
 class ArticleController extends Controller
 {
     public function __construct()
@@ -81,12 +83,24 @@ class ArticleController extends Controller
 
         $inputs = $request->all();
         $inputs['blog_id'] = $blog->id;
-        $inputs['published_at'] = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_day']);
+        $published_at = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_date']);
+        $inputs['published_at'] = $published_at;
 
         $article = Article::create($inputs);
 
+        // 処理完了時に表示するメッセージ
+        $message = 'エッセイの投稿を完了しました';
+
+        // 公開設定している未公開記事は強制的に非公開にする
+        if($article->status_id == Status::getByName('公開')->id && $published_at->gt(Carbon::now())){
+            $article->update(['status_id' => Status::getByName('非公開')->id]);
+            $message = '公開日は'.$published_at->format('Y年m月d日 の h:i:s').'です';
+
+            ProcessPublishArticle::dispatch($article)->delay(now()->addSeconds(10));
+        }
+
         return redirect()->route('users.blogs.articles.edit', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article->id])
-                         ->with('success','エッセイの投稿を完了しました');
+                         ->with('success',$message);
     }
 
     /**
@@ -142,13 +156,24 @@ class ArticleController extends Controller
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
-
-        $inputs['published_at'] = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_day']);
+        $published_at = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_date']);
+        $inputs['published_at'] = $published_at;
 
         $article->update($inputs);
 
+        // 処理完了時に表示するメッセージ
+        $message = 'エッセイの編集を完了しました';
+
+        // 公開設定している未公開記事は強制的に非公開にする
+        if($article->status_id == Status::getByName('公開')->id && $published_at->gt(Carbon::now())){
+            $article->update(['status_id' => Status::getByName('非公開')->id]);
+            $message = '公開日は'.$published_at->format('Y年m月d日 の h:i:s').'です';
+
+            ProcessPublishArticle::dispatch($article)->delay($published_at);
+        }
+
         return redirect()->route('users.blogs.articles.edit', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id])
-                         ->with('success','エッセイの編集を完了しました');
+                         ->with('success',$message);
     }
 
     /**

@@ -17,12 +17,14 @@
     window.addEventListener('DOMContentLoaded', () => {
         const textarea = document.getElementById('{{ $textarea_attributes["id"] }}');
 
-        const [handleChangeTextarea] = useFunctions();
+        const [handleChangeTextarea] = useHandleChange();
 
         textarea.addEventListener('keyup', handleChangeTextarea);
     });
 
-    const useFunctions = () => {
+    // イベントには引数を渡せないため、クロージャにして必要な引数をあらかじめ取得しておいている。
+    // こうしないとイベント毎に要素の検索をする必要がある。
+    const useHandleChange = () => {
         const textareaElm = document.getElementById('{{ $textarea_attributes["id"] }}');
         const countTextareaElm = document.getElementById('{{ "count_".$textarea_attributes["id"] }}');
         const errorTextareaElm = document.getElementById('{{ "error_".$textarea_attributes["id"] }}');
@@ -44,6 +46,7 @@
 
         determineMaxCountAndAssignClass();
 
+        // 初期カウント文字
         countTextareaElm.innerHTML = countTextarea + ' / {{ $max_count }}文字';
 
         const handleChangeTextarea = (event) => {

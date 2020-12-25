@@ -38,7 +38,7 @@ class ProfileFormRequest extends FormRequest
             'email' => ['required', Rule::unique('users')->ignore(Auth::guard('user')->user()->id)],
             'birth_year' => ['required'],
             'birth_month' => ['required'],
-            'birth_day' => ['required'],
+            'birth_date' => ['required'], // 2020/12/23日付のみだとdateのほうが良い。
         ];
     }
 }

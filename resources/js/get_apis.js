@@ -9,8 +9,6 @@
 
 });*/
 
-// ※fetchAPIで書き直したほうが良いかも。
-
 // urlを渡してGETリクエストをし、成功なら取得したデータのJSONを、失敗ならステータステキストをもとにエラーを返す
 const get = (url) => {
     return new Promise((resolve, reject) => {
@@ -19,7 +17,7 @@ const get = (url) => {
 
         xhr.onload = () => {
             if(xhr.status === 200)
-                resolve( xhr.responseText );
+                resolve( JSON.parse(xhr.responseText) );
         };
         xhr.onerror = () => {
             reject( new Error(xhr.statusText) );

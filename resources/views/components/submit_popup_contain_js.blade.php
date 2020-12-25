@@ -6,7 +6,7 @@
 
     ▼使用例
     include('components.submit_popup_contain_js',[
-        'form_id' => 'logout_form',             ...submitするフォームのid
+        'form_id' => 'logout_form',             ...submitするフォームのid、formが複数ある場合でもtarget_idに応じてformが検索されるため、このform_idは一つで問題ない。
         'target_ids' => ['logout_button'],         ...クリックするボタンやaタグリンクのid（配列で渡す）
         'message' => 'ログアウトしますか？',      ...主メッセージ
         'sub_message' => ''                     ...副メッセージ
@@ -80,27 +80,27 @@
 
         // const form = document.getElementById('{{ $form_id }}');
 
-        // popupを拒否、何も起きない
+        // popupを拒否するボタンのイベント登録、何も起きない
         rejectBtn.addEventListener('click', {{ $form_id.'_' }}submitReject);
 
         let targets = [];
 
-        @foreach($target_ids as $index => $target_id)
+        @foreach($target_ids as $target_id)
             targets.push(document.getElementById('{{ $target_id }}'));
         @endforeach
 
         targets.forEach((target) => {
-            // あらかじめデフォルトの動作を格納、popupを承認してデフォルトの動作を呼ぶ。
+            // １．あらかじめデフォルトの動作を格納、popupを承認してデフォルトの動作を呼ぶ。
             // 本来はbind(thisArg) ... 例えば console.log(this.name)等でのthisをthisArgに置き換えるものだが、その時新しい関数を生成して返すためそれを利用。
             // console.log(target.onclick);
             const defaultOnClick = target.onclick.bind({});
 
-            // 後から追加したイベントのpreventDefault()で無効化できなかったので、この段階でデフォルトイベントを破棄。
+            // ２．後から追加したイベントのpreventDefault()で無効化できなかったので、この段階でデフォルトイベントを破棄。
             target.onclick = (event) => { event.preventDefault(); };
 
             // acceptBtn.addEventListener('click', submitAcceptClosure(defaultOnClick));
 
-            // form送信のイベントが登録されている要素に、popupを表示するメソッドを上書きしている。
+            // ３．form送信のイベントが登録されている要素に、popupを表示するメソッドを上書きしている。
             target.addEventListener('click', {{ $form_id.'_' }}handleClickClosure(defaultOnClick));
         });
     });

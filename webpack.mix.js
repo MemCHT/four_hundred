@@ -13,8 +13,9 @@ const mix = require('laravel-mix');
 
 //mix.js('resources/js/app.js', 'public/js');
 mix.js([
-   'resources/js/app.js'
+   'resources/js/app.js',
 ], 'public/js/app.js');
+    // .js('resources/js/get_apis.js', 'public/js/get_apis.js');
 
 mix.sass('resources/sass/app.scss', 'public/css')
    .sass('resources/sass/popup.scss', '../resources/build/css')

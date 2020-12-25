@@ -15,6 +15,7 @@ $factory->define(Blog::class, function (Faker $faker) {
         'user_id' => $faker->numberBetween(1,$user_count),
         'title' => $faker->text(255),
         'status_id' => $faker->numberBetween(1,$status_count),
-        'overview' => $faker->text(400)
+        'overview' => $faker->text(400),
+        'updated_at' => $faker->dateTimeThisYear()
     ];
 });

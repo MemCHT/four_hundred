@@ -19,4 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'api'], function(){
     Route::resource('test', 'API\TestController');
+    // Route::resource('blogs', 'API\BlogController');
+
+    // ブログ複数取得
+    Route::get('blogs', 'API\BlogController@list');
+
+    // 記事複数取得
+    Route::get('blogs/{blog}/articles', 'API\ArticleController@list');
+
 });

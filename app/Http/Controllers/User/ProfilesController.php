@@ -101,7 +101,7 @@ class ProfilesController extends Controller
             'email' => $inputs['email'],
             'icon' => isset($inputs['icon']) ? $inputs['icon'] : null
         ];
-        $profile['birthday'] = Carbon::create($inputs['birth_year'], $inputs['birth_month'], $inputs['birth_day']);
+        $profile['birthday'] = Carbon::create($inputs['birth_year'], $inputs['birth_month'], $inputs['birth_date']);
 
         //dd($inputs);
 

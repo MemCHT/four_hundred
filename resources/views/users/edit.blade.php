@@ -60,14 +60,14 @@
                     <p>月</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="birth_day" value="{{ $user->birthday->format('d') }}" required placeholder="dd">
+                    <input type="number" class="form-control" name="birth_date" value="{{ $user->birthday->format('d') }}" required placeholder="dd">
                 </div>
                 <div class="">
                     <p>日</p>
                 </div>
             </div>
             <span class="help-block">
-                @include('components.error', ['name' => 'birth_day'])
+                @include('components.error', ['name' => 'birth_date'])
                 @include('components.error', ['name' => 'birth_month'])
                 @include('components.error', ['name' => 'birth_year'])
             </span>

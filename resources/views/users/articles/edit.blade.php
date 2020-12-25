@@ -32,13 +32,13 @@
                     <p>年</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="published_month" value={{ old('published_month') ? old('published_month') : $article->published_at->format('m') }} required placeholder="mm">
+                    <input type="number" min="1" max="12" class="form-control" name="published_month" value={{ old('published_month') ? old('published_month') : $article->published_at->format('m') }} required placeholder="mm">
                 </div>
                 <div class="">
                     <p>月</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="published_day" value={{ old('published_day') ? old('published_day') : $article->published_at->format('d') }} required placeholder="dd">
+                    <input type="number" min="1" max="31" class="form-control" name="published_date" value={{ old('published_date') ? old('published_date') : $article->published_at->format('d') }} required placeholder="dd">
                 </div>
                 <div class="">
                     <p>日</p>
@@ -47,7 +47,7 @@
 
             @include('components.error', ['name' => 'published_year'])
             @include('components.error', ['name' => 'published_month'])
-            @include('components.error', ['name' => 'published_day'])
+            @include('components.error', ['name' => 'published_date'])
         </div>
 
         <div class="form-group mb-4">

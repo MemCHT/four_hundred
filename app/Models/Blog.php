@@ -210,9 +210,9 @@ class Blog extends Model
      * @return Illuminate\Database\Eloquent\Builder
      */
     private static function searchTitle($builder, $title){
-        $blogs = Blog::where('title', 'like', "%$title%");
+        $builder = $builder->where('title', 'like', "%$title%");
 
-        return $blogs;
+        return $builder;
     }
 
     /**
@@ -225,12 +225,10 @@ class Blog extends Model
     private static function searchUserName($builder, $user_name){
         $user_ids = User::where('name', 'like', "%$user_name%")->get('id');
 
-        $blogs = $builder->whereIn('user_id', $user_ids);
+        $builder = $builder->whereIn('user_id', $user_ids);
 
-        return $blogs;
+        return $builder;
     }
-
-    /** TODO_20201204 ユーザ側閲覧機能の検索、ブログ一覧から */
 
     /**
      * 連想配列（キーと値）で検索する
@@ -249,5 +247,17 @@ class Blog extends Model
         }
 
         return $articles;
+    }
+
+    /**
+     * newestソート
+     *
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function sortNewest($builder){
+        $builder = $builder->orderBy('updated_at', 'DESC');
+
+        return $builder;
     }
 }

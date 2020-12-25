@@ -27,19 +27,19 @@
             <div id="releaseDay" class="row align-items-center">
                 <label for="releaseDay" class="control-label pl-3 mb-0">公開日</label>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="published_year" value={{ old('published_year') ? old('published_year') : date('Y') }} required placeholder="yyyy">
+                    <input type="number" min="{{ date('Y') }}" class="form-control" name="published_year" value={{ old('published_year') ? old('published_year') : date('Y') }} required placeholder="yyyy">
                 </div>
                 <div class="">
                     <p>年</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="published_month" value={{ old('published_month') ? old('published_month') : date('m') }} required placeholder="mm">
+                    <input type="number" min="1" max="12" class="form-control" name="published_month" value={{ old('published_month') ? old('published_month') : date('m') }} required placeholder="mm">
                 </div>
                 <div class="">
                     <p>月</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="published_day" value={{ old('published_day') ? old('published_day') : date('d') }} required placeholder="dd">
+                    <input type="number" min="1" max="31" class="form-control" name="published_date" value={{ old('published_date') ? old('published_date') : date('d') }} required placeholder="dd">
                 </div>
                 <div class="">
                     <p>日</p>
@@ -48,7 +48,7 @@
 
             @include('components.error', ['name' => 'published_year'])
             @include('components.error', ['name' => 'published_month'])
-            @include('components.error', ['name' => 'published_day'])
+            @include('components.error', ['name' => 'published_date'])
         </div>
 
         <div class="form-group mb-4">

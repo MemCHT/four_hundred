@@ -56,6 +56,10 @@ body {
   border-bottom: 3px solid #3c7d9b;
 }
 
+#app nav .container .nav-second .navbar-collapse .navbar-nav .nav-item .current-nav-link {
+  border-bottom: 3px solid #3c7d9b;
+}
+
 #app main {
   background-color: white;
 }

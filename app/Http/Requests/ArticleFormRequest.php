@@ -29,10 +29,11 @@ class ArticleFormRequest extends FormRequest
         return [
             'status_id' => 'required',
             'title' => 'required|max:40',
+
             'body' => 'required|max:400',
             'published_year' => 'required|date_format:Y',
             'published_month' => 'required|date_format:m',
-            'published_date' => "required|lte:".$dateConfirmation->day, // 入力年月をもとに、日付の整合性チェック
+            'published_date' => "required|lte:".$dateConfirmation->day, // 入力年月をもとに 、日付の整合性チェック
         ];
     }
 

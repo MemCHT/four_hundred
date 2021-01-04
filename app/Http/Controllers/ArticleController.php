@@ -94,9 +94,9 @@ class ArticleController extends Controller
         // 公開設定している未公開記事は強制的に非公開にする
         if($article->status_id == Status::getByName('公開')->id && $published_at->gt(Carbon::now())){
             $article->update(['status_id' => Status::getByName('非公開')->id]);
-            $message = '公開日は'.$published_at->format('Y年m月d日 の h:i:s').'です';
+            $message = '公開日は'.$published_at->format('Y年m月d日 の H:i:s').'です';
 
-            ProcessPublishArticle::dispatch($article)->delay(now()->addSeconds(10));
+            ProcessPublishArticle::dispatch($article)->delay($published_at);
         }
 
         return redirect()->route('users.blogs.articles.edit', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article->id])
@@ -167,7 +167,7 @@ class ArticleController extends Controller
         // 公開設定している未公開記事は強制的に非公開にする
         if($article->status_id == Status::getByName('公開')->id && $published_at->gt(Carbon::now())){
             $article->update(['status_id' => Status::getByName('非公開')->id]);
-            $message = '公開日は'.$published_at->format('Y年m月d日 の h:i:s').'です';
+            $message = '公開日は'.$published_at->format('Y年m月d日 の H:i:s').'です';
 
             ProcessPublishArticle::dispatch($article)->delay($published_at);
         }

@@ -107,9 +107,9 @@
                     <div class="nav-second col-md-12 d-flex mt-3">
                         <div class="collapse navbar-collapse">
                             <ul class="navbar-nav ml-auto mr-auto">
-                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.index', ['user'=>Auth::guard('user')->user()->id]) }}">ブログ一覧</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.index', ['user'=>0,'blog'=>0]) }}">記事一覧</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.create', ['user'=>Auth::guard('user')->user()->id,'blog'=>Auth::guard('user')->user()->blog->id]) }}">記事を書く</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/blogs$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('users.blogs.index', ['user'=>Auth::guard('user')->user()->id]) }}">ブログ一覧</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/articles$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('users.blogs.articles.index', ['user'=>0,'blog'=>0]) }}">記事一覧</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/articles\/create$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('users.blogs.articles.create', ['user'=>Auth::guard('user')->user()->id,'blog'=>Auth::guard('user')->user()->blog->id]) }}">記事を書く</a></li>
                             </ul>
                         </div>
                     </div>

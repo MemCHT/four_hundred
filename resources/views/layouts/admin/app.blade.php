@@ -84,9 +84,9 @@
                     <div class="nav-second col-md-12 d-flex mt-3">
                         <div class="collapse navbar-collapse">
                             <ul class="navbar-nav ml-auto mr-auto">
-                                <li class="nav-item"><a class="nav-link" href="{{ route('admins.users.index') }}">ユーザー管理</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('admins.articles.index') }}">記事管理</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('admins.comments.index') }}">コメント一覧</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/users$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('admins.users.index') }}">ユーザー管理</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/articles$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('admins.articles.index') }}">記事管理</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/comments$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('admins.comments.index') }}">コメント一覧</a></li>
                             </ul>
                         </div>
                     </div>

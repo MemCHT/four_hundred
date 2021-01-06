@@ -27,4 +27,7 @@ Route::group(['middleware' => 'api'], function(){
     // 記事複数取得
     Route::get('blogs/{blog}/articles', 'API\ArticleController@list');
 
+    // ユーザー取得
+    Route::get('users/{user}', 'API\UserController@get');
+
 });

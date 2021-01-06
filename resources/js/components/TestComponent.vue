@@ -2,8 +2,13 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card" v-for="blog in blogs" :key="blog.id">
+                <div class="card"
+                    v-for="blog in blogs"
+                    v-bind:key="blog.id"
+                    >
                     <div class="card-header">Test Component</div>
+
+                    <example-component></example-component>
 
                     <div class="card-body">
                         I'm an test component.

@@ -25,7 +25,7 @@ class BlogController extends Controller
     }*/
 
     /**
-     * ブログのリストを取得するapi用コントローラ
+     * ブログのリストを取得するapi
      *
      * 【リクエストパラメータ】
      * | Name  | Value | Description

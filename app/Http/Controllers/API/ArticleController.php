@@ -10,7 +10,7 @@ use App\Models\Article;
 class ArticleController extends Controller
 {
     /**
-     * 記事のリストを取得するapi用コントローラ
+     * 記事のリストを取得するapi
      *
      * 【リクエストパラメータ】
      * | Name  | Value | Description
@@ -39,8 +39,8 @@ class ArticleController extends Controller
             $builder = $builder->$build( $parameter[$build] );
         }
 
-        $blogs = $builder->get();
+        $articles = $builder->get();
 
-        return $blogs;
+        return $articles;
     }
 }

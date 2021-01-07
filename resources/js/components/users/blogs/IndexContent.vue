@@ -1,8 +1,5 @@
 <template>
     <div id="blogIndexWrapper" class="blog-index-wrapper mt-5">
-        <!-- @foreach($blogs as $blog) -->
-            <!-- blogitem -->
-        <!-- @endforeach -->
         <blog-item
             v-for="blog in blogs"
             v-bind:key="blog.id"
@@ -41,7 +38,6 @@ import SeeMoreButton from '../../SeeMoreButton.vue';
                 // axiosの場合404や500でもcatchしてくれる。またレスポンスがjson形式なので扱いやすい。それ以外はfetchとほぼ使い心地は一緒
                 const res = await window.axios.get(`/api/blogs?offset=${offset}&limit=4&sort=newest`);
                 const blogData = res.data;
-                // console.log('get blog-list');
                 blogData.forEach(item => console.log(item.id));
 
                 return blogData;

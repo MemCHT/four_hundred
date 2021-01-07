@@ -21,13 +21,26 @@ Route::group(['middleware' => 'api'], function(){
     Route::resource('test', 'API\TestController');
     // Route::resource('blogs', 'API\BlogController');
 
-    // ブログ複数取得
+    // ブログAPI
+    // 有効ブログ複数取得
     Route::get('blogs', 'API\BlogController@list');
 
-    // 記事複数取得
+    // 記事API
+    // 有効記事複数取得
     Route::get('blogs/{blog}/articles', 'API\ArticleController@list');
 
+    // ユーザーAPI
     // ユーザー取得
     Route::get('users/{user}', 'API\UserController@get');
+
+    // コメントAPI
+    // 記事idから有効コメント複数取得
+    Route::get('articles/{article}/comments', 'API\CommentController@list');
+
+    // お気に入りAPI
+    // 記事idから有効お気に入り複数取得
+    Route::get('articles/{article}/favorites', 'API\FavoriteController@list');
+    // 記事idとユーザーidから、記事にあるお気に入りの中からユーザーidに該当するものがあるかどうか判定;
+    Route::get('articles/{article}/favorites/exists', 'API\FavoriteController@existUserOnArticle');
 
 });

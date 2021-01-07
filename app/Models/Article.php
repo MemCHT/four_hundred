@@ -60,6 +60,16 @@ class Article extends Model
     }
 
     /**
+     * articleインスタンスにある有効なお気に入りの中に、特定のuserのものが含まれているかどうか判定
+     *
+     * @param int $user_id
+     * @return boolean
+     */
+    public function existsUserAtFavorites($user_id){
+        return Favorite::getValidFavoritesBuilder($this->id)->where('user_id', $user_id)->exists();
+    }
+
+    /**
      * commentインスタンスにある有効なお気に入りを取得
      * @return Illuminate\Database\Eloquent\Collection (Comment)
      */

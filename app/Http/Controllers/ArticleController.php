@@ -16,6 +16,7 @@ use App\Models\Favorite;
 
 use App\Jobs\ProcessPublishArticle;
 
+// ルートモデルバインディングでもっと簡単にかける。
 class ArticleController extends Controller
 {
     public function __construct()
@@ -59,7 +60,7 @@ class ArticleController extends Controller
      * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function create($user_id,$blog_id)
+    public function create($user_id,$blog_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
@@ -76,7 +77,7 @@ class ArticleController extends Controller
      * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function store(ArticleFormRequest $request,$user_id,$blog_id)
+    public function store(ArticleFormRequest $request,$user_id,$blog_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
@@ -111,7 +112,7 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function show($user_id,$blog_id,$article_id)
+    public function show($user_id,$blog_id,$article_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $article = Article::find($article_id);
@@ -128,7 +129,7 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($user_id,$blog_id,$article_id)
+    public function edit($user_id,$blog_id,$article_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $article = Article::find($article_id);
@@ -149,7 +150,7 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function update(ArticleFormRequest $request, $user_id,$blog_id,$article_id)
+    public function update(ArticleFormRequest $request, $user_id,$blog_id,$article_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $inputs = $request->all();
 

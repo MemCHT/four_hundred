@@ -38,6 +38,7 @@ class BlogController extends Controller
     public function list(Request $request)
     {
         $builder = Blog::select('*');
+        $builder = Blog::buildToPublic($builder);
 
         $parameter = $request->input();
 

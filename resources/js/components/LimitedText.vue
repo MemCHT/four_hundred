@@ -13,8 +13,5 @@
                 return this.text.length > this.range ? this.text.substring(0,this.range) + '...' : this.text;
             }
         },
-        mounted() {
-            console.log('Component mounted.')
-        }
     }
 </script>

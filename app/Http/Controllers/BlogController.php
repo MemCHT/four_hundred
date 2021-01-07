@@ -14,6 +14,7 @@ use App\Models\Blog;
 use App\Models\Status;
 use App\Models\Article;
 
+// ルートモデルバインディングでもっと簡単にかける。
 class BlogController extends Controller
 {
     public function __construct()

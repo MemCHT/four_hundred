@@ -23,6 +23,7 @@ class ArticleController extends Controller
     public function list(Request $request, $blog_id)
     {
         $builder = Article::where('blog_id', $blog_id);
+        $builder = Article::buildToPublic($builder);
 
         $parameter = $request->input();
 

@@ -13,13 +13,12 @@
                 </div>
             </div>-->
 
-            <!-- TODO_2021/01/04 タグが登録されていない判定される問題の解決 -->
             <blog-index></blog-index>
 
             <!--<div class="text-center mb-4">
                 <button class="btn btn-primary col-md-4">もっと見る</button>
             </div>-->
-            {{$blogs->appends($input)->links('vendor.pagination.modified')}}
+            <!--{{$blogs->appends($input)->links('vendor.pagination.modified')}}-->
         </div>
     </div>
 </div>

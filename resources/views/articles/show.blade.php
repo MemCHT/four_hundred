@@ -21,10 +21,10 @@
                     </div>
                     <div class="col-md-6 d-flex flex-row-reverse">
                         <div class="ml-2">
-                            @comment{{ count($article->comments) }}@endcomment
+                            @comment{{ count($article->validComments()) }}@endcomment
                         </div>
                         <div>
-                            @favorite(['article' => $article, 'canSubmit' => true]){{ count($article->favorites) }}@endfavorite
+                            @favorite(['article' => $article, 'canSubmit' => true]){{ count($article->validFavorites()) }}@endfavorite
                         </div>
                     </div>
                 </div>
@@ -65,10 +65,10 @@
                                     <div class="row">
                                         <div class="col-md-6 d-flex">
                                             <div>
-                                                @favorite(['article' => $nav_article, 'canSubmit' => false]){{ count($nav_article->favorites) }}@endfavorite
+                                                @favorite(['article' => $nav_article, 'canSubmit' => false]){{ count($nav_article->validFavorites()) }}@endfavorite
                                             </div>
                                             <div class="ml-2">
-                                                @comment{{ count($nav_article->comments) }}@endcomment
+                                                @comment{{ count($nav_article->validComments()) }}@endcomment
                                             </div>
                                         </div>
                                         <div class="col-md-6 text-right text-secondary">{{ $nav_article->updated_at->format('Y/m/d') }}</div>
@@ -88,7 +88,7 @@
                     <div class="text-center text-primary mb-3" style="font-size: 1.25em;">
                         @comment コメント{{ count($article->comments) }}件@endcomment
                     </div>
-                    @foreach($article->comments as $comment)
+                    @foreach($article->validComments() as $comment)
                         <div class="pb-5 mb-4 col-md-12 pr-0 pl-0" style="border-bottom: 1px solid #AAAAAA">
                             <div class="mb-3">
                                 @include('components.user', ['user' => $comment->user, 'sub_info' => $comment->updated_at])

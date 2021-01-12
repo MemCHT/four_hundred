@@ -103,8 +103,6 @@ class ProfilesController extends Controller
         ];
         $profile['birthday'] = Carbon::create($inputs['birth_year'], $inputs['birth_month'], $inputs['birth_date']);
 
-        //dd($inputs);
-
         // プロフィール更新
         User::profileUpdate($profile, Auth::guard('user')->user()->id);
 

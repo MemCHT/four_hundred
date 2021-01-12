@@ -7,7 +7,6 @@
 
             <h2 class="text-center font-weight-bold">ログイン</h2>
             <div class="card">
-                <!-- <div class="card-header">four hundredにログイン</div> -->
 
                 <div class="card-body">
                     @if(session('oauth_error'))

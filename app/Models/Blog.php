@@ -50,21 +50,6 @@ class Blog extends Model
     }
 
     /**
-     * パラメータに応じて、Blogインスタンス存在チェック
-     * @param array params = ['user' => xx , 'blog' => xx]
-     * @return bool
-     */
-    /* public static function isExist($params){
-        if(isset($params['blog']) && isset($params['user'])){
-            $blog = self::find($params['blog']);
-
-            if($blog && $blog->user_id == $params['user'])
-                return User::isExist($params);
-        }
-        return false;
-    }*/
-
-    /**
      * 全記事のお気に入り総数を取得
      * @return int
      */
@@ -181,7 +166,6 @@ class Blog extends Model
                                 'articles.id', '=', 'popularity.popularity_articles_id'
                             )
                             ->orderBy('popularity.sum_favorites', 'DESC');
-        // dd($articles);
         return $articles;
     }
 

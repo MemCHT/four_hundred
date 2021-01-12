@@ -157,22 +157,9 @@
     window.addEventListener('DOMContentLoaded',()=>{
         createCheckBoxes();
 
-        /*const btnToPublic = document.getElementById('btnToPublic');
-        const btnToPrivate = document.getElementById('btnToPrivate');
-        const btnDelete = document.getElementById('btnDelete');
-        const btns = {toPublic: btnToPublic, toPrivate: btnToPrivate, delete: btnDelete};
-
-        for(let [key, btn] of Object.entries(btns)){
-            btn.addEventListener('click', () => {
-
-                commentManageForm.submitType.value = submitTypes[key];
-            });
-        }*/
-
         document.commentManageForm.addEventListener('submit', handleSubmit);
     });
 
-    // event.currentTarget === document.commentManageForm: HTMLFormElement
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -185,17 +172,13 @@
             if(element.checked)
                 element.type = "text";
         });
-        // alert(form.submitType.value);
         const type = form.submitType.value;
         // alert(form.innerHTML); // どちらのsubmitType.valueにも値がはいっていない...！
-        // alert(form.elements[4]);
 
         form = form.submitType.value === submitTypes['delete']
                  ? submitDelete(form)
                  : submitUpdate(form);
-        // alert(form.innerHTML);
 
-        // alert(type);
         form.submitType.remove();
         form.innerHTML += `<input type='text' name='submitType' value='${type}' >`;
 
@@ -203,7 +186,6 @@
     }
 
     const submitUpdate = (form) => {
-        // alert('来てるよん');
         form.innerHTML += '{{ method_field("PUT") }}';
         form.action = '{{ route("admins.comments.update", ["comment" => 0]) }}';
 

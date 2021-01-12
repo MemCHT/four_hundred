@@ -60,10 +60,8 @@ import UserInfo from '../../UserInfo.vue';
         async mounted(){
             const vm = this;
             const articleData = vm.baseArticle;
-            // const userRes = await window.axios.get(`/api/blogs/${vm.baseArticle.blog_id}/user`);
-            // articleData.user = userRes.data;
 
-            // vm.article = articleData;
+            // propsのためnullはありえないはずだが、これをかませないとarticleData.blog_idがundefinedになる。
             if(articleData.blog_id){
                 const urls = [`/api/blogs/${articleData.blog_id}/user`, `/api/blogs/${articleData.blog_id}`];
                 const [userRes, blogRes] =await Promise.all(urls.map((url) => window.axios.get(url)));

@@ -31,7 +31,6 @@
             </div>
         </div>
 
-        <!-- 要処理追加 -->
         <div class="form-group mb-4">
             <label for="email" class="control-label">メールアドレス</label>
 
@@ -42,7 +41,6 @@
             </div>
         </div>
 
-        <!-- 要処理追加 -->
         <div class="form-group mb-5">
             <label id="birthday" class="control-label">生年月日</label>
 

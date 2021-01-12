@@ -126,12 +126,6 @@ class BlogController extends Controller
         $input = $request->input();
         $blog = Blog::find($blog_id);
 
-        //ブログ所有ユーザ以外ならリダイレクト
-        /*if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
-        }*/
-        // dd($input);
-
         $blog->update($input);
 
         return redirect()->route('users.blogs.edit', ['user' => $user_id, 'blog' => $blog_id])

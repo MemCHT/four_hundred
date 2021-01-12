@@ -15,11 +15,9 @@
                 @include('components.error', ['name' => 'title'])
             </div>
 
-            <!-- 要処理追加 -->
             <div class="form-group mb-5">
                 <label for="overview" class="control-label">ブログ説明文</label>
 
-                <!--<textarea id="overview" type="text" class="form-control" name="overview" rows="4" required>{{ $blog->overview }}</textarea>-->
                 @include('components.textarea_with_count', [
                     'textarea_attributes' => [
                         'id' => 'overview',

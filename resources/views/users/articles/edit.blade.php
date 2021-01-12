@@ -21,7 +21,6 @@
             @include('components.error', ['name' => 'title'])
         </div>
 
-        <!-- 要処理追加 -->
         <div class="form-group mb-5">
             <div id="releaseDay" class="row align-items-center">
                 <label for="releaseDay" class="control-label pl-3 mb-0">公開日</label>

@@ -138,25 +138,18 @@ class CommentController extends Controller
         $article = Article::find($article_id);
         $comment = Comment::find($comment_id);
         $inputs = $request->all();
-        // dd($inputs);
 
         $selected_comments = array_filter(array_map(function($key, $value){
             if(preg_match('/comment_/', $key))
                 return $value;
-            // dd($key);
         },array_keys($inputs), array_values($inputs))
         ,function($value){ return $value; });
 
-
-        // dd($selected_comments);
 
         //記事所有ユーザ以外ならリダイレクト
         if(Auth::id() !== intval($user_id) && Auth::guard('admin')->check() === false){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }
-
-        // $comment_user = $comment->user;
-        // Comment::destroy($comment_id);
 
         $comments = Comment::whereIn('id', $selected_comments)->delete();
 

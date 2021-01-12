@@ -196,7 +196,6 @@ class ArticleController extends Controller
         Article::destroy($article_id);
 
         // なぜかredirect()->back でも url()->previous() でも、現在のurlが取得されてしまう。
-        // dd(url()->previous());
         $route = Auth::guard('user')->check() ? redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id])
                                               : redirect()->route('admins.articles.index');
 

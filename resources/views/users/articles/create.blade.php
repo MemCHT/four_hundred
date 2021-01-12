@@ -20,7 +20,6 @@
             @include('components.error', ['name' => 'title'])
         </div>
 
-        <!-- 要処理追加 -->
         <div class="form-group mb-5">
 
 

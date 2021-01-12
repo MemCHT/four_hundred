@@ -104,8 +104,6 @@ class FavoriteController extends Controller
      */
     public function update(Request $request, $user_id, $blog_id, $article_id, $favorite_id)
     {
-        // $user = User::find($user_id);
-        // $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
         $favorite = Favorite::find($favorite_id);
         $favorite->update(['status' => !($favorite->status)]);  // statusを反転させる。

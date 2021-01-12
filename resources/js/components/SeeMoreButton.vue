@@ -9,8 +9,5 @@
         props:{
             seeMoreAction: Function
         },
-        mounted() {
-        },
-
     }
 </script>

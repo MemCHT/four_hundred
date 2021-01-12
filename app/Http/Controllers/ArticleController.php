@@ -40,10 +40,12 @@ class ArticleController extends Controller
         // paginate時は$requestに格納されている。
         $input = $request->input() ? $request->input() : session('input');
         $type = $request->input('type') ? $request->input('type') : session('input')['type'];
+        unset($input['type']);
 
         $method = 'sort'.ucfirst($type);
 
 
+        // dd($input);
         $articles = Article::search( $input ?? [] );
         // typeが渡されていない場合は、デフォルトで新着順
         $articles = $type ? Article::$method($articles) : Article::sortNewest($articles); // 予期されない呼び方に気を付ける。

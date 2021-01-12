@@ -5,23 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
 
-            <!--<div class="title-wrapper mt-5">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h2> ブログ一覧 </h2>
-                    </div>
-                </div>
-            </div>-->
+            <blog-index :keyword="'{{ $input ? http_build_query($input) : '' }}'"></blog-index>
 
-            <blog-index></blog-index>
-
-            <!--<div class="text-center mb-4">
-                <button class="btn btn-primary col-md-4">もっと見る</button>
-            </div>-->
-            <!--{{$blogs->appends($input)->links('vendor.pagination.modified')}}-->
         </div>
     </div>
 </div>
 @endsection
-
-<script src="{{mix('js/app.js')}}"></script>

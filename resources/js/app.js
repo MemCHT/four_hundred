@@ -32,6 +32,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 // ブログ一覧用コンポーネント
 Vue.component('blog-index', require('./components/users/blogs/IndexContent.vue').default);
 // Vue.component('blog-index', require('./components/users/blogs/BlogItem'));
+// 記事一覧用コンポーネント
+Vue.component('article-index', require('./components/users/articles/IndexContent.vue').default);
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

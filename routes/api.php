@@ -22,11 +22,15 @@ Route::group(['middleware' => 'api'], function(){
     // Route::resource('blogs', 'API\BlogController');
 
     // ブログAPI
-    // 有効ブログ複数取得
+    // ブログ取得
+    Route::get('blogs/{blog}', 'API\BlogController@get');
+    // 公開ブログ複数取得
     Route::get('blogs', 'API\BlogController@list');
+    // ブログに紐づいたユーザー取得
+    Route::get('blogs/{blog}/user', 'API\BlogController@getUser');
 
     // 記事API
-    // 有効記事複数取得
+    // 公開記事複数取得
     Route::get('blogs/{blog}/articles', 'API\ArticleController@list');
 
     // ユーザーAPI
@@ -34,7 +38,7 @@ Route::group(['middleware' => 'api'], function(){
     Route::get('users/{user}', 'API\UserController@get');
 
     // コメントAPI
-    // 記事idから有効コメント複数取得
+    // 記事idから公開コメント複数取得
     Route::get('articles/{article}/comments', 'API\CommentController@list');
 
     // お気に入りAPI

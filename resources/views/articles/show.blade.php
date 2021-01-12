@@ -86,7 +86,7 @@
             <div class="article-comments-wrapper">
                 <div class="col-md-11 row justify-content-center mx-auto">
                     <div class="text-center text-primary mb-3" style="font-size: 1.25em;">
-                        @comment コメント{{ count($article->comments) }}件@endcomment
+                        @comment コメント{{ count($article->validComments()) }}件@endcomment
                     </div>
                     @foreach($article->validComments() as $comment)
                         <div class="pb-5 mb-4 col-md-12 pr-0 pl-0" style="border-bottom: 1px solid #AAAAAA">

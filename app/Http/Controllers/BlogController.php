@@ -32,6 +32,7 @@ class BlogController extends Controller
         $user = User::find($user_id);
 
         $input = $request->input() ? $request->input() : session('input');
+        unset($input['type']);
 
         $blogs = Blog::search( $input ?? [] );
 

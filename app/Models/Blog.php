@@ -122,24 +122,6 @@ class Blog extends Model
     }
 
     /**
-     * ブログ一覧表示用オブジェクトを取得
-     * @return Illuminate\Pagination\LengthAwarePaginator
-     */
-    /*public static function getIndexObject(){
-        $status_id_public = Status::getByName('公開')->id;
-
-        $blogs = self::where('status_id', $status_id_public)
-                     ->orderBy('updated_at', 'DESC')
-                     ->paginate(4);
-
-        foreach($blogs as $blog){
-            $blog->formatForIndex();
-        }
-
-        return $blogs;
-    }*/
-
-    /**
      * Blogのビルダーを公開のもののみにビルドする。
      * @param Illuminate\Database\Eloquent\Builder
      * @return Illuminate\Database\Eloquent\Builder
@@ -232,7 +214,7 @@ class Blog extends Model
 
     /**
      * 連想配列（キーと値）で検索する
-     * @param  array  ['title' => 'hoge', 'body' => 'hoge', 'blogTitle' => 'hoge]
+     * @param  array  ['title' => 'hoge', 'userName' => 'hoge]
      * @return  Illuminate\Database\Eloquent\Builder
      */
     private static $search_keys = ['userName','title'];

@@ -36,7 +36,7 @@ import BlogInnerItem from './BlogInnerItem.vue';
         async mounted(){
             const vm = this;
             const blogData = vm.baseBlog;
-            const userRes = await window.axios.get(`/api/users/${vm.baseBlog.user_id}`);
+            const userRes = await window.axios.get(`/api/users/${blogData.user_id}`);
             blogData.user = userRes.data;
 
             vm.blog = blogData;

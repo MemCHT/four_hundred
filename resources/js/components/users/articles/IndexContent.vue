@@ -1,67 +1,72 @@
 <template>
-    <div id="blogIndexWrapper" class="blog-index-wrapper mt-5">
-        <blog-item
-            v-for="blog in blogs"
-            v-bind:key="blog.id"
-            v-bind:baseBlog="blog"
-        />
+
+    <div class="article-index-wrapper mt-5">
+
+        <div class="row mr-0 ml-0">
+            <article-item
+                v-for="article in articles"
+                :key="article.id"
+                :baseArticle="article"
+            />
+        </div>
 
         <see-more-buttom
-            :seeMoreAction="addBlogs()"
+            :seeMoreAction="addArticles()"
         />
     </div>
 </template>
 
 <script>
-import BlogItem from './BlogItem.vue';
+import ArticleItem from './Item.vue';
 import SeeMoreButton from '../../SeeMoreButton.vue';
     export default {
         components: {
-            'blog-item':BlogItem,
+            'article-item':ArticleItem,
             'see-more-buttom':SeeMoreButton
-        },
-        props: {
-            keyword: String
         },
         data() {
             return {
-                blogs: [{}],
+                articles: [{}],
                 offset: 0
             };
         },
+        props:{
+            sort: String,
+            keyword: String
+        },
         methods:{
-            getBlogs:async function(offset = 0){
+            getArticles:async function(offset = 0){
 
                 const vm = this;
 
-                console.log('access blog-list api');
+                console.log('access article-list api');
                 // axiosの場合404や500でもcatchしてくれる。またレスポンスがjson形式なので扱いやすい。それ以外はfetchとほぼ使い心地は一緒
-                const res = await window.axios.get(`/api/blogs?offset=${offset}&limit=4&sort=newest&${vm.keyword}`);
-                const blogData = res.data;
-                blogData.forEach(item => console.log(item.id));
+                const res = await window.axios.get(`/api/blogs/0/articles?offset=${offset}&limit=8&sort=${vm.sort}&${vm.keyword}`);
+                const articleData = res.data;
+                articleData.forEach(item => console.log(item.id));
 
-                return blogData;
+                return articleData;
             },
             // アロー関数は呼ばれた場所が"this" ← ず～っとここでつまづいてた。
             // クロージャで内包してほしいthis → IndexContent（ここ）のthis
             // アロー関数のthis → 宣言された時点でのthis、（methodsオブジェクトをthisとしているっぽい）
             // そのためfunction()でなければIndexContentのthisを示せない。
-            addBlogs:function(){
+            addArticles:function(){
 
                 const vm = this;
 
                 return () => {
-                    vm.getBlogs(vm.offset).then((data) => {
-                        vm.blogs = vm.blogs.concat(data);
+                    vm.getArticles(vm.offset).then((data) => {
+                        vm.articles = vm.articles.concat(data);
                     });
-                    vm.offset+=4;
+                    vm.offset+=8;
                 };
             },
         },
         async mounted(){
             const vm = this;
-            vm.blogs = await vm.getBlogs();
-            vm.offset+=4;
+            vm.articles = await vm.getArticles();
+            vm.offset+=8;
         }
     }
 </script>

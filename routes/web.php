@@ -20,7 +20,7 @@ Route::get('/test/model/{index}','TestController@index');
 
 // 一般機能
 Route::prefix('users')->name('users.')->group(function(){
-    //ヘッダーの検索機能 ※リダイレクトのみ
+    //ヘッダーの検索機能 ※Blog/ArticleControllerへリダイレクト
     Route::get('search', 'HeaderController@search')->name('header.search');
 
     //ブログ管理

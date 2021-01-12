@@ -21,7 +21,6 @@
             @include('components.error', ['name' => 'title'])
         </div>
 
-        <!-- 要処理追加 -->
         <div class="form-group mb-5">
             <div id="releaseDay" class="row align-items-center">
                 <label for="releaseDay" class="control-label pl-3 mb-0">公開日</label>
@@ -32,13 +31,13 @@
                     <p>年</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="published_month" value={{ old('published_month') ? old('published_month') : $article->published_at->format('m') }} required placeholder="mm">
+                    <input type="number" min="1" max="12" class="form-control" name="published_month" value={{ old('published_month') ? old('published_month') : $article->published_at->format('m') }} required placeholder="mm">
                 </div>
                 <div class="">
                     <p>月</p>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" class="form-control" name="published_day" value={{ old('published_day') ? old('published_day') : $article->published_at->format('d') }} required placeholder="dd">
+                    <input type="number" min="1" max="31" class="form-control" name="published_date" value={{ old('published_date') ? old('published_date') : $article->published_at->format('d') }} required placeholder="dd">
                 </div>
                 <div class="">
                     <p>日</p>
@@ -47,17 +46,26 @@
 
             @include('components.error', ['name' => 'published_year'])
             @include('components.error', ['name' => 'published_month'])
-            @include('components.error', ['name' => 'published_day'])
+            @include('components.error', ['name' => 'published_date'])
         </div>
 
-        <!-- 要処理追加 -->
         <div class="form-group mb-4">
             <label for="body" class="control-label">本文</label>
 
-            <div>
-                <textarea id="body" type="body" class="form-control" name="body" rows="10" required >{{ $article->body }}</textarea>
-            </div>
-            <p class="text-right">xxx/xxx文字</p>
+            @include('components.textarea_with_count', [
+                    'textarea_attributes' => [
+                        'id' => 'body',
+                        'type' => 'text',
+                        'class' => 'form-control',
+                        'name' => 'body',
+                        'rows' => '10',
+                        'required' => 'true',
+                        'value' => old('body') ?? $article->body,
+                        'placeholder' => '本文'
+                    ],
+                    'max_count' => 400
+                ])
+
             @include('components.error', ['name' => 'body'])
         </div>
 

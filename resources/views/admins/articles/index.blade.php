@@ -27,8 +27,14 @@
 
         <div class="col-md-12 row pr-0 pl-0 mt-5">
             @foreach($articles as $article)
+
+                <?php
+                    $article_card_delete_btn_id = 'articleCardDeleteBtn_'.$article->id;
+                    $article_card_delete_btn_ids[] = $article_card_delete_btn_id;
+                ?>
+
                 <div class="col-md-6 mb-4">
-                    @include('admins.articles.article_card', ['article' => $article])
+                    @include('admins.articles.article_card', ['article' => $article, 'target_id' => $article_card_delete_btn_id])
                 </div>
             @endforeach
         </div>
@@ -39,3 +45,12 @@
     </div>
 </div>
 @endsection
+
+@include('components.submit_popup_contain_js',[
+        'form_id' => 'articleDeleteForm',
+        'target_ids' => $article_card_delete_btn_ids,
+        'message' => '記事を削除しますか？',
+        'sub_message' => '記事を削除してもよろしいですか？<br>記事を削除すると、元に戻すことはできません。',
+        'accept' => '削除する',
+        'reject' => 'キャンセル'
+    ])

@@ -14,6 +14,7 @@ use App\Models\Blog;
 use App\Models\Status;
 use App\Models\Article;
 
+// ルートモデルバインディングでもっと簡単にかける。
 class BlogController extends Controller
 {
     public function __construct()
@@ -26,14 +27,20 @@ class BlogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($user_id)
+    public function index(Request $request, $user_id)
     {
         $user = User::find($user_id);
 
-        // $blogs = Blog::getIndexObject();
-        $blogs = Blog::buildPublic()->paginate(4);
+        $input = $request->input() ? $request->input() : session('input');
+        unset($input['type']);
 
-        return view('blogs.index', compact('blogs'));
+        $blogs = Blog::search( $input ?? [] );
+
+        $blogs = Blog::buildToPublic( $blogs );
+        $blogs = $blogs->orderBy('updated_at', 'DESC');
+        $blogs = $blogs->paginate(4);
+
+        return view('blogs.index', compact('blogs', 'input'));
     }
 
     /**
@@ -118,12 +125,6 @@ class BlogController extends Controller
     {
         $input = $request->input();
         $blog = Blog::find($blog_id);
-
-        //ブログ所有ユーザ以外ならリダイレクト
-        /*if(Auth::id() !== intval($user_id)){
-            return redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id]);
-        }*/
-        // dd($input);
 
         $blog->update($input);
 

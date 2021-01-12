@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+
     <script src="https://kit.fontawesome.com/652b493660.js" crossorigin="anonymous"></script>
 
     <!-- Fonts -->
@@ -49,7 +50,9 @@
                             @auth('user')
 
                                 <li class="nav-item search-form mr-5">
-                                    @include('components.search', ['name' => 'keyword', 'placeholder' => 'キーワードや作者名で検索'])
+                                    <form action="{{ route('users.header.search') }}">
+                                        @include('components.search', ['name' => 'keyword', 'placeholder' => 'キーワードや作者名で検索'/*, 'value' => session('input')*/])
+                                    </form>
                                 </li>
 
                                 <li class="nav-item mr-5">
@@ -70,9 +73,10 @@
 
                                         <a class="dropdown-item" href="{{route('users.show', ['user' => Auth::id()])}}">マイブログ</a>
                                         <a class="dropdown-item" href="{{ route('users.profile.edit') }}">設定</a>
-                                        <a class="dropdown-item" href="{{ route('users.logout') }}"
-                                           onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
+                                        <a id="logout_button" class="dropdown-item" href="{{ route('users.logout') }}" onclick="
+                                            event.preventDefault();
+                                            document.getElementById('logout-form').submit();
+                                        ">
                                             {{ __('layouts.logout') }}
                                         </a>
                                         <form id="logout-form" action="{{ route('users.logout') }}" method="POST" style="display: none;">
@@ -104,9 +108,9 @@
                     <div class="nav-second col-md-12 d-flex mt-3">
                         <div class="collapse navbar-collapse">
                             <ul class="navbar-nav ml-auto mr-auto">
-                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.index', ['user'=>Auth::guard('user')->user()->id]) }}">ブログ一覧</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.index', ['user'=>0,'blog'=>0]) }}">記事一覧</a></li>
-                                <li class="nav-item"><a class="nav-link" href="{{ route('users.blogs.articles.create', ['user'=>Auth::guard('user')->user()->id,'blog'=>Auth::guard('user')->user()->blog->id]) }}">記事を書く</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/blogs$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('users.blogs.index', ['user'=>Auth::guard('user')->user()->id]) }}">ブログ一覧</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/articles$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('users.blogs.articles.index', ['user'=>0,'blog'=>0]) }}">記事一覧</a></li>
+                                <li class="nav-item"><a class="nav-link {{ preg_match('/articles\/create$/', url()->current()) ? 'current-nav-link' : '' }}" href="{{ route('users.blogs.articles.create', ['user'=>Auth::guard('user')->user()->id,'blog'=>Auth::guard('user')->user()->blog->id]) }}">記事を書く</a></li>
                             </ul>
                         </div>
                     </div>
@@ -124,4 +128,13 @@
 </body>
 </html>
 
+@auth('user')
+    @include('components.submit_popup_contain_js',[
+        'form_id' => 'logout_form',
+        'target_ids' => ['logout_button'],
+        'message' => 'ログアウトしますか？',
+        'accept' => 'はい',
+        'reject' => 'いいえ'
+    ])
+@endauth
 

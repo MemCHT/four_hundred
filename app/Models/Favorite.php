@@ -65,4 +65,17 @@ class Favorite extends Model
 
         return $valid_favorites;
     }
+
+    /**
+     * 該当エッセイの、ステータスがtrueなお気に入りのビルダーを取得
+     *
+     * @param article_id $article_id
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public static function getValidFavoritesBuilder($article_id){
+        $valid_favorites_builder = Favorite::where('article_id', $article_id)
+                            ->where('status', true);
+
+        return $valid_favorites_builder;
+    }
 }

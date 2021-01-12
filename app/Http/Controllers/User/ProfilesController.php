@@ -101,9 +101,7 @@ class ProfilesController extends Controller
             'email' => $inputs['email'],
             'icon' => isset($inputs['icon']) ? $inputs['icon'] : null
         ];
-        $profile['birthday'] = Carbon::create($inputs['birth_year'], $inputs['birth_month'], $inputs['birth_day']);
-
-        //dd($inputs);
+        $profile['birthday'] = Carbon::create($inputs['birth_year'], $inputs['birth_month'], $inputs['birth_date']);
 
         // プロフィール更新
         User::profileUpdate($profile, Auth::guard('user')->user()->id);

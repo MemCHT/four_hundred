@@ -50,7 +50,7 @@
     </h3>
 
     @if(isset($comments[0]))
-    <form action="{{ route('users.blogs.articles.comments.destroy', ['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id, 'comment' => $comments[0]->id]) }}" method="POST" class="comment-index-form">
+    <form id="commentManageForm" action="{{ route('users.blogs.articles.comments.destroy', ['user' => $user->id, 'blog' => $user->blog->id, 'article' => $article->id, 'comment' => $comments[0]->id]) }}" method="POST" class="comment-index-form">
         @csrf
         @method('DELETE')
 
@@ -93,7 +93,8 @@
         </div>
 
         <div class="form-group row mt-5 mb-5">
-            <button type="submit" class="form-control btn btn-outline-danger col-md-2 offset-md-5">削除する</button>
+
+            <button id="commentDeleteBtn" type="submit" onclick="commentManageForm.submit();" class="form-control btn btn-outline-danger col-md-2 offset-md-5">削除する</button>
         </div>
     </form>
     @else
@@ -134,3 +135,22 @@
     }
 
 </script>
+
+<?php
+    $comment_manage_form_message = '件を削除しますか？';
+    $comment_manage_form_sub_message = '件のコメントを削除しますか？<br>※コメントを削除すると、元に戻すことはできません。';
+?>
+
+@include('components.submit_popup_contain_js',[
+        'form_id' => 'commentManageForm',
+        'target_ids' => ["commentDeleteBtn"],
+        'message' => '〇件を削除しますか？',
+        'sub_message' => '〇件のコメントを削除しますか？<br>※コメントを削除すると、元に戻すことはできません。',
+        'accept' => '削除する',
+        'reject' => 'キャンセル',
+        'popupWillAppear' => "
+            const checkedCommentCount = Array.prototype.filter.call(commentManageForm.elements, (value) => value.checked && (value.id != 'commentCheckBoxAll') ).length;
+            document.getElementById('commentManageForm_message').innerText = checkedCommentCount + '{$comment_manage_form_message}';
+            document.getElementById('commentManageForm_subMessage').innerHTML = checkedCommentCount + '{$comment_manage_form_sub_message}';
+        "
+])

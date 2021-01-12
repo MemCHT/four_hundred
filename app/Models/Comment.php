@@ -29,7 +29,7 @@ class Comment extends Model
     // 管理者側機能：コメント一覧のデザイン実装時に変更必要
     // commentにステータスを設ける
     public static function getValidComments($article_id){
-        $comments = Comment::where('id', $article_id)->get();
+        $comments = Comment::where('article_id', $article_id)->where('status_id', Status::getByName('公開')->id)->get();
         return $comments;
     }
 
@@ -38,11 +38,12 @@ class Comment extends Model
      * @param  Illuminate\Database\Eloquent\Builder
      * @return  Illuminate\Database\Eloquent\Builder
      */
-    private static function searchTitle($builder, $title){
+    /*private static function searchTitle($builder, $title){
         $builder->where('title', 'like',  "%$title%");
 
         return $builder;
-    }
+    }*/
+
     /**
      * userName検索
      * @param  Illuminate\Database\Eloquent\Builder

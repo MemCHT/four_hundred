@@ -50,21 +50,6 @@ class Blog extends Model
     }
 
     /**
-     * パラメータに応じて、Blogインスタンス存在チェック
-     * @param array params = ['user' => xx , 'blog' => xx]
-     * @return bool
-     */
-    /* public static function isExist($params){
-        if(isset($params['blog']) && isset($params['user'])){
-            $blog = self::find($params['blog']);
-
-            if($blog && $blog->user_id == $params['user'])
-                return User::isExist($params);
-        }
-        return false;
-    }*/
-
-    /**
      * 全記事のお気に入り総数を取得
      * @return int
      */
@@ -122,29 +107,19 @@ class Blog extends Model
     }
 
     /**
-     * ブログ一覧表示用オブジェクトを取得
-     * @return Illuminate\Pagination\LengthAwarePaginator
+     * Blogのビルダーを公開のもののみにビルドする。
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
      */
-    /*public static function getIndexObject(){
+    public static function buildToPublic( $builder = null ){
+        if($builder === null)
+            $builder = Blog::select('*');
+
         $status_id_public = Status::getByName('公開')->id;
 
-        $blogs = self::where('status_id', $status_id_public)
-                     ->orderBy('updated_at', 'DESC')
-                     ->paginate(4);
+        $builder = $builder->where('status_id', $status_id_public);
 
-        foreach($blogs as $blog){
-            $blog->formatForIndex();
-        }
-
-        return $blogs;
-    }*/
-    public static function buildPublic(){
-        $status_id_public = Status::getByName('公開')->id;
-
-        $blogs = self::where('status_id', $status_id_public)
-                     ->orderBy('updated_at', 'DESC');
-
-        return $blogs;
+        return $builder;
     }
 
     /**
@@ -176,7 +151,7 @@ class Blog extends Model
     }
 
     /**
-     * 閲覧用Articleを新着順にbuildする
+     * 閲覧用Articleを人気順にbuildする
      *
      * @param Illuminate\Database\Eloquent\Collection ($articles)
      */
@@ -191,7 +166,64 @@ class Blog extends Model
                                 'articles.id', '=', 'popularity.popularity_articles_id'
                             )
                             ->orderBy('popularity.sum_favorites', 'DESC');
-        // dd($articles);
         return $articles;
+    }
+
+    /**
+     * title検索
+     *
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchTitle($builder, $title){
+        $builder = $builder->where('title', 'like', "%$title%");
+
+        return $builder;
+    }
+
+    /**
+     * userName検索
+     * // UserのsearchNameからとってきたロジックの方が良いかも。
+     *
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    private static function searchUserName($builder, $user_name){
+        $user_ids = User::where('name', 'like', "%$user_name%")->get('id');
+
+        $builder = $builder->whereIn('user_id', $user_ids);
+
+        return $builder;
+    }
+
+    /**
+     * 連想配列（キーと値）で検索する
+     * @param  array  ['title' => 'hoge', 'userName' => 'hoge]
+     * @return  Illuminate\Database\Eloquent\Builder
+     */
+    private static $search_keys = ['userName','title'];
+    public static function search( $inputs ){
+        $articles = self::select('*');
+
+        foreach($inputs as $key => $value){
+            $method = 'search'.ucfirst($key);
+
+            if(in_array($key, self::$search_keys))
+                $articles = self::$method($articles, $value);
+        }
+
+        return $articles;
+    }
+
+    /**
+     * newestソート
+     *
+     * @param Illuminate\Database\Eloquent\Builder
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public static function sortNewest($builder){
+        $builder = $builder->orderBy('updated_at', 'DESC');
+
+        return $builder;
     }
 }

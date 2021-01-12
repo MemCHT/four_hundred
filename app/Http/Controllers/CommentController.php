@@ -14,6 +14,7 @@ use App\Models\Article;
 use App\Models\Comment;
 use App\Notifications\CommentNotification;
 
+// ルートモデルバインディングでもっと簡単にかける。
 class CommentController extends Controller
 {
     public function __construct()
@@ -141,23 +142,21 @@ class CommentController extends Controller
         $selected_comments = array_filter(array_map(function($key, $value){
             if(preg_match('/comment_/', $key))
                 return $value;
-            // dd($key);
         },array_keys($inputs), array_values($inputs))
         ,function($value){ return $value; });
 
-
-        // dd($selected_comments);
 
         //記事所有ユーザ以外ならリダイレクト
         if(Auth::id() !== intval($user_id) && Auth::guard('admin')->check() === false){
             return redirect(route('users.blogs.articles.show', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]));
         }
 
-        // $comment_user = $comment->user;
-        // Comment::destroy($comment_id);
+        $comments = Comment::whereIn('id', $selected_comments)->delete();
 
-        Comment::whereIn('id', $selected_comments)->delete();
+        if(!$comments)
+            return redirect(route('users.blogs.articles.comments.index', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','コメントの削除は行われませんでした');
 
         return redirect(route('users.blogs.articles.comments.index', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id]))->with('success','コメントを削除しました');
+
     }
 }

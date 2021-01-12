@@ -5,7 +5,6 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <!-- <div class="card-header">パスワードリセット</div> -->
                 <h2 class="text-center font-weight-bold">パスワードリセット</h2>
 
                 <div class="card-body">
@@ -60,7 +59,6 @@
                     </form>
                 </div>
             </div>
-            <!-- include('components.sns_login') -->
         </div>
     </div>
 </div>

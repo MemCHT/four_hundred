@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Models\Status;
+
 class CreateCommentsTable extends Migration
 {
     /**
@@ -18,7 +20,7 @@ class CreateCommentsTable extends Migration
             $table->bigInteger('article_id')->unsigned();
             $table->bigInteger('user_id')->unsigned();
             $table->string('body',400);
-            $table->tinyInteger('status_id')->unsigned();
+            $table->tinyInteger('status_id')->unsigned()->default(1); // この時点でStatusテーブルがないから引っ張ってこれない → そう考えるとステータスはconfigにあったほうがよいのかも。
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
 

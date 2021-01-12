@@ -14,6 +14,9 @@ use App\Models\Status;
 use App\Models\Article;
 use App\Models\Favorite;
 
+use App\Jobs\ProcessPublishArticle;
+
+// ルートモデルバインディングでもっと簡単にかける。
 class ArticleController extends Controller
 {
     public function __construct()
@@ -33,35 +36,23 @@ class ArticleController extends Controller
     public function index(Request $request, $user_id, $blog_id)
     {
 
-        $page = $request->input('page');
-        $type = $request->input('type');
-        $session_type = session()->get('type');
+        // searchからリダイレクト時に、inputをsessionに格納している。
+        // paginate時は$requestに格納されている。
+        $input = $request->input() ? $request->input() : session('input');
+        $type = $request->input('type') ? $request->input('type') : session('input')['type'];
+        unset($input['type']);
+
+        $method = 'sort'.ucfirst($type);
 
 
-        // リンクからページに移動した場合
-        if( !$type && !$page)
-            session()->forget('type');
-
-        if($type){
-            session()->put('type', $type);
-
-        }else if($session_type && $page){
-            $type = $session_type;
-
-        }else{
-            $type = 'newest';
-        }
-
-        $methods = [
-            'newest' => function(){ return Article::sortNewest(); },
-            'popularity' => function(){ return Article::sortPopularity(); }
-        ];
-
-        $articles = $methods[$type]();
+        // dd($input);
+        $articles = Article::search( $input ?? [] );
+        // typeが渡されていない場合は、デフォルトで新着順
+        $articles = $type ? Article::$method($articles) : Article::sortNewest($articles); // 予期されない呼び方に気を付ける。
         $articles = Article::buildToPublic($articles);
         $articles = $articles->paginate(8);
 
-        return view('users.articles.index', compact('articles', 'type'));
+        return view('users.articles.index', compact('articles', 'type', 'input'));
     }
 
     /**
@@ -71,7 +62,7 @@ class ArticleController extends Controller
      * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function create($user_id,$blog_id)
+    public function create($user_id,$blog_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
@@ -88,19 +79,31 @@ class ArticleController extends Controller
      * @param  int  $blog_id
      * @return \Illuminate\Http\Response
      */
-    public function store(ArticleFormRequest $request,$user_id,$blog_id)
+    public function store(ArticleFormRequest $request,$user_id,$blog_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
 
         $inputs = $request->all();
         $inputs['blog_id'] = $blog->id;
-        $inputs['published_at'] = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_day']);
+        $published_at = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_date']);
+        $inputs['published_at'] = $published_at;
 
         $article = Article::create($inputs);
 
+        // 処理完了時に表示するメッセージ
+        $message = 'エッセイの投稿を完了しました';
+
+        // 公開設定している未公開記事は強制的に非公開にする
+        if($article->status_id == Status::getByName('公開')->id && $published_at->gt(Carbon::now())){
+            $article->update(['status_id' => Status::getByName('非公開')->id]);
+            $message = '公開日は'.$published_at->format('Y年m月d日 の H:i:s').'です';
+
+            ProcessPublishArticle::dispatch($article)->delay($published_at);
+        }
+
         return redirect()->route('users.blogs.articles.edit', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article->id])
-                         ->with('success','エッセイの投稿を完了しました');
+                         ->with('success',$message);
     }
 
     /**
@@ -111,7 +114,7 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function show($user_id,$blog_id,$article_id)
+    public function show($user_id,$blog_id,$article_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $article = Article::find($article_id);
@@ -128,7 +131,7 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function edit($user_id,$blog_id,$article_id)
+    public function edit($user_id,$blog_id,$article_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $user = User::find($user_id);
         $article = Article::find($article_id);
@@ -149,20 +152,31 @@ class ArticleController extends Controller
      * @param  int  $article_id
      * @return \Illuminate\Http\Response
      */
-    public function update(ArticleFormRequest $request, $user_id,$blog_id,$article_id)
+    public function update(ArticleFormRequest $request, $user_id,$blog_id,$article_id) // ルートモデルバインディングでもっと簡単にかける。
     {
         $inputs = $request->all();
 
         $user = User::find($user_id);
         $blog = Blog::find($blog_id);
         $article = Article::find($article_id);
-
-        $inputs['published_at'] = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_day']);
+        $published_at = Carbon::create($inputs['published_year'], $inputs['published_month'], $inputs['published_date']);
+        $inputs['published_at'] = $published_at;
 
         $article->update($inputs);
 
+        // 処理完了時に表示するメッセージ
+        $message = 'エッセイの編集を完了しました';
+
+        // 公開設定している未公開記事は強制的に非公開にする
+        if($article->status_id == Status::getByName('公開')->id && $published_at->gt(Carbon::now())){
+            $article->update(['status_id' => Status::getByName('非公開')->id]);
+            $message = '公開日は'.$published_at->format('Y年m月d日 の H:i:s').'です';
+
+            ProcessPublishArticle::dispatch($article)->delay($published_at);
+        }
+
         return redirect()->route('users.blogs.articles.edit', ['user' => $user_id, 'blog' => $blog_id, 'article' => $article_id])
-                         ->with('success','エッセイの編集を完了しました');
+                         ->with('success',$message);
     }
 
     /**
@@ -182,7 +196,6 @@ class ArticleController extends Controller
         Article::destroy($article_id);
 
         // なぜかredirect()->back でも url()->previous() でも、現在のurlが取得されてしまう。
-        // dd(url()->previous());
         $route = Auth::guard('user')->check() ? redirect()->route('users.blogs.show', ['user' => $user_id, 'blog' => $blog_id])
                                               : redirect()->route('admins.articles.index');
 

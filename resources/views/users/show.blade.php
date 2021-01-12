@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="title col-md-12 row align-items-end mb-4">
                         <div class="col-md-10">
-                            <h2>{{ strlen($user->blog->title) > 60 ? substr($user->blog->title,0 , 60).'...' : $user->blog->title }}</h2>
+                            <h2>{{ $user->blog->title }}</h2>
                         </div>
                         <div class="col-md-2 text-right">
                             @if(Auth::guard('user')->user()->canFollow($user->id))
@@ -94,14 +94,7 @@
                                 <p>{{ strlen($article->body) > 130 ? substr($article->body,0 , 130).'...' : $article->body }}</p>
                                 <div class="row align-items-center">
 
-                                    <!-- コメント一覧と同じ、ユーザー表示をコンポーネント化してもよい -->
                                     <div class="comment-header d-flex align-items-center col-md-6">
-                                        <!--<img src="{{asset('images/icon/'.$article->blog->user->icon)}}" alt="comment-icon" style="height: 1.8em">
-
-                                        <div class="ml-3">
-                                            <p class="mb-0"><strong>{{$article->blog->user->name}}</strong></p>
-                                            <p class="mb-0 comment-created-at"><small>{{$article->updated_at}}</small></p>
-                                        </div>-->
                                         @include('components.user', ['user' => $article->blog->user, 'sub_info' => $article->updated_at])
                                     </div>
 

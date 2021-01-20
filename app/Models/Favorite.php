@@ -23,21 +23,6 @@ class Favorite extends Model
     }
 
     /**
-     * パラメータに応じて、Favoriteインスタンス存在チェック
-     * @param array params = ['user' => xx , 'blog' => xx, 'article' => xx, 'favorite' => xx]
-     * @return bool
-     */
-    /* public static function isExist($params){
-        if(isset($params['favorite']) && isset($params['article'])){
-            $favorite = self::find($params['favorite']);
-
-            if($favorite && $favorite->article_id == $params['article'])
-                return Article::isExist($params);
-        }
-        return false;
-    }*/
-
-    /**
      * 該当エッセイに対して、ユーザがお気に入り登録をしているかどうか確認
      *
      * @param article_id $article_id

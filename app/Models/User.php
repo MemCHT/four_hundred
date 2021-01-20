@@ -131,21 +131,6 @@ class User extends Authenticatable implements AssurableRouteParameters
     }
 
     /**
-     * ルートパラメータに応じて、Userの存在チェック
-     *
-     * @param  array  $params
-     * @return bool
-     */
-    /*public static function isExist($params){
-        if(isset($params['user'])){
-            $user = self::find($params['user']);
-
-            return isset($user);
-        }
-        return false;
-    }*/
-
-    /**
      * vendorに実装されているfirstOrCreateをオーバーライド
      * Blogを同時作成する処理を追加
      *
@@ -205,40 +190,6 @@ class User extends Authenticatable implements AssurableRouteParameters
 
         return $users;
     }
-
-    /**
-     * ユーザ一覧表示用インスタンスを取得
-     * @param  Illuminate\Http\Request
-     * @return  Illuminate\Pagination\LengthAwarePaginator (article)
-     */
-    /*public static function searchUserByKeyword($request){
-        $users = User::select('*');
-
-        $keyword = $request->input('keyword');
-        $session_has_keyword = $request->session()->has('keyword');
-        $request_has_page = $request->has('page');
-
-        // 1. 検索もページ移動もしていないとき、セッションを破棄する。（ヘッダから直接飛んだ時）
-        if(isset($keyword) == false && $request_has_page == false)
-            $request->session()->forget('keyword');
-
-        // 2. 検索後にページボタン押下時、セッションからkeywordを取得
-        if( $session_has_keyword && $request_has_page)
-            $keyword = $request->session()->get('keyword');
-
-        // 3. キーワード（name, email）によって検索処理
-        if(isset($keyword)){
-            $users->where('name', 'like', '%'.$keyword.'%')->orWhere('email', 'like', '%'.$keyword.'%');
-            $request->session()->put('keyword', $keyword);
-        }
-        $users = $users->/*orderBy('updated_at', 'DESC')->*//*paginate(8);
-
-        foreach($users as $user){
-            $user->formatForUserCard();
-        }
-
-        return $users;
-    }*/
 
     /**
      * name検索

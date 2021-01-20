@@ -47,10 +47,6 @@ import SeeMoreButton from '../../SeeMoreButton.vue';
 
                 return articleData;
             },
-            // アロー関数は呼ばれた場所が"this" ← ず～っとここでつまづいてた。
-            // クロージャで内包してほしいthis → IndexContent（ここ）のthis
-            // アロー関数のthis → 宣言された時点でのthis、（methodsオブジェクトをthisとしているっぽい）
-            // そのためfunction()でなければIndexContentのthisを示せない。
             addArticles:function(){
 
                 const vm = this;

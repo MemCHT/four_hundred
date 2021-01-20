@@ -45,7 +45,7 @@ class Article extends Model
     }
 
     /**
-     * articleインスタンスにある有効なお気に入りの中に、特定のuserのものが含まれているかどうか判定
+     * articleインスタンスにある有効なお気に入りの中に、特定（引数）のuserのものが含まれているかどうか判定
      *
      * @param int $user_id
      * @return boolean
@@ -91,16 +91,18 @@ class Article extends Model
      * @return Illuminate\Database\Eloquent\Builder
      */
     public static function sortPopularity($builder=null){
+        \DB::enableQueryLog();
         if(is_null($builder))
             $builder = Article::select('*');
 
-        $builder->join(
+        $builder->where('articles.status_id', Status::getByName('公開')->id)
+                ->join(
                     \DB::raw('(SELECT articles.id AS popularity_articles_id, count(favorites.id) AS sum_favorites FROM articles
-                        LEFT JOIN favorites ON favorites.article_id = articles.id
+                        LEFT JOIN (SELECT * FROM favorites WHERE favorites.status = true) AS favorites ON favorites.article_id = articles.id
                         GROUP BY articles.id) AS popularity'),
                     'articles.id', '=', 'popularity.popularity_articles_id'
-        )
-        ->orderBy('popularity.sum_favorites', 'DESC');
+        )->orderBy('popularity.sum_favorites', 'DESC');
+        //dd(\DB::getQueryLog());
 
         return $builder;
     }

@@ -116,7 +116,10 @@ class Blog extends Model
             $builder = Blog::select('*');
 
         $status_id_public = Status::getByName('公開')->id;
+        // 有効なユーザーからのみブログを取得可能
+        // $valid_users = User::where('status_id', $status_id_public)->pluck('id');
 
+        // $builder = $builder->whereIn('user_id', $valid_users);
         $builder = $builder->where('status_id', $status_id_public);
 
         return $builder;

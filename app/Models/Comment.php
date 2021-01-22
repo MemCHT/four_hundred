@@ -26,23 +26,15 @@ class Comment extends Model
         return $this->belongsTo(Status::class, 'status_id', 'id');
     }
 
-    // 管理者側機能：コメント一覧のデザイン実装時に変更必要
-    // commentにステータスを設ける
+    /**
+     * Articleに属する有効コメントをすべて取得する
+     * @param int $article_id
+     * @return Illuminate\Database\Eloquent\Collection
+     */
     public static function getValidComments($article_id){
         $comments = Comment::where('article_id', $article_id)->where('status_id', Status::getByName('公開')->id)->get();
         return $comments;
     }
-
-    /**
-     * title検索
-     * @param  Illuminate\Database\Eloquent\Builder
-     * @return  Illuminate\Database\Eloquent\Builder
-     */
-    /*private static function searchTitle($builder, $title){
-        $builder->where('title', 'like',  "%$title%");
-
-        return $builder;
-    }*/
 
     /**
      * userName検索

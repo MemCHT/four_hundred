@@ -26,5 +26,8 @@
         <server name="MAIL_DRIVER" value="array"/>
         <server name="QUEUE_CONNECTION" value="sync"/>
         <server name="SESSION_DRIVER" value="array"/>
+
+        <!-- ↓を追加 -->
+        <env name="DB_DATABASE" value="test_laravel_db"/>
     </php>
 </phpunit>
